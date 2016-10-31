@@ -19,10 +19,12 @@
     <ClCompile Include="MD5FileData.cpp" />
     <ClCompile Include="MD5Mesh.cpp" />
     <ClCompile Include="MD5Node.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
     <ClCompile Include="OGLRenderer.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -37,10 +39,12 @@
     <ClInclude Include="MD5FileData.h" />
     <ClInclude Include="MD5Mesh.h" />
     <ClInclude Include="MD5Node.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="OBJMesh.h" />
     <ClInclude Include="OGLRenderer.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />

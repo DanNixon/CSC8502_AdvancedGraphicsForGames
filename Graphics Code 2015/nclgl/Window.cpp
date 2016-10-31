@@ -104,9 +104,11 @@ Window::Window(std::string title, int sizeX, int sizeY, bool fullScreen)	{
 	if(!keyboard) {
 		keyboard	= new Keyboard(windowHandle);
 	}
+
 	if(!mouse) {
 		mouse		= new Mouse(windowHandle);
 	}
+
 	//if(!timer) {
 		timer		= new GameTimer();
 	//}
@@ -128,10 +130,13 @@ Window::Window(std::string title, int sizeX, int sizeY, bool fullScreen)	{
 
 Window::~Window(void)
 {
-	delete keyboard;keyboard = NULL;
-	delete mouse;	mouse = NULL;
+	delete keyboard;
+  keyboard = NULL;
 
-	FreeConsole();		//Destroy the console window
+	delete mouse;
+  mouse = NULL;
+
+	//FreeConsole();
 }
 
 HWND Window::GetHandle() {
