@@ -16,6 +16,30 @@ Mesh *Mesh::GenerateTriangle()
   m->colours[2] = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
 
   m->BufferData();
+
+  return m;
+}
+
+Mesh *Mesh::GenerateSquare()
+{
+  Mesh *m = new Mesh();
+  m->numVertices = 4;
+  m->type = GL_TRIANGLE_STRIP;
+
+  m->vertices = new Vector3[m->numVertices];
+  m->vertices[0] = Vector3(-0.5f, 0.5f, 0.0f);
+  m->vertices[1] = Vector3(-0.5f, -0.5f, 0.0f);
+  m->vertices[2] = Vector3(0.5f, 0.5f, 0.0f);
+  m->vertices[3] = Vector3(0.5f, -0.5f, 0.0f);
+
+  m->colours = new Vector4[m->numVertices];
+  m->colours[0] = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+  m->colours[1] = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+  m->colours[2] = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+  m->colours[3] = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
+  m->BufferData();
+
   return m;
 }
 
@@ -44,6 +68,16 @@ void Mesh::Draw()
   glBindVertexArray(arrayObject);
   glDrawArrays(type, 0, numVertices);
   glBindVertexArray(0);
+}
+
+void *Mesh::GetBuffer(MeshBuffer b, GLenum mode)
+{
+  return glMapBuffer(bufferObject[b], mode);
+}
+
+bool Mesh::ReturnBuffer(MeshBuffer b)
+{
+  return glUnmapBuffer(bufferObject[b]) == GL_TRUE;
 }
 
 void Mesh::BufferData()

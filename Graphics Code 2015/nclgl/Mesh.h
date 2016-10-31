@@ -13,12 +13,21 @@ class Mesh
 {
 public:
   static Mesh *GenerateTriangle();
+  static Mesh *GenerateSquare();
 
 public:
   Mesh(void);
   ~Mesh(void);
 
+  inline size_t NumVertices() const
+  {
+    return numVertices;
+  }
+
   virtual void Draw();
+
+  virtual void *GetBuffer(MeshBuffer b, GLenum mode);
+  virtual bool ReturnBuffer(MeshBuffer b);
 
 protected:
   void BufferData();

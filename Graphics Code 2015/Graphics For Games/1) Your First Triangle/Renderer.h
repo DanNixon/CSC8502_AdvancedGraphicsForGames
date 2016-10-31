@@ -2,6 +2,8 @@
 
 #include "../../nclgl/OGLRenderer.h"
 
+#define NUM_MESHES 2
+
 class Renderer : public OGLRenderer
 {
 public:
@@ -10,5 +12,5 @@ public:
   virtual void RenderScene();
 
 protected:
-  Mesh *triangle;
+  Mesh *meshes[NUM_MESHES];
 };

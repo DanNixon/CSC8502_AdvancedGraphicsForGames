@@ -3,7 +3,11 @@
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
 {
-  triangle = Mesh::GenerateTriangle();
+  for (size_t i = 0; i < NUM_MESHES; i++)
+    meshes[i] = nullptr;
+
+  //meshes[0] = Mesh::GenerateTriangle();
+  meshes[1] = Mesh::GenerateSquare();
 
   currentShader = new Shader(SHADERDIR "basicVertex.glsl", SHADERDIR "colourFragment.glsl");
 
@@ -15,7 +19,8 @@ Renderer::Renderer(Window &parent)
 
 Renderer::~Renderer(void)
 {
-  delete triangle;
+  for (size_t i = 0; i < NUM_MESHES; i++)
+    delete meshes[i];
 }
 
 void Renderer::RenderScene()
@@ -24,7 +29,23 @@ void Renderer::RenderScene()
   glClear(GL_COLOR_BUFFER_BIT);
 
   glUseProgram(currentShader->GetProgram());
-  triangle->Draw();
+  for (size_t i = 0; i < NUM_MESHES; i++)
+  {
+    if (meshes[i] != nullptr)
+    {
+#if 0
+      void *data = meshes[i]->GetBuffer(COLOUR_BUFFER, GL_READ_WRITE);
+      if (data)
+      {
+        for (size_t i = 0; i < meshes[i]->NumVertices() * 4; i++)
+          ((float *)data)[i] = 0.5f;
+      }
+      meshes[i]->ReturnBuffer(COLOUR_BUFFER);
+#endif
+
+      meshes[i]->Draw();
+    }
+  }
   glUseProgram(0);
 
   SwapBuffers();
