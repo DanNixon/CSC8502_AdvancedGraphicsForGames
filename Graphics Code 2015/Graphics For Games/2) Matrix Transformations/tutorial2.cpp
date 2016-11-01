@@ -7,15 +7,11 @@ int main()
 {
   Window w("Vertex Transformation!", 800, 600, false);
   if (!w.HasInitialised())
-  {
     return -1;
-  }
 
   Renderer renderer(w);
   if (!renderer.HasInitialised())
-  {
     return -1;
-  }
 
   float scale = 100.0f;
   float rotation = 0.0f;
@@ -26,7 +22,7 @@ int main()
     if (Window::GetKeyboard()->KeyDown(KEYBOARD_1))
       renderer.SwitchToOrthographic();
     if (Window::GetKeyboard()->KeyDown(KEYBOARD_2))
-      renderer.SwitchToPerspective();
+      renderer.SwitchToPerspective(110.0f);
 
     if (Window::GetKeyboard()->KeyDown(KEYBOARD_PLUS))
       ++scale;

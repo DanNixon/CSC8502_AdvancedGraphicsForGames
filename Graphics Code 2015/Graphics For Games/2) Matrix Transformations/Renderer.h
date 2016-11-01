@@ -10,7 +10,7 @@ public:
 
   virtual void RenderScene();
 
-  void SwitchToPerspective();
+  void SwitchToPerspective(float fov = 45.0f);
   void SwitchToOrthographic();
 
   inline void SetScale(float s)

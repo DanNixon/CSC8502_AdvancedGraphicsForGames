@@ -51,9 +51,9 @@ void Renderer::RenderScene()
   SwapBuffers();
 }
 
-void Renderer::SwitchToPerspective()
+void Renderer::SwitchToPerspective(float fov)
 {
-  projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
+  projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, fov);
 }
 
 void Renderer::SwitchToOrthographic()
