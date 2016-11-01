@@ -9,7 +9,7 @@ Renderer::Renderer(Window &parent)
   //meshes[0] = Mesh::GenerateTriangle();
   meshes[1] = Mesh::GenerateSquare();
 
-  currentShader = new Shader(SHADERDIR "basicVertex.glsl", SHADERDIR "colourFragment.glsl");
+  currentShader = new Shader(SHADERDIR "BasicVertex.glsl", SHADERDIR "ColourFragment.glsl");
 
   if (!currentShader->LinkProgram())
     return;
