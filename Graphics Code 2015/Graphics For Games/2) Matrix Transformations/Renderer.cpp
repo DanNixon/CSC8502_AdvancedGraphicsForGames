@@ -3,7 +3,8 @@
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
 {
-  triangle = Mesh::GenerateTriangle();
+  mesh = Mesh::GenerateSphere();
+  camera = new Camera();
 
   currentShader = new Shader(SHADERDIR "MatrixVertex.glsl", SHADERDIR "ColourFragment.glsl");
   if (!currentShader->LinkProgram())
@@ -11,11 +12,13 @@ Renderer::Renderer(Window &parent)
 
   init = true;
   SwitchToOrthographic();
+
+  //glEnable(GL_DEPTH_TEST);
 }
 
 Renderer::~Renderer(void)
 {
-  delete triangle;
+  delete mesh;
 }
 
 void Renderer::RenderScene()
@@ -43,12 +46,18 @@ void Renderer::RenderScene()
     glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false,
                        (float *)&modelMatrix);
 
-    triangle->Draw();
+    mesh->Draw();
   }
 
   glUseProgram(0);
 
   SwapBuffers();
+}
+
+void Renderer::UpdateScene(float msec)
+{
+  camera->UpdateCamera(msec);
+  viewMatrix = camera->BuildViewMatrix();
 }
 
 void Renderer::SwitchToPerspective(float fov)

@@ -14,10 +14,11 @@ class Mesh
 public:
   static Mesh *GenerateTriangle();
   static Mesh *GenerateSquare();
+  static Mesh *GenerateSphere(size_t resolution = 64);
 
 public:
-  Mesh(void);
-  ~Mesh(void);
+  Mesh();
+  ~Mesh();
 
   inline size_t NumVertices() const
   {

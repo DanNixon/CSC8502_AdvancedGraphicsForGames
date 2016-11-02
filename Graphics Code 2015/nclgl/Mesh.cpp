@@ -43,7 +43,44 @@ Mesh *Mesh::GenerateSquare()
   return m;
 }
 
-Mesh::Mesh(void)
+Mesh * Mesh::GenerateSphere(size_t resolution)
+{
+  Mesh *m = new Mesh();
+  m->numVertices = resolution * resolution * 2;
+  m->type = GL_TRIANGLE_STRIP;
+
+  m->vertices = new Vector3[m->numVertices];
+  m->colours = new Vector4[m->numVertices];
+
+  float deltaTheta = (float)(PI / resolution);
+  float deltaPhi = (float)((PI * 2.0f) / resolution);
+
+  size_t n = 0;
+  for (size_t i = 0; i < resolution; i++)
+  {
+    const float theta1 = i * deltaTheta;
+    const float theta2 = (i + 1) * deltaTheta;
+
+    for (size_t j = 0; j < resolution; j++)
+    {
+      const float phi = j * deltaPhi;
+
+      m->vertices[n] = Vector3(cos(theta1) * sin(phi), sin(theta1) * sin(phi), cos(phi));
+      m->colours[n] = Vector4(theta1, phi, 0.0f, 1.0f);
+      n++;
+
+      m->vertices[n] = Vector3(cos(theta2) * sin(phi), sin(theta2) * sin(phi), cos(phi));
+      m->colours[n] = Vector4(theta2, phi, 0.0f, 1.0f);
+      n++;
+    }
+  }
+
+  m->BufferData();
+
+  return m;
+}
+
+Mesh::Mesh()
 {
   for (int i = 0; i < MAX_BUFFER; ++i)
     bufferObject[i] = 0;
@@ -55,7 +92,7 @@ Mesh::Mesh(void)
   type = GL_TRIANGLES;
 }
 
-Mesh::~Mesh(void)
+Mesh::~Mesh()
 {
   glDeleteVertexArrays(1, &arrayObject);
   glDeleteBuffers(MAX_BUFFER, bufferObject);

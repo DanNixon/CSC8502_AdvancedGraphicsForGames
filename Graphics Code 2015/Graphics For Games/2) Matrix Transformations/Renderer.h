@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../nclgl/OGLRenderer.h"
+#include "../nclgl/Camera.h"
 
 class Renderer : public OGLRenderer
 {
@@ -9,6 +10,7 @@ public:
   virtual ~Renderer(void);
 
   virtual void RenderScene();
+  virtual void UpdateScene(float msec);
 
   void SwitchToPerspective(float fov = 45.0f);
   void SwitchToOrthographic();
@@ -29,7 +31,8 @@ public:
   }
 
 protected:
-  Mesh *triangle;
+  Mesh *mesh;
+  Camera *camera;
 
   float scale;
   float rotation;
