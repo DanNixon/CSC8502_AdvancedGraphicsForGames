@@ -2,6 +2,9 @@
 
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
+    , filtering(true)
+    , repeating(false)
+    , blendFactor(0.5f)
 {
   mesh = Mesh::GenerateTriangle();
 
@@ -19,9 +22,6 @@ Renderer::Renderer(Window &parent)
   init = true;
 
   projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, 1, -1);
-
-  filtering = true;
-  repeating = false;
 }
 
 Renderer::~Renderer()
@@ -35,6 +35,7 @@ void Renderer::RenderScene()
 
   glUseProgram(currentShader->GetProgram());
 
+  glUniform1f(glGetUniformLocation(currentShader->GetProgram(), "blendFactor"), blendFactor);
   UpdateShaderMatrices();
 
   glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
@@ -69,4 +70,14 @@ void Renderer::ToggleFiltering()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filtering ? GL_LINEAR : GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filtering ? GL_LINEAR : GL_NEAREST);
   glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Renderer::OffsetBlendFactor(float offset)
+{
+  blendFactor += offset;
+
+  if (blendFactor < 0.0f)
+    blendFactor = 0.0f;
+  else if (blendFactor > 1.0f)
+    blendFactor = 1.0f;
 }

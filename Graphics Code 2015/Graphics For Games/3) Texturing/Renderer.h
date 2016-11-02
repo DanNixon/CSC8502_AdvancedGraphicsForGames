@@ -13,10 +13,12 @@ public:
   void UpdateTextureMatrix(float rotation);
   void ToggleRepeating();
   void ToggleFiltering();
+  void OffsetBlendFactor(float offset);
 
 protected:
   Mesh *mesh;
 
   bool filtering;
   bool repeating;
+  float blendFactor;
 };

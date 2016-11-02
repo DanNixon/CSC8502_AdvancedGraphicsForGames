@@ -34,6 +34,12 @@ int main()
     if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
       renderer.ToggleRepeating();
 
+    if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_MINUS))
+      renderer.OffsetBlendFactor(-0.05f);
+
+    if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_PLUS))
+      renderer.OffsetBlendFactor(0.05f);
+
     renderer.RenderScene();
   }
 
