@@ -6,6 +6,7 @@ enum MeshBuffer
 {
   VERTEX_BUFFER,
   COLOUR_BUFFER,
+  TEXTURE_BUFFER,
   MAX_BUFFER
 };
 
@@ -30,6 +31,16 @@ public:
   virtual void *GetBuffer(MeshBuffer b, GLenum mode);
   virtual bool ReturnBuffer(MeshBuffer b);
 
+  inline GLuint GetTexture()
+  {
+    return texture;
+  }
+
+  inline void SetTexture(GLuint t)
+  {
+    texture = t;
+  }
+
 protected:
   void BufferData();
 
@@ -38,7 +49,9 @@ protected:
   GLuint bufferObject[MAX_BUFFER];
   GLuint numVertices;
   GLuint type;
+  GLuint texture;
 
   Vector3 *vertices;
   Vector4 *colours;
+  Vector2 *textureCoords;
 };

@@ -3,39 +3,39 @@
 #include "../../nclGL/window.h"
 #include "Renderer.h"
 
-int main() {
-	Window w("Texturing!", 800,600,false);	 //This is all boring win32 window creation stuff!
-	if(!w.HasInitialised()) {
-		return -1;
-	}
-	
-	Renderer renderer(w);	//This handles all the boring OGL 3.2 initialisation stuff, and sets up our tutorial!
-	if(!renderer.HasInitialised()) {
-		return -1;
-	}
+int main()
+{
+  Window w("Texturing!", 800, 600, false);
+  if (!w.HasInitialised())
+    return -1;
 
-	float rotate = 0.0f;
-	while(w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)){
-		if(Window::GetKeyboard()->KeyDown(KEYBOARD_LEFT) ) {
-			--rotate;
-			renderer.UpdateTextureMatrix(rotate);
-		}
+  Renderer renderer(w);
+  if (!renderer.HasInitialised())
+    return -1;
 
-		if(Window::GetKeyboard()->KeyDown(KEYBOARD_RIGHT) ) {
-			++rotate;
-			renderer.UpdateTextureMatrix(rotate);
-		}
+  float rotate = 0.0f;
+  while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
+  {
+    if (Window::GetKeyboard()->KeyDown(KEYBOARD_LEFT))
+    {
+      --rotate;
+      renderer.UpdateTextureMatrix(rotate);
+    }
 
-		if(Window::GetKeyboard()->KeyTriggered(KEYBOARD_1) ) {
-			renderer.ToggleFiltering();
-		}
+    if (Window::GetKeyboard()->KeyDown(KEYBOARD_RIGHT))
+    {
+      ++rotate;
+      renderer.UpdateTextureMatrix(rotate);
+    }
 
-		if(Window::GetKeyboard()->KeyTriggered(KEYBOARD_2) ) {
-			renderer.ToggleRepeating();
-		}
+    if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+      renderer.ToggleFiltering();
 
-		renderer.RenderScene();
-	}
+    if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
+      renderer.ToggleRepeating();
 
-	return 0;
+    renderer.RenderScene();
+  }
+
+  return 0;
 }
