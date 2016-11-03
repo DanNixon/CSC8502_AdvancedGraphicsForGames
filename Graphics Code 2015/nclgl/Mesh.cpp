@@ -38,9 +38,9 @@ Mesh *Mesh::GenerateSquare()
   m->vertices[3] = Vector3(1.0f, 1.0f, 0.0f);
 
   m->colours = new Vector4[m->numVertices];
-  m->colours[0] = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-  m->colours[1] = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-  m->colours[2] = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+  m->colours[0] = Vector4(1.0f, 0.0f, 0.0f, 0.5f);
+  m->colours[1] = Vector4(0.0f, 1.0f, 0.0f, 0.5f);
+  m->colours[2] = Vector4(0.0f, 0.0f, 1.0f, 0.5f);
   m->colours[3] = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
 
   m->textureCoords = new Vector2[m->numVertices];

@@ -5,7 +5,7 @@ Renderer::Renderer(Window &parent)
     , usingDepth(false)
     , usingAlpha(false)
     , blendMode(0)
-    , modifyObject(true)
+    , selectedObject(true)
 {
   meshes[0] = Mesh::GenerateSquare();
   meshes[1] = Mesh::GenerateTriangle();
@@ -69,18 +69,21 @@ void Renderer::RenderScene()
 
 void Renderer::ToggleObject()
 {
-  modifyObject = !modifyObject;
+  selectedObject = !selectedObject;
+  std::cout << "Object: " << selectedObject << '\n';
 }
 
 void Renderer::ToggleDepth()
 {
   usingDepth = !usingDepth;
+  std::cout << "Depth: " << usingDepth << '\n';
   usingDepth ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 }
 
 void Renderer::ToggleAlphaBlend()
 {
   usingAlpha = !usingAlpha;
+  std::cout << "Alpha: " << usingAlpha << '\n';
   usingAlpha ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 }
 
@@ -92,20 +95,24 @@ void Renderer::ToggleBlendMode()
   {
   case (0):
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    std::cout << "Blend: a, 1 - a\n";
     break;
   case (1):
     glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+    std::cout << "Blend: c, 1 - c\n";
     break;
   case (2):
     glBlendFunc(GL_ONE, GL_ZERO);
+    std::cout << "Blend: 1, 0\n";
     break;
   case (3):
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    std::cout << "Blend: a, 1\n";
     break;
   }
 }
 
 void Renderer::MoveObject(float by)
 {
-  positions[int(modifyObject)].z += by;
+  positions[int(selectedObject)].z += by;
 }

@@ -26,7 +26,7 @@ protected:
   Matrix4 projMatrix;
   Matrix4 viewMatrix;
 
-  bool modifyObject;
+  bool selectedObject;
   bool usingDepth;
   bool usingAlpha;
   int blendMode;
