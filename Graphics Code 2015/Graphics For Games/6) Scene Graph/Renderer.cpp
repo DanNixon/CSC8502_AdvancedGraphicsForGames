@@ -16,7 +16,24 @@ Renderer::Renderer(Window &parent)
   camera->SetPosition(Vector3(0, 30, 175));
 
   root = new SceneNode();
-  root->AddChild(new CubeRobot());
+
+  {
+    SceneNode *r = new CubeRobot();
+    r->SetTransform(Matrix4::Scale(Vector3(3.0f, 3.0f, 3.0f)));
+    root->AddChild(r);
+  }
+
+  {
+    SceneNode *r = new CubeRobot();
+    r->SetTransform(Matrix4::Translation(Vector3(-10.0f, 0.0f, 0.0f)));
+    root->AddChild(r);
+  }
+
+  {
+    SceneNode *r = new CubeRobot();
+    r->SetTransform(Matrix4::Translation(Vector3(10.0f, 0.0f, 0.0f)));
+    root->AddChild(r);
+  }
 
   glEnable(GL_DEPTH_TEST);
   init = true;
