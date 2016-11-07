@@ -8,7 +8,9 @@ effects.
 
 The challenge is to use OpenGL and C++ to create a graphical simulation of an
 alien planet surface.
+
 The planet could be of any type – rock, ice, lava, forest, desert, lagoon, etc.
+
 A massive explosion can be triggered in the scene.
 
 The goal of the coursework is to integrate as many graphical effects as you can
@@ -18,13 +20,16 @@ interactive experience. The specification is therefore deliberately open-ended.
 You will not lose marks for using code from the tutorials, although further
 marks will be gained for introducing more complex elements. You will also not
 lose marks for using textures/models derived from outside sources for elements
-in the scene. Remember that all such external material must be referenced and
-attributed properly.
+in the scene.
+
+Remember that all such external material must be referenced and attributed
+properly.
 
 The coursework consists of two parts. The first part is to develop the standard
-features of the scene to a level of high quality. The second part is to
-integrate multiple advanced graphical effects into the scene, while maintaining
-a cinematic framerate.
+features of the scene to a level of high quality.
+
+The second part is to integrate multiple advanced graphical effects into the
+scene, while maintaining a cinematic framerate.
 
 ## Coursework part A – standard features
 
@@ -44,10 +49,12 @@ integrated into the scene.
 
 ## Coursework part B – advanced features
 
-This is a list of ideas for enhancing the scene graphically. You may choose
-features from this list or add your own ideas. The more complex the feature and
-the better implemented and integrated, the higher the mark awarded for that
-feature.
+This is a list of ideas for enhancing the scene graphically.
+
+You may choose features from this list or add your own ideas.
+
+The more complex the feature and the better implemented and integrated, the
+higher the mark awarded for that feature.
 
 - Planet surface extends as far as the eye can see
 - Explosion causes permanent damage to planet
@@ -81,16 +88,20 @@ Marks Available (50)
 ### Coursework A (25 marks)
 
 Implementation of the standard features gains up to 25 marks.
-A “first class” submission consists of these features implemented with
+
+A "first class" submission consists of these features implemented with
 well-structured code, running at 60fps in full screen on the lab PC.
 
 ### Coursework B (25 marks)
 
 Advanced rendering techniques (the optional extras above) gain up to 25 marks.
-A “first class” submission entails a balanced scene of graphical effects
+
+A "first class" submission entails a balanced scene of graphical effects
 including at least four advanced graphical features (well implemented and
 integrated with the standard features), running at a minimum of 60fps in
-full-screen mode. The code must be clearly formatted.
+full-screen mode.
+
+The code must be clearly formatted.
 
 ## Learning Outcomes
 
