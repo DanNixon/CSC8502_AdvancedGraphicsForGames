@@ -35,16 +35,16 @@ framerate.
 This is the list of standard features which must be well implemented and
 integrated into the scene.
 
-- The planet surface (not the height-map that is provided in tutorials)
-- The environment should be lit with ambient, diffuse and specular
-- Shadows
-- Skybox
-- Explosion is triggered by pressing a key. It consists of
-  - A bright flash which overwhelms the screen
-  - Particle effects
-- A navigable camera, moving around the 3D environment
-- Display the framerate being achieved
-- Display the total memory being used
+- [ ] The planet surface (not the height-map that is provided in tutorials)
+- [ ] The environment should be lit with ambient, diffuse and specular
+- [ ] Shadows
+- [ ] Skybox
+- [ ] Explosion is triggered by pressing a key. It consists of
+  - [ ] A bright flash which overwhelms the screen
+  - [ ] Particle effects
+- [ ] A navigable camera, moving around the 3D environment
+- [ ] Display the framerate being achieved
+- [ ] Display the total memory being used
 
 ## Coursework part B – advanced features
 
@@ -55,15 +55,15 @@ You may choose features from this list or add your own ideas.
 The more complex the feature and the better implemented and integrated, the
 higher the mark awarded for that feature.
 
-- Planet surface extends as far as the eye can see
-- Explosion causes permanent damage to planet
-- Vegetation which grows as the scene runs (i.e. it evolves over time
+- [ ] Planet surface extends as far as the eye can see
+- [ ] Explosion causes permanent damage to planet
+- [ ] Vegetation which grows as the scene runs (i.e. it evolves over time
   programmatically)
-- Space ships, UFOs, strange lights in the sky (lighting is key here not the
+- [ ] Space ships, UFOs, strange lights in the sky (lighting is key here not the
   space ship model)
-- Weather effects (rain, snow, fog, wind, lightning)
-- Volcano or geyser eruption
-- A portal effect
+- [ ] Weather effects (rain, snow, fog, wind, lightning)
+- [ ] Volcano or geyser eruption
+- [ ] A portal effect
 - Lens-flare
 - A light that casts shadows appropriately (ie from the light’s position in all
   directions)
