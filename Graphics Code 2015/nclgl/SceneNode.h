@@ -3,16 +3,16 @@
 #include <vector>
 
 #include "Matrix4.h"
+#include "Mesh.h"
 #include "Vector3.h"
 #include "Vector4.h"
-#include "Mesh.h"
 
 class SceneNode
 {
 public:
   static bool CompareByCameraDistance(SceneNode *a, SceneNode *b)
   {
-    return (a - > distanceFromCamera < b->distanceFromCamera) ? true : false;
+    return (a->distanceFromCamera < b->distanceFromCamera) ? true : false;
   }
 
 public:

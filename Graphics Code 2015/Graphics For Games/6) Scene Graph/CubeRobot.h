@@ -1,16 +1,11 @@
 #pragma once
 
-#include ".\nclgl\SceneNode.h"
-#include ".\nclgl\OBJMesh.h"
+#include "../nclgl/SceneNode.h"
+#include "../nclgl/OBJMesh.h"
 
 class CubeRobot : public SceneNode
 {
 public:
-  CubeRobot();
-  ~CubeRobot(){};
-
-  virtual void Update(float msec);
-
   static void CreateCube()
   {
     OBJMesh *m = new OBJMesh();
@@ -22,6 +17,12 @@ public:
   {
     delete cube;
   }
+
+public:
+  CubeRobot();
+  ~CubeRobot(){};
+
+  virtual void Update(float msec);
 
 protected:
   static Mesh *cube;

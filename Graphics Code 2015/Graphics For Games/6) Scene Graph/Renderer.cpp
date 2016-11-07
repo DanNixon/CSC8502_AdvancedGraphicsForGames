@@ -8,7 +8,7 @@ Renderer::Renderer(Window &parent)
 
   currentShader = new Shader(SHADERDIR "SceneVertex.glsl", SHADERDIR "SceneFragment.glsl");
 
-  if (!currentShader - > LinkProgram())
+  if (!currentShader->LinkProgram())
     return;
 
   projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
@@ -21,6 +21,7 @@ Renderer::Renderer(Window &parent)
   glEnable(GL_DEPTH_TEST);
   init = true;
 }
+
 Renderer::~Renderer(void)
 {
   delete root;
@@ -54,15 +55,16 @@ void Renderer::DrawNode(SceneNode *n)
   if (n->GetMesh())
   {
     Matrix4 transform = n->GetWorldTransform() * Matrix4::Scale(n->GetModelScale());
-    glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), " modelMatrix "), 1, false,
+    glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false,
                        (float *)&transform);
 
-    glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), " nodeColour "), 1,
+    glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1,
                  (float *)&n->GetColour());
 
-    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), " useTexture "),
+    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"),
                 (int)n->GetMesh()->GetTexture());
-    n->Draw();
+
+    n->Draw(*this);
   }
 
   for (vector<SceneNode *>::const_iterator i = n->GetChildIteratorStart();

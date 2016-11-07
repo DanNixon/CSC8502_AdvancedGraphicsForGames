@@ -20,6 +20,9 @@ f vert index / tex index / norm index  vert index / tex index / norm index  vert
 OBJ files can also be split up into a number of submeshes, making loading them
 in even more annoying. 
 */
+
+using namespace std;
+
 bool	OBJMesh::LoadOBJMesh(std::string filename)	{
 	std::ifstream f(filename.c_str(),std::ios::in);
 
@@ -358,7 +361,7 @@ The mtl files in that big pack of city buildings haven't been exported correctly
 void	OBJMesh::FixTextures(MTLInfo &info) {
 	if(!info.bumpNum) {
 
-		string temp = info.diffuse;
+		std::string temp = info.diffuse;
 
 		if(temp[temp.size() - 5] == 'd') {
 			temp[temp.size() - 5] = 'n';

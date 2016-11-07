@@ -31,7 +31,7 @@ void SceneNode::Draw(const OGLRenderer &r)
 void SceneNode::Update(float msec)
 {
   if (parent)
-    worldTransform = parent - > worldTransform * transform;
+    worldTransform = parent -> worldTransform * transform;
   else
     worldTransform = transform;
 

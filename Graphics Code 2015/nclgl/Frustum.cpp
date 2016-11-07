@@ -4,7 +4,7 @@ bool Frustum::InsideFrustum(SceneNode &n)
 {
   for (int p = 0; p < 6; ++p)
   {
-    if (!planes[p].SphereInPlane(n.GetWorldTransform().GetPositionVector(), n.GetBoundingRadius()))
+    if (!m_planes[p].SphereInPlane(n.GetWorldTransform().GetPositionVector(), n.GetBoundingRadius()))
       return false;
   }
 
@@ -19,15 +19,15 @@ void Frustum::FromMatrix(const Matrix4 &mat)
   Vector3 wAxis = Vector3(mat.values[3], mat.values[7], mat.values[11]);
 
   // RIGHT
-  planes[0] = Plane(wAxis - xAxis, (mat.values[15] - mat.values[12]), true);
+  m_planes[0] = Plane(wAxis - xAxis, (mat.values[15] - mat.values[12]), true);
   // LEFT
-  planes[1] = Plane(wAxis + xAxis, (mat.values[15] + mat.values[12]), true);
+  m_planes[1] = Plane(wAxis + xAxis, (mat.values[15] + mat.values[12]), true);
   // BOTTOM
-  planes[2] = Plane(wAxis + yAxis, (mat.values[15] + mat.values[13]), true);
+  m_planes[2] = Plane(wAxis + yAxis, (mat.values[15] + mat.values[13]), true);
   // TOP
-  planes[3] = Plane(wAxis - yAxis, (mat.values[15] - mat.values[13]), true);
+  m_planes[3] = Plane(wAxis - yAxis, (mat.values[15] - mat.values[13]), true);
   // FAR
-  planes[4] = Plane(wAxis - zAxis, (mat.values[15] - mat.values[14]), true);
+  m_planes[4] = Plane(wAxis - zAxis, (mat.values[15] - mat.values[14]), true);
   // NEAR
-  planes[5] = Plane(wAxis + zAxis, (mat.values[15] + mat.values[14]), true);
+  m_planes[5] = Plane(wAxis + zAxis, (mat.values[15] + mat.values[14]), true);
 }

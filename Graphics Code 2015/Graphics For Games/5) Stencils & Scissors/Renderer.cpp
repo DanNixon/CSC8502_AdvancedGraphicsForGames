@@ -1,20 +1,20 @@
-#include " Renderer .h"
+#include "Renderer.h"
 
-Renderer::Renderer(Window& parent)
+Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
 {
   triangle = Mesh::GenerateTriangle();
-  quad = Mesh::GenerateQuad();
+  quad = Mesh::GenerateSquare();
 
-  currentShader = new Shader(SHADERDIR "TexturedVertex . glsl ", SHADERDIR "StencilFragment.glsl");
+  currentShader = new Shader(SHADERDIR "TexturedVertex.glsl ", SHADERDIR "StencilFragment.glsl");
 
-  if (!currentShader - > LinkProgram())
+  if (!currentShader->LinkProgram())
     return;
 
-  triangle - > SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO,
-                   SOIL_CREATE_NEW_ID, 0));
-  quad - > SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "chessboard.tga", SOIL_LOAD_AUTO,
-               SOIL_CREATE_NEW_ID, 0));
+  triangle->SetTexture(
+      SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+  quad->SetTexture(
+      SOIL_load_OGL_texture(TEXTUREDIR "chessboard.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
   if (!triangle->GetTexture() || !quad->GetTexture())
     return;
@@ -44,18 +44,22 @@ void Renderer::RenderScene()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-  if (usingScissor) {
+  if (usingScissor)
+  {
     glEnable(GL_SCISSOR_TEST);
     glScissor((float)width / 2.5f, (float)height / 2.5f, (float)width / 5.0f, (float)height / 5.0f);
   }
 
-  glUseProgram(currentShader - > GetProgram());
+  glUseProgram(currentShader->GetProgram());
   UpdateShaderMatrices();
 
   glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
 
-  if (usingStencil) {
+  if (usingStencil)
+  {
     glEnable(GL_STENCIL_TEST);
+
+    glStencilMask(0b10101010);
 
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     glStencilFunc(GL_ALWAYS, 2, ~0);
