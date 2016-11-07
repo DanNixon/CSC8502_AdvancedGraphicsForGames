@@ -2,10 +2,13 @@
 
 #include <algorithm>
 
+#include "CubeRobot.h"
+
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
 {
   CubeRobot::CreateCube();
+
   projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
 
   camera = new Camera();
@@ -13,7 +16,7 @@ Renderer::Renderer(Window &parent)
 
   currentShader = new Shader(SHADERDIR "SceneVertex.glsl", SHADERDIR "SceneFragment.glsl");
 
-  quad = Mesh::GenerateQuad();
+  quad = Mesh::GenerateSquare();
   quad->SetTexture(
       SOIL_load_OGL_texture(TEXTUREDIR "stainedglass.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
@@ -66,7 +69,7 @@ void Renderer::BuildNodeLists(SceneNode *from)
     Vector3 dir = from->GetWorldTransform().GetPositionVector() - camera->GetPosition();
     from->SetCameraDistance(Vector3::Dot(dir, dir));
 
-    if (from - > GetColour().w < 1.0f)
+    if (from->GetColour().w < 1.0f)
       transparentNodeList.push_back(from);
     else
       nodeList.push_back(from);
@@ -109,13 +112,13 @@ void Renderer::DrawNode(SceneNode *n)
     glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"),
                 (int)n->GetMesh()->GetTexture());
 
-    n->Draw();
+    n->Draw(*this);
   }
 }
 
 void Renderer::RenderScene()
 {
-  BuildNodeLists(root, msec);
+  BuildNodeLists(root);
   SortNodeLists();
 
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
