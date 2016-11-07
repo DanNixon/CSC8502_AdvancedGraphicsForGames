@@ -1,4 +1,4 @@
-CSC8502 Coursework – 2016/17
+# CSC8502 Coursework – 2016/17
 
 Due: 25th November
 
@@ -26,7 +26,7 @@ features of the scene to a level of high quality. The second part is to
 integrate multiple advanced graphical effects into the scene, while maintaining
 a cinematic framerate.
 
-Coursework part A – standard features:
+## Coursework part A – standard features
 
 This is the list of standard features which must be well implemented and
 integrated into the scene.
@@ -42,7 +42,7 @@ integrated into the scene.
 - Display the framerate being achieved
 - Display the total memory being used
 
-Coursework part B – advanced features:
+## Coursework part B – advanced features
 
 This is a list of ideas for enhancing the scene graphically. You may choose
 features from this list or add your own ideas. The more complex the feature and
@@ -65,7 +65,7 @@ feature.
 - A pool of realistic water which reflects the scene
 - Any other advanced graphical effects
 
-Deliverable items (submitted via NESS)
+## Deliverable items (submitted via NESS)
 
 - Source code (zip file)
 - A document containing at least four screen shots and a link to a Youtube video
@@ -74,15 +74,17 @@ Deliverable items (submitted via NESS)
 
 Demonstrate the program running in the lab to Gary and Richard.
 
+## Marking
+
 Marks Available (50)
 
-Coursework A (25 marks)
+### Coursework A (25 marks)
 
 Implementation of the standard features gains up to 25 marks.
 A “first class” submission consists of these features implemented with
 well-structured code, running at 60fps in full screen on the lab PC.
 
-Coursework B (25 marks)
+### Coursework B (25 marks)
 
 Advanced rendering techniques (the optional extras above) gain up to 25 marks.
 A “first class” submission entails a balanced scene of graphical effects
@@ -90,7 +92,7 @@ including at least four advanced graphical features (well implemented and
 integrated with the standard features), running at a minimum of 60fps in
 full-screen mode. The code must be clearly formatted.
 
-Learning Outcomes
+## Learning Outcomes
 
 - Identify appropriate techniques for rendering graphics in real-time
 - Describe graphical representations mathematically
