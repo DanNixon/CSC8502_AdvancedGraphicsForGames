@@ -64,21 +64,19 @@ higher the mark awarded for that feature.
 - [ ] Weather effects (rain, snow, fog, wind, lightning)
 - [ ] Volcano or geyser eruption
 - [ ] A portal effect
-- Lens-flare
-- A light that casts shadows appropriately (ie from the light’s position in all
+- [ ] Lens-flare
+- [ ] A light that casts shadows appropriately (ie from the light’s position in all
   directions)
+- [ ] A pool of realistic water which reflects the scene
 - Any additional post-processing effect
-- A pool of realistic water which reflects the scene
 - Any other advanced graphical effects
 
 ## Deliverable items (submitted via NESS)
 
 - Source code (zip file)
-- A document containing at least four screen shots and a link to a Youtube video
-  of your coursework running.
-- Deliverable items (demonstration)
-
-Demonstrate the program running in the lab to Gary and Richard.
+- A document containing at least four screen shots and a link to a YouTube video
+  of your coursework running
+- Demonstrate the program running in the lab to Gary and Richard
 
 ## Marking
 
