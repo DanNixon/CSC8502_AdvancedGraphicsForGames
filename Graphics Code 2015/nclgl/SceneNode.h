@@ -10,6 +10,12 @@
 class SceneNode
 {
 public:
+  static bool CompareByCameraDistance(SceneNode *a, SceneNode *b)
+  {
+    return (a - > distanceFromCamera < b->distanceFromCamera) ? true : false;
+  }
+
+public:
   SceneNode(Mesh *m = NULL, Vector4 colour = Vector4(1, 1, 1, 1));
   ~SceneNode(void);
 
@@ -73,6 +79,26 @@ public:
     return children.end();
   }
 
+  inline float GetBoundingRadius() const
+  {
+    return boundingRadius;
+  }
+
+  inline void SetBoundingRadius(float f)
+  {
+    boundingRadius = f;
+  }
+
+  inline float GetCameraDistance() const
+  {
+    return distanceFromCamera;
+  }
+
+  inline void SetCameraDistance(float f)
+  {
+    distanceFromCamera = f;
+  }
+
 protected:
   SceneNode *parent;
   Mesh *mesh;
@@ -81,4 +107,6 @@ protected:
   Vector3 modelScale;
   Vector4 colour;
   std::vector<SceneNode *> children;
+  float distanceFromCamera;
+  float boundingRadius;
 };
