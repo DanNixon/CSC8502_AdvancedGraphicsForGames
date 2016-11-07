@@ -26,10 +26,9 @@ Remember that all such external material must be referenced and attributed
 properly.
 
 The coursework consists of two parts. The first part is to develop the standard
-features of the scene to a level of high quality.
-
-The second part is to integrate multiple advanced graphical effects into the
-scene, while maintaining a cinematic framerate.
+features of the scene to a level of high quality. The second part is to integrate
+multiple advanced graphical effects into the scene, while maintaining a cinematic
+framerate.
 
 ## Coursework part A – standard features
 
