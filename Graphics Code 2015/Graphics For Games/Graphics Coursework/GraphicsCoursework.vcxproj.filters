@@ -1,2 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="MeshNode.cpp" />
+    <ClCompile Include="PerformanceMonitorNode.cpp" />
+    <ClCompile Include="PositionableCamera.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderNode.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="MeshNode.h" />
+    <ClInclude Include="PerformanceMonitorNode.h" />
+    <ClInclude Include="PositionableCamera.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="SceneNode.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderNode.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Scene Graph">
+      <UniqueIdentifier>{e5e67322-9daf-4616-9f10-2ebef697b787}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -69,6 +69,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MeshNode.cpp" />
+    <ClCompile Include="PerformanceMonitorNode.cpp" />
+    <ClCompile Include="PositionableCamera.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderNode.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="MeshNode.h" />
+    <ClInclude Include="PerformanceMonitorNode.h" />
+    <ClInclude Include="PositionableCamera.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="SceneNode.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
