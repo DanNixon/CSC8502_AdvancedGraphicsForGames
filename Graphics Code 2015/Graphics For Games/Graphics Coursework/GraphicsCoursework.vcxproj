@@ -70,6 +70,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshNode.cpp" />
     <ClCompile Include="PerformanceMonitorNode.cpp" />
@@ -82,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="PerformanceMonitorNode.h" />
     <ClInclude Include="PositionableCamera.h" />

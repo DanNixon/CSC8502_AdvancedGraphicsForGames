@@ -11,6 +11,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderNode.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="ShaderNode.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shaders.h" />
+    <ClInclude Include="Light.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Scene Graph">

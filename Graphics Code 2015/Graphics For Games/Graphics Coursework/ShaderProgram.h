@@ -23,14 +23,6 @@ public:
   ShaderProgram();
   ~ShaderProgram();
 
-  /**
-   * @copydoc IMemoryManaged::releaseOrder
-   */
-  virtual int releaseOrder() const
-  {
-    return 5;
-  }
-
   bool addShader(Shader *s);
 
   bool link();

@@ -18,14 +18,6 @@ public:
   virtual ~Shader();
 
   /**
-   * @copydoc IMemoryManaged::releaseOrder
-   */
-  virtual int releaseOrder() const
-  {
-    return 6;
-  }
-
-  /**
    * @brief Returns the type of shader (shader stage).
    * @return Shader stage
    */
