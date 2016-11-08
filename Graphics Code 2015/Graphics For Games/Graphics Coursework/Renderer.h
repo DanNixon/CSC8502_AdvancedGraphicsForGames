@@ -1,6 +1,17 @@
 #pragma once
 
-class Renderer
+#include "../../nclgl/OGLRenderer.h"
+
+class SceneNode;
+
+class Renderer : public OGLRenderer
 {
-  // TODO
+public:
+  Renderer(Window &parent);
+  virtual ~Renderer();
+
+  virtual void RenderScene();
+
+protected:
+  SceneNode *m_sceneGraphRoot;
 };

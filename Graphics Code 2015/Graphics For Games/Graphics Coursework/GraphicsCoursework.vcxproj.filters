@@ -26,9 +26,4 @@
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="Light.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Scene Graph">
-      <UniqueIdentifier>{e5e67322-9daf-4616-9f10-2ebef697b787}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
 </Project>

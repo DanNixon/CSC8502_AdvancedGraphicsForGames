@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main Graphics Tutorials", "Main Graphics Tutorials", "{26FF1E94-61DD-4E24-A071-50FA11CAC038}"
 EndProject
@@ -76,9 +76,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra Graphics Tutorials", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Extra - Texture Atlas", "Extra - Texture Atlas\Extra - Texture Atlas.vcxproj", "{5E152084-769D-459E-B59A-C8F05E165612}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphics Coursework", "Graphics Coursework", "{B12FA29E-1613-4E55-9C1D-B7DCD8A760D8}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsCoursework", "Graphics Coursework\GraphicsCoursework.vcxproj", "{909A2CFC-6E55-4776-8B60-93B44103A9CF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{98D6B51B-CB0A-4389-ADC6-24082B967C3F} = {98D6B51B-CB0A-4389-ADC6-24082B967C3F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -199,6 +200,5 @@ Global
 		{5E5378FE-275C-4B32-935D-22E7A4AD5AA3} = {26FF1E94-61DD-4E24-A071-50FA11CAC038}
 		{55C75BC7-89C2-4B38-8118-CF8C26426E7A} = {26FF1E94-61DD-4E24-A071-50FA11CAC038}
 		{5E152084-769D-459E-B59A-C8F05E165612} = {B1D006B4-76BF-41B1-8DE5-1828E5BC4E74}
-		{909A2CFC-6E55-4776-8B60-93B44103A9CF} = {B12FA29E-1613-4E55-9C1D-B7DCD8A760D8}
 	EndGlobalSection
 EndGlobal
