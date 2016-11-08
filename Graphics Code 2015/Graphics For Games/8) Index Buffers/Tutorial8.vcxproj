@@ -70,7 +70,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HeightMap.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="tutorial8.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HeightMap.h" />
+    <ClInclude Include="Renderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

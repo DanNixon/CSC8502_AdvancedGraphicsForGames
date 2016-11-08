@@ -204,17 +204,17 @@ bool	OBJMesh::LoadOBJMesh(std::string filename)	{
 
 			m->SetTexturesFromMTL(sm->mtlSrc, sm->mtlType);
 
-			m->numVertices	= sm->vertIndices.size();
+			m->m_numVertices	= sm->vertIndices.size();
 
-			m->vertices		= new Vector3[m->numVertices];
+			m->m_vertices		= new Vector3[m->m_numVertices];
 			for(unsigned int j = 0; j < sm->vertIndices.size(); ++j) {
-				m->vertices[j] = inputVertices[sm->vertIndices[j]-1];
+				m->m_vertices[j] = inputVertices[sm->vertIndices[j]-1];
 			}
 
 			if(!sm->texIndices.empty())	{
-				m->textureCoords	= new Vector2[m->numVertices];
+				m->m_textureCoords	= new Vector2[m->m_numVertices];
 				for(unsigned int j = 0; j < sm->texIndices.size(); ++j) {
-					m->textureCoords[j] = inputTexCoords[sm->texIndices[j]-1];
+					m->m_textureCoords[j] = inputTexCoords[sm->texIndices[j]-1];
 				}
 			}
 
@@ -270,7 +270,7 @@ void	OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType) {
 
 	if(i != materials.end()) {
 		if(!i->second.diffuse.empty())	{
-			texture = i->second.diffuseNum;
+			m_texture = i->second.diffuseNum;
 		}
 #ifdef OBJ_USE_TANGENTS_BUMPMAPS
 		if(!i->second.bump.empty())	{

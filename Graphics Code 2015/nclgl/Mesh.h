@@ -7,6 +7,7 @@ enum MeshBuffer
   VERTEX_BUFFER,
   COLOUR_BUFFER,
   TEXTURE_BUFFER,
+  INDEX_BUFFER,
   MAX_BUFFER
 };
 
@@ -23,7 +24,7 @@ public:
 
   inline size_t NumVertices() const
   {
-    return numVertices;
+    return m_numVertices;
   }
 
   virtual void Draw();
@@ -33,25 +34,29 @@ public:
 
   inline GLuint GetTexture()
   {
-    return texture;
+    return m_texture;
   }
 
   inline void SetTexture(GLuint t)
   {
-    texture = t;
+    m_texture = t;
   }
 
 protected:
   void BufferData();
 
 protected:
-  GLuint arrayObject;
-  GLuint bufferObject[MAX_BUFFER];
-  GLuint numVertices;
-  GLuint type;
-  GLuint texture;
+  GLuint m_arrayObject;
+  GLuint m_bufferObjects[MAX_BUFFER];
 
-  Vector3 *vertices;
-  Vector4 *colours;
-  Vector2 *textureCoords;
+  GLuint m_type;
+  GLuint m_numVertices;
+  GLuint m_numIndices;
+  
+  GLuint m_texture;
+
+  Vector3 *m_vertices;
+  Vector4 *m_colours;
+  Vector2 *m_textureCoords;
+  unsigned int *m_indices;
 };

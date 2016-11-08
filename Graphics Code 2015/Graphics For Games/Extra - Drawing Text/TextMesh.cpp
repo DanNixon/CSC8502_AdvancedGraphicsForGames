@@ -16,13 +16,13 @@ TextMesh::TextMesh(const std::string &text, const Font &font) :  font(font)	{
 
 	//Each quad will be 4 points, drawn using a triangle strip
 	//just like the GenerateQuad function from early on!
-	type = GL_TRIANGLE_STRIP;
+	m_type = GL_TRIANGLE_STRIP;
 
 	//Each character has 4 vertices...
-	numVertices = text.length()*4;
+	m_numVertices = text.length()*4;
 
-	vertices	  = new Vector3[numVertices];
-	textureCoords = new Vector2[numVertices];
+	m_vertices	  = new Vector3[m_numVertices];
+	m_textureCoords = new Vector2[m_numVertices];
 
 	//Now to work out how much of the texture each character
 	//of the font takes up. Remember, texture coordinates
@@ -52,17 +52,17 @@ TextMesh::TextMesh(const std::string &text, const Font &font) :  font(font)	{
 		float x = (float)(c%font.xCount);
 		float y = (float)((c / font.xCount)%font.yCount);
 
-		vertices[(i*4)  ] = Vector3((float)i  ,  0,0);
-		vertices[(i*4)+1] = Vector3((float)i  , -1,0);
-		vertices[(i*4)+2] = Vector3((float)i+1,  0,0);
-		vertices[(i*4)+3] = Vector3((float)i+1, -1,0);
+		m_vertices[(i*4)  ] = Vector3((float)i  ,  0,0);
+		m_vertices[(i*4)+1] = Vector3((float)i  , -1,0);
+		m_vertices[(i*4)+2] = Vector3((float)i+1,  0,0);
+		m_vertices[(i*4)+3] = Vector3((float)i+1, -1,0);
 		
 		//Now we can simply use our worked out font character sizes
 		//to generate the correct texture coordinates for each glyph...
-		textureCoords[(i*4)  ] = Vector2(x*texelWidth     , (y)*texelHeight);
-		textureCoords[(i*4)+1] = Vector2(x*texelWidth	  , (y+1) * texelHeight);
-		textureCoords[(i*4)+2] = Vector2((x+1)*texelWidth , (y)*texelHeight);
-		textureCoords[(i*4)+3] = Vector2((x+1)*texelWidth , (y+1) * texelHeight);	
+		m_textureCoords[(i*4)  ] = Vector2(x*texelWidth     , (y)*texelHeight);
+		m_textureCoords[(i*4)+1] = Vector2(x*texelWidth	  , (y+1) * texelHeight);
+		m_textureCoords[(i*4)+2] = Vector2((x+1)*texelWidth , (y)*texelHeight);
+		m_textureCoords[(i*4)+3] = Vector2((x+1)*texelWidth , (y+1) * texelHeight);	
 	}
 	//Lastly, we buffer the data, just like a 'normal' mesh!
 	BufferData();
@@ -76,5 +76,5 @@ Draw instead to dereference texture every frame, but this way is slightly
 more elegant)
 */
 TextMesh::~TextMesh(void)	{
-	texture = 0;
+	m_texture = 0;
 }

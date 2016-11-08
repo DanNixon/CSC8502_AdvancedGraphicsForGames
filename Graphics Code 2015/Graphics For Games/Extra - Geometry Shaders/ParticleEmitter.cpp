@@ -28,7 +28,7 @@ ParticleEmitter::ParticleEmitter(void)	{
 	//texture = SOIL_load_OGL_texture("../Textures/particle.tga",
 	//SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID,SOIL_FLAG_COMPRESS_TO_DXT);
 
-	texture = SOIL_load_OGL_texture(TEXTUREDIR"nyan.png",
+	m_texture = SOIL_load_OGL_texture(TEXTUREDIR"nyan.png",
 		SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID,SOIL_FLAG_COMPRESS_TO_DXT);
 }
 
@@ -146,30 +146,30 @@ allocate some new graphics memory!
 void	ParticleEmitter::ResizeArrays() {
 	//Delete the system memory, as it is of the wrong size now...
 	//yes, this does mean we're keeping particle info in THREE places...
-	delete[] vertices;
-	delete[] colours;
+	delete[] m_vertices;
+	delete[] m_colours;
 
 	//Tell OpenGL that we can delete our old VBOs
-	glDeleteBuffers(1, &bufferObject[VERTEX_BUFFER]);
-	glDeleteBuffers(1, &bufferObject[COLOUR_BUFFER]);
+	glDeleteBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
+	glDeleteBuffers(1, &m_bufferObjects[COLOUR_BUFFER]);
 
 
 
 
 	//Make some new system memory
-	vertices = new Vector3[particles.size()];
-	colours  = new Vector4[particles.size()];
+	m_vertices = new Vector3[particles.size()];
+	m_colours  = new Vector4[particles.size()];
 
 
 	//Make some new VBO space in memory. Note how we don't actually upload any
 	//data to the graphics card here! We just 'new' the memory for now.
-	glGenBuffers(1, &bufferObject[VERTEX_BUFFER]);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObject[VERTEX_BUFFER]);
+	glGenBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
+	glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
 	glBufferData(GL_ARRAY_BUFFER, particles.size()*sizeof(Vector3), 0, GL_DYNAMIC_DRAW);
 
 
-	glGenBuffers(1, &bufferObject[COLOUR_BUFFER]);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObject[COLOUR_BUFFER]);
+	glGenBuffers(1, &m_bufferObjects[COLOUR_BUFFER]);
+	glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[COLOUR_BUFFER]);
 	glBufferData(GL_ARRAY_BUFFER, particles.size()*sizeof(Vector4), 0, GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);	//Done with our buffers...
@@ -188,21 +188,21 @@ and quicker than faffing with mapping and unmapping buffers!
 void ParticleEmitter::Draw()	{
 	//Get 2 contiguous sections of memory full of our particle info
 	for(unsigned int i = 0; i < particles.size(); ++i) {
-		vertices[i] = particles.at(i)->position;
-		colours[i]  = particles.at(i)->colour;
+		m_vertices[i] = particles.at(i)->position;
+		m_colours[i]  = particles.at(i)->colour;
 	}
 
-	glBindVertexArray(arrayObject);
+	glBindVertexArray(m_arrayObject);
 
 	//Bind our vertex data, and update its data with that of the vertices array
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObject[VERTEX_BUFFER]);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, particles.size()*sizeof(Vector3), (void*)vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, particles.size()*sizeof(Vector3), (void*)m_vertices);
 	glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3), 0);	//Tell the VAO we have positions...
 	glEnableVertexAttribArray(VERTEX_BUFFER);	//Binds this buffer to the VAO
 	
 	//And now do the same for colours...
-	glBindBuffer(GL_ARRAY_BUFFER, bufferObject[COLOUR_BUFFER]);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, particles.size()*sizeof(Vector4), (void*)colours);
+	glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[COLOUR_BUFFER]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, particles.size()*sizeof(Vector4), (void*)m_colours);
 	glVertexAttribPointer(COLOUR_BUFFER, 4, GL_FLOAT, GL_FALSE, sizeof(Vector4), 0);
 	glEnableVertexAttribArray(COLOUR_BUFFER);
 	
@@ -215,7 +215,7 @@ void ParticleEmitter::Draw()	{
 
 	//And now do our usual Drawing stuff...
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glDrawArrays(GL_POINTS,  0, particles.size());	// draw ordered list of vertices
 	glBindTexture(GL_TEXTURE_2D, 0);
 
