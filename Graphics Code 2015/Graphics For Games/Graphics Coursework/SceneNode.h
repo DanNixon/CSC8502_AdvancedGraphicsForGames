@@ -4,8 +4,20 @@
 
 #include "../nclgl/Matrix4.h"
 
+#include "ShaderProgram.h"
+
 namespace GraphicsCoursework
 {
+struct SceneNodeRenderData
+{
+  SceneNodeRenderData()
+    : program(nullptr)
+  {
+  }
+
+  ShaderProgram *program;
+};
+
 class SceneNode
 {
 public:
@@ -48,5 +60,7 @@ protected:
   Matrix4 m_localTransform;
   Matrix4 m_worldTransform;
   std::vector<SceneNode *> m_children;
+
+  SceneNodeRenderData m_renderData;
 };
 }

@@ -3,9 +3,16 @@
 #include "../../nclgl/OGLRenderer.h"
 
 #include "SceneNode.h"
+#include "Camera.h"
 
 namespace GraphicsCoursework
 {
+struct RenderList
+{
+  Camera * camera;
+  std::vector<SceneNode *> nodes;
+};
+
 class Renderer : public OGLRenderer
 {
 public:
@@ -16,6 +23,8 @@ public:
   {
     return m_sceneGraphRoot;
   }
+
+  void UpdateRenderLists();
 
   virtual void RenderScene();
 
