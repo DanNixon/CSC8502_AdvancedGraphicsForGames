@@ -1,3 +1,6 @@
 #include "PositionableCamera.h"
 
-// TODO
+namespace GraphicsCoursework
+{
+  // TODO
+}

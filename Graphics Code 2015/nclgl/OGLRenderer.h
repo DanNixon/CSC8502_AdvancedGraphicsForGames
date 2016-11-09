@@ -37,7 +37,6 @@ _-_-_-_-_-_-_-""  ""
 
 using std::vector;
 
-
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glew32.lib")
 #pragma comment(lib, "SOIL.lib")

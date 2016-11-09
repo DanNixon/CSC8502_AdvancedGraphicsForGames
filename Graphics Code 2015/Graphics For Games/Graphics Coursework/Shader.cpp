@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 
+namespace GraphicsCoursework
+{
 /**
  * @brief Creates a new shader.
  * @param filename GLSL source file
@@ -14,7 +16,7 @@ Shader::Shader(std::string filename, GLuint stage)
     : m_valid(false)
     , m_stage(stage)
 {
-  m_valid = compile(filename);
+  m_valid = Compile(filename);
 }
 
 /**
@@ -31,7 +33,7 @@ Shader::~Shader(void)
  * @param into [out] String to store contents in
  * @return True on success, false if file is not found
  */
-bool Shader::loadFile(std::string filename, std::string &into)
+bool Shader::LoadFile(std::string filename, std::string &into)
 {
   std::ifstream file;
 
@@ -55,10 +57,10 @@ bool Shader::loadFile(std::string filename, std::string &into)
  * @param filename GLSL source file
  * @return True for successful compilation
  */
-bool Shader::compile(std::string filename)
+bool Shader::Compile(std::string filename)
 {
   std::string load;
-  if (!loadFile(filename, load))
+  if (!LoadFile(filename, load))
     return false;
 
   m_shaderObject = glCreateShader(m_stage);
@@ -78,4 +80,5 @@ bool Shader::compile(std::string filename)
   }
 
   return success;
+}
 }

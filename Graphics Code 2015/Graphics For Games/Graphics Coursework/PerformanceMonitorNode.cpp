@@ -1,3 +1,6 @@
 #include "PerformanceMonitorNode.h"
 
-// TODO
+namespace GraphicsCoursework
+{
+  // TODO
+}

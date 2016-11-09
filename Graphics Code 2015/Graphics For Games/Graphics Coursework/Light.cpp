@@ -1,3 +1,6 @@
 #include "Light.h"
 
-// TOOD
+namespace GraphicsCoursework
+{
+  // TODO
+}

@@ -1,0 +1,10 @@
+#pragma once
+
+enum Buffer
+{
+  VERTEX_BUFFER,
+  COLOUR_BUFFER,
+  TEXTURE_BUFFER,
+  INDEX_BUFFER,
+  MAX_BUFFER
+};

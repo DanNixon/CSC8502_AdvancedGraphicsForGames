@@ -2,9 +2,15 @@
 
 #include <iostream>
 
-#include "../../NCLGL/Window.h"
+#include "../../nclgl/Window.h"
 
+#include "MeshNode.h"
 #include "Renderer.h"
+#include "ShaderNode.h"
+#include "ShaderProgram.h"
+#include "Shaders.h"
+
+using namespace GraphicsCoursework;
 
 int main()
 {
@@ -16,9 +22,18 @@ int main()
   if (!r.HasInitialised())
     return 1;
 
+  Mesh *tri = Mesh::GenerateTriangle();
+  tri->SetTexture(
+      SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+
+  r.Root()->AddChild(new ShaderNode(
+      "shader1", new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"),
+                                    new FragmentShader(SHADERDIR "TexturedFragment.glsl")})));
+
+  r.Root()->Child("shader1")->AddChild(new MeshNode("tri1", tri));
+
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
-    // TODO
     r.RenderScene();
   }
 

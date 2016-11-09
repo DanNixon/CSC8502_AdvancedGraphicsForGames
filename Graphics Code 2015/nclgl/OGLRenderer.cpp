@@ -241,7 +241,8 @@ void OGLRenderer::UpdateShaderMatrices()	{
 void OGLRenderer::SetCurrentShader(Shader*s) {
 	currentShader = s;
 
-	glUseProgram(s->GetProgram());
+  if (currentShader != nullptr)
+  	glUseProgram(s->GetProgram());
 }
 
 void OGLRenderer::SetTextureRepeating( GLuint target, bool repeating )	{

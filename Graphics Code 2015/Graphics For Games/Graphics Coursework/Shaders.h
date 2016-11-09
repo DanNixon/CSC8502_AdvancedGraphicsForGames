@@ -4,6 +4,8 @@
 
 #include "Shader.h"
 
+namespace GraphicsCoursework
+{
 /**
  * @class VertexShader
  * @brief Encapsulation for a vertex shader.
@@ -93,3 +95,4 @@ public:
   {
   }
 };
+}

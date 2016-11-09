@@ -6,7 +6,7 @@ Renderer::Renderer(Window &parent)
   triangle = Mesh::GenerateTriangle();
   quad = Mesh::GenerateSquare();
 
-  currentShader = new Shader(SHADERDIR "TexturedVertex.glsl ", SHADERDIR "StencilFragment.glsl");
+  currentShader = new Shader(SHADERDIR "TexturedVertex.glsl", SHADERDIR "StencilFragment.glsl");
 
   if (!currentShader->LinkProgram())
     return;

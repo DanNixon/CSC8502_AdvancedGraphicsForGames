@@ -1,21 +1,30 @@
 #include "Renderer.h"
 
+namespace GraphicsCoursework
+{
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
-    , m_sceneGraphRoot(nullptr)
+    , m_sceneGraphRoot(new SceneNode("root"))
 {
-  // TODO
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
 
   this->init = true;
 }
 
 Renderer::~Renderer()
 {
-  if (m_sceneGraphRoot != nullptr)
-    delete m_sceneGraphRoot;
+  delete m_sceneGraphRoot;
 }
 
 void Renderer::RenderScene()
 {
-  // TODO
+  glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  m_sceneGraphRoot->Render();
+
+  SwapBuffers();
+}
 }

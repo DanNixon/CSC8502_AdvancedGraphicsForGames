@@ -1,3 +1,6 @@
 #include "Camera.h"
 
-// TODO
+namespace GraphicsCoursework
+{
+  // TODO
+}

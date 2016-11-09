@@ -1,15 +1,7 @@
 #pragma once
 
 #include "OGLRenderer.h"
-
-enum MeshBuffer
-{
-  VERTEX_BUFFER,
-  COLOUR_BUFFER,
-  TEXTURE_BUFFER,
-  INDEX_BUFFER,
-  MAX_BUFFER
-};
+#include "Buffer.h"
 
 class Mesh
 {
@@ -29,8 +21,8 @@ public:
 
   virtual void Draw();
 
-  virtual void *GetBuffer(MeshBuffer b, GLenum mode);
-  virtual bool ReturnBuffer(MeshBuffer b);
+  virtual void *GetBuffer(Buffer b, GLenum mode);
+  virtual bool ReturnBuffer(Buffer b);
 
   inline GLuint GetTexture()
   {

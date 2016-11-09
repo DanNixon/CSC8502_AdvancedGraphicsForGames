@@ -6,6 +6,8 @@
 
 #include "GL/glew.h"
 
+namespace GraphicsCoursework
+{
 /**
  * @class Shader
  * @brief Encapsulation for a single OpenGL shader.
@@ -21,7 +23,7 @@ public:
    * @brief Returns the type of shader (shader stage).
    * @return Shader stage
    */
-  GLuint stage() const
+  GLuint Stage() const
   {
     return m_stage;
   }
@@ -30,7 +32,7 @@ public:
    * @brief Returns the GL shader object.
    * @return Shader object
    */
-  GLuint object() const
+  GLuint Object() const
   {
     return m_shaderObject;
   }
@@ -39,17 +41,19 @@ public:
    * @brief Checks if the shader has been compiled.
    * @return True if shader is valid
    */
-  bool valid() const
+  bool Valid() const
   {
     return m_valid;
   }
 
 private:
-  bool loadFile(std::string filename, std::string &into);
-  bool compile(std::string filename);
+  bool LoadFile(std::string filename, std::string &into);
+  bool Compile(std::string filename);
 
+private:
   GLuint m_stage;        //!< Shader stage
   GLuint m_shaderObject; //!< GL shader object
 
   bool m_valid; //!< Flag indicating validity of shader
 };
+}

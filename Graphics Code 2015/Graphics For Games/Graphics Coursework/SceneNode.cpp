@@ -1,5 +1,9 @@
 #include "SceneNode.h"
 
+#include <algorithm>
+
+namespace GraphicsCoursework
+{
 SceneNode::SceneNode(const std::string &name)
     : m_name(name)
     , m_parent(nullptr)
@@ -39,6 +43,29 @@ bool SceneNode::RemoveChild(SceneNode *child)
   return retVal;
 }
 
+bool SceneNode::RemoveChild(const std::string & name)
+{
+  bool retVal = false;
+
+  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode * n) {return n->Name() == name; });
+  if (it != m_children.end())
+  {
+    (*it)->m_parent = nullptr;
+    (*it)->m_worldTransform.ToIdentity();
+    m_children.erase(it);
+
+    retVal = true;
+  }
+
+  return retVal;
+}
+
+SceneNode * SceneNode::Child(const std::string & name)
+{
+  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode * n) {return n->Name() == name; });
+  return (it == m_children.end() ? nullptr : *it);
+}
+
 void SceneNode::UpdateTransformations()
 {
   if (m_parent == nullptr)
@@ -54,4 +81,5 @@ void SceneNode::Render()
 {
   for (auto it = m_children.begin(); it != m_children.end(); ++it)
     (*it)->Render();
+}
 }

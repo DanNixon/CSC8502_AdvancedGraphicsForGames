@@ -4,6 +4,8 @@
 
 #include "../nclgl/Matrix4.h"
 
+namespace GraphicsCoursework
+{
 class SceneNode
 {
 public:
@@ -17,6 +19,9 @@ public:
 
   void AddChild(SceneNode *child);
   bool RemoveChild(SceneNode *child);
+  bool RemoveChild(const std::string &name);
+
+  SceneNode * Child(const std::string &name);
 
   inline void SetLocalTransformation(const Matrix4 &t)
   {
@@ -44,3 +49,4 @@ protected:
   Matrix4 m_worldTransform;
   std::vector<SceneNode *> m_children;
 };
+}

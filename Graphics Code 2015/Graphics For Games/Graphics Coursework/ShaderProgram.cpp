@@ -2,8 +2,14 @@
 
 #include "ShaderProgram.h"
 
+#include <iostream>
+
+#include "../nclgl/Buffer.h"
+
 #include "Shader.h"
 
+namespace GraphicsCoursework
+{
 /**
  * @brief Creates a new, empty shader program.
  */
@@ -16,6 +22,20 @@ ShaderProgram::ShaderProgram()
   m_program = glCreateProgram();
 }
 
+ShaderProgram::ShaderProgram(std::vector<Shader *> shaders)
+{
+  size_t i = 0;
+
+  for (auto it = shaders.begin(); it != shaders.end(); ++it)
+    m_shaders[i++] = *it;
+
+  for (; i < NUM_SHADERS; i++)
+    m_shaders[i] = nullptr;
+
+  m_program = glCreateProgram();
+  Link();
+}
+
 /**
  * @brief Destroys the shader program, deteching all shaders and deleting the
  *        program.
@@ -25,7 +45,7 @@ ShaderProgram::~ShaderProgram()
   for (size_t i = 0; i < NUM_SHADERS; i++)
   {
     if (m_shaders[i] != nullptr)
-      glDetachShader(m_program, m_shaders[i]->object());
+      glDetachShader(m_program, m_shaders[i]->Object());
   }
 
   glDeleteProgram(m_program);
@@ -36,7 +56,7 @@ ShaderProgram::~ShaderProgram()
  * @param s Shader to add
  * @return True if the shader was added
  */
-bool ShaderProgram::addShader(Shader *s)
+bool ShaderProgram::AddShader(Shader *s)
 {
   for (size_t i = 0; i < NUM_SHADERS; i++)
   {
@@ -54,26 +74,25 @@ bool ShaderProgram::addShader(Shader *s)
  * @brief Links the shader program.
  * @return True if the program was successfully linked
  */
-bool ShaderProgram::link()
+bool ShaderProgram::Link()
 {
   if (m_valid)
     return false;
 
-  // TODO
-  //glBindAttribLocation(m_program, VERTEX_BUFFER, "position");
-  //glBindAttribLocation(m_program, COLOUR_BUFFER, "colour");
-  //glBindAttribLocation(m_program, NORMAL_BUFFER, "normal");
-  //glBindAttribLocation(m_program, TANGENT_BUFFER, "tangent");
-  //glBindAttribLocation(m_program, TEXTURE_BUFFER, "texCoord");
+  glBindAttribLocation(m_program, VERTEX_BUFFER, "position");
+  glBindAttribLocation(m_program, COLOUR_BUFFER, "colour");
+  glBindAttribLocation(m_program, TEXTURE_BUFFER, "texCoord");
+  // glBindAttribLocation(m_program, NORMAL_BUFFER, "normal");
+  // glBindAttribLocation(m_program, TANGENT_BUFFER, "tangent");
 
   for (size_t i = 0; i < NUM_SHADERS; i++)
   {
     if (m_shaders[i] != nullptr)
     {
-      if (!m_shaders[i]->valid())
+      if (!m_shaders[i]->Valid())
         return false;
 
-      glAttachShader(m_program, m_shaders[i]->object());
+      glAttachShader(m_program, m_shaders[i]->Object());
     }
   }
 
@@ -84,8 +103,9 @@ bool ShaderProgram::link()
 
   if (status == GL_FALSE)
   {
-    char error[2048];
-    glGetProgramInfoLog(m_program, sizeof(error), nullptr, error);
+    char errorMsg[2048];
+    glGetProgramInfoLog(m_program, sizeof(errorMsg), nullptr, errorMsg);
+    std::cerr << errorMsg << '\n';
     return false;
   }
 
@@ -95,7 +115,9 @@ bool ShaderProgram::link()
   {
     char errorMsg[2048];
     glGetInfoLogARB(m_program, sizeof(errorMsg), nullptr, errorMsg);
+    std::cerr << errorMsg << '\n';
   }
 
   return m_valid;
+}
 }

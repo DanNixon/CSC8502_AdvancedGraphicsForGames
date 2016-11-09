@@ -139,12 +139,12 @@ void Mesh::Draw()
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void *Mesh::GetBuffer(MeshBuffer b, GLenum mode)
+void *Mesh::GetBuffer(Buffer b, GLenum mode)
 {
   return glMapBuffer(m_bufferObjects[b], mode);
 }
 
-bool Mesh::ReturnBuffer(MeshBuffer b)
+bool Mesh::ReturnBuffer(Buffer b)
 {
   return glUnmapBuffer(m_bufferObjects[b]) == GL_TRUE;
 }
