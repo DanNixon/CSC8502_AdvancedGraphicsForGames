@@ -5,43 +5,43 @@
 
 namespace GraphicsCoursework
 {
-  CameraSelectorNode::CameraSelectorNode(const std::string & name)
+CameraSelectorNode::CameraSelectorNode(const std::string &name)
     : SceneNode(name)
     , m_camera(nullptr)
+{
+}
+
+CameraSelectorNode::~CameraSelectorNode()
+{
+}
+
+void CameraSelectorNode::SetCamera(const std::string &cameraName)
+{
+  if (m_renderer == nullptr)
   {
+    m_camera = nullptr;
+    return;
   }
 
-  CameraSelectorNode::~CameraSelectorNode()
-  {
-  }
+  m_camera = dynamic_cast<CameraNode *>(m_renderer->Root()->FindFirstChildByName(cameraName));
 
-  void CameraSelectorNode::SetCamera(const std::string & cameraName)
-  {
-    if (m_renderer == nullptr)
-    {
-      m_camera = nullptr;
-      return;
-    }
+  // Update active flag to account for different camera
+  SetActive(m_active);
+}
 
-    m_camera = dynamic_cast<CameraNode *>(m_renderer->Root()->FindFirstChildByName(cameraName));
+void CameraSelectorNode::SetActive(bool active)
+{
+  m_active = active && m_camera != nullptr;
+}
 
-    // Update active flag to account for different camera
-    SetActive(m_active);
-  }
+void CameraSelectorNode::Render(RenderState &state)
+{
+  if (m_active)
+    state.viewMatrix = m_camera->ViewMatrix();
 
-  void CameraSelectorNode::SetActive(bool active)
-  {
-    m_active = active && m_camera != nullptr;
-  }
+  SceneNode::Render(state);
 
-  void CameraSelectorNode::Render(RenderState & state)
-  {
-    if (m_active)
-      state.viewMatrix = m_camera->ViewMatrix();
-
-    SceneNode::Render(state);
-
-    if (m_active)
-      state.viewMatrix.ToIdentity();
-  }
+  if (m_active)
+    state.viewMatrix.ToIdentity();
+}
 }

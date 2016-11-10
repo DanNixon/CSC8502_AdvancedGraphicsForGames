@@ -22,7 +22,7 @@ void ShaderNode::SetActive(bool active)
   m_active = active && m_program != nullptr && m_program->Valid();
 }
 
-void ShaderNode::Render(RenderState & state)
+void ShaderNode::Render(RenderState &state)
 {
   GLint prevProgram = 0;
 
@@ -32,8 +32,10 @@ void ShaderNode::Render(RenderState & state)
     glUseProgram(m_program->Program());
     state.shader = m_program;
 
-    glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "viewMatrix"), 1, false, (float*)&state.viewMatrix);
-    glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "projMatrix"), 1, false, (float*)&state.projectionMatrix);
+    glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "viewMatrix"), 1, false,
+                       (float *)&state.viewMatrix);
+    glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "projMatrix"), 1, false,
+                       (float *)&state.projectionMatrix);
   }
 
   SceneNode::Render(state);

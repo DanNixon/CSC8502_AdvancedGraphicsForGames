@@ -4,22 +4,21 @@
 
 namespace GraphicsCoursework
 {
-  CameraNode::CameraNode(const std::string &name)
+CameraNode::CameraNode(const std::string &name)
     : SceneNode(name)
     , m_yawAngle(0.0f)
     , m_pitchAngle(0.0f)
-  {
-  }
+{
+}
 
-  CameraNode::~CameraNode()
-  {
-  }
+CameraNode::~CameraNode()
+{
+}
 
-  Matrix4 CameraNode::ViewMatrix() const
-  {
-    return
-      Matrix4::Rotation(-m_pitchAngle, Vector3(1, 0, 0)) *
-      Matrix4::Rotation(-m_yawAngle, Vector3(0, 1, 0)) *
-      Matrix4::Translation(-m_worldTransform.GetPositionVector());
-  }
+Matrix4 CameraNode::ViewMatrix() const
+{
+  return Matrix4::Rotation(-m_pitchAngle, Vector3(1, 0, 0)) *
+         Matrix4::Rotation(-m_yawAngle, Vector3(0, 1, 0)) *
+         Matrix4::Translation(-m_worldTransform.GetPositionVector());
+}
 }

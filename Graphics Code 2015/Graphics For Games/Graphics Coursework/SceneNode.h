@@ -36,8 +36,8 @@ public:
   bool RemoveChild(SceneNode *child);
   bool RemoveChild(const std::string &name);
 
-  SceneNode * Child(const std::string &name);
-  SceneNode * FindFirstChildByName(const std::string &name);
+  SceneNode *Child(const std::string &name);
+  SceneNode *FindFirstChildByName(const std::string &name);
 
   virtual void SetLocalTransformation(const Matrix4 &t)
   {
@@ -56,7 +56,7 @@ public:
 
   void UpdateTransformations();
 
-  virtual void Render(RenderState & state);
+  virtual void Render(RenderState &state);
 
 protected:
   const std::string m_name;

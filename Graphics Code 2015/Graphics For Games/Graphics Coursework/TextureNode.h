@@ -9,7 +9,7 @@
 
 namespace GraphicsCoursework
 {
-//class Texture;
+// class Texture;
 
 struct TextureMapping
 {
@@ -23,7 +23,7 @@ struct TextureMapping
     texture->UnBindFromShader(program, uniformName, textureBuffer);
   }
 
-  Texture * texture;
+  Texture *texture;
   std::string uniformName;
   GLuint textureBuffer;
 };
@@ -34,10 +34,10 @@ public:
   typedef std::vector<TextureMapping> TextureMappingList;
 
 public:
-  TextureNode(const std::string &name, const TextureMappingList & mappings);
+  TextureNode(const std::string &name, const TextureMappingList &mappings);
   virtual ~TextureNode();
 
-  virtual void Render(RenderState & state);
+  virtual void Render(RenderState &state);
 
 private:
   TextureMappingList m_mappings;

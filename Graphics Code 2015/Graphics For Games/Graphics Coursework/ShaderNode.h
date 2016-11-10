@@ -13,7 +13,7 @@ public:
   virtual ~ShaderNode();
 
   virtual void SetActive(bool active);
-  virtual void Render(RenderState & state);
+  virtual void Render(RenderState &state);
 
 private:
   ShaderProgram *m_program;

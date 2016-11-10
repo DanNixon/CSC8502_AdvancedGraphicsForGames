@@ -4,7 +4,7 @@
 
 namespace GraphicsCoursework
 {
-  class CameraNode;
+class CameraNode;
 
 class CameraSelectorNode : public SceneNode
 {
@@ -14,20 +14,20 @@ public:
 
   void SetCamera(const std::string &cameraName);
 
-  inline void SetCamera(CameraNode * camera)
+  inline void SetCamera(CameraNode *camera)
   {
     m_camera = camera;
   }
 
-  inline CameraNode * Camera()
+  inline CameraNode *Camera()
   {
     return m_camera;
   }
 
   virtual void SetActive(bool active);
-  virtual void Render(RenderState & state);
+  virtual void Render(RenderState &state);
 
 protected:
-  CameraNode * m_camera;
+  CameraNode *m_camera;
 };
 }

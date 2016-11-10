@@ -23,7 +23,7 @@ ShaderProgram::ShaderProgram()
 }
 
 ShaderProgram::ShaderProgram(std::vector<Shader *> shaders)
-  : m_valid(false)
+    : m_valid(false)
 {
   size_t i = 0;
 

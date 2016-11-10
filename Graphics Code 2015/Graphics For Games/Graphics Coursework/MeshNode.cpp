@@ -18,7 +18,7 @@ MeshNode::~MeshNode()
   delete m_mesh;
 }
 
-void MeshNode::Render(RenderState & state)
+void MeshNode::Render(RenderState &state)
 {
   if (m_active)
   {
@@ -26,7 +26,8 @@ void MeshNode::Render(RenderState & state)
     {
       // Set model matrix
       if (state.shader != nullptr)
-        glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false, (float*)&m_worldTransform);
+        glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false,
+                           (float *)&m_worldTransform);
 
       // Draw mesh
       m_mesh->Draw();
@@ -40,7 +41,7 @@ void MeshNode::Render(RenderState & state)
   SceneNode::Render(state);
 }
 
-void MeshNode::RenderSingle(RenderState & state)
+void MeshNode::RenderSingle(RenderState &state)
 {
   // TODO
 }

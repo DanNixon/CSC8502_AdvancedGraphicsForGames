@@ -8,32 +8,32 @@
 
 namespace GraphicsCoursework
 {
-  class Texture
+class Texture
+{
+public:
+  static void UnBind(GLuint idx);
+
+public:
+  Texture();
+  virtual ~Texture();
+
+  bool LoadFromFile(const std::string &filename);
+
+  inline bool Valid() const
   {
-  public:
-    static void UnBind(GLuint idx);
+    return m_textureID != 0;
+  }
 
-  public:
-    Texture();
-    virtual ~Texture();
+  inline GLuint GetTextureID()
+  {
+    return m_textureID;
+  }
 
-    bool LoadFromFile(const std::string &filename);
-    
-    inline bool Valid() const
-    {
-      return m_textureID != 0;
-    }
+  void BindTo(GLuint target);
+  void BindToShader(GLuint program, const std::string &uniformName, GLuint idx);
+  void UnBindFromShader(GLuint program, const std::string &uniformName, GLuint idx);
 
-    inline GLuint GetTextureID()
-    {
-      return m_textureID;
-    }
-
-    void BindTo(GLuint target);
-    void BindToShader(GLuint program, const std::string &uniformName, GLuint idx);
-    void UnBindFromShader(GLuint program, const std::string &uniformName, GLuint idx);
-
-  protected:
-    GLuint m_textureID;
-  };
+protected:
+  GLuint m_textureID;
+};
 }

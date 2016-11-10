@@ -46,11 +46,14 @@ bool SceneNode::RemoveChild(SceneNode *child)
   return retVal;
 }
 
-bool SceneNode::RemoveChild(const std::string & name)
+bool SceneNode::RemoveChild(const std::string &name)
 {
   bool retVal = false;
 
-  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode * n) {return n->Name() == name; });
+  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode *n)
+                         {
+                           return n->Name() == name;
+                         });
   if (it != m_children.end())
   {
     (*it)->m_renderer = nullptr;
@@ -64,13 +67,16 @@ bool SceneNode::RemoveChild(const std::string & name)
   return retVal;
 }
 
-SceneNode * SceneNode::Child(const std::string & name)
+SceneNode *SceneNode::Child(const std::string &name)
 {
-  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode * n) {return n->Name() == name; });
+  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode *n)
+                         {
+                           return n->Name() == name;
+                         });
   return (it == m_children.end() ? nullptr : *it);
 }
 
-SceneNode * SceneNode::FindFirstChildByName(const std::string & name)
+SceneNode *SceneNode::FindFirstChildByName(const std::string &name)
 {
   SceneNode *retVal = nullptr;
 
@@ -101,7 +107,7 @@ void SceneNode::UpdateTransformations()
     (*it)->UpdateTransformations();
 }
 
-void SceneNode::Render(RenderState & state)
+void SceneNode::Render(RenderState &state)
 {
   for (auto it = m_children.begin(); it != m_children.end(); ++it)
     (*it)->Render(state);

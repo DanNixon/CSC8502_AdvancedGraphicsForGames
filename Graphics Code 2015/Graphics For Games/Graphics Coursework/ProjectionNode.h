@@ -22,7 +22,7 @@ public:
     m_projectionMatrix = proj;
   }
 
-  virtual void Render(RenderState & state);
+  virtual void Render(RenderState &state);
 
 protected:
   Matrix4 m_projectionMatrix;
