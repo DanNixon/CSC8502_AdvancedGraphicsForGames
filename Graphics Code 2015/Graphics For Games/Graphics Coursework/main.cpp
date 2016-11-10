@@ -1,3 +1,5 @@
+/** @file */
+
 #pragma comment(lib, "nclgl.lib")
 
 #include <iostream>
@@ -12,6 +14,7 @@
 #include "ProjectionNode.h"
 #include "CameraNode.h"
 #include "CameraSelectorNode.h"
+#include "Texture.h"
 
 using namespace GraphicsCoursework;
 
@@ -24,10 +27,6 @@ int main()
   Renderer r(w);
   if (!r.HasInitialised())
     return 1;
-
-  Mesh *tri = Mesh::GenerateTriangle();
-  tri->SetTexture(
-      SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
   r.Root()->AddChild(new CameraNode("cam1"));
   r.Root()->FindFirstChildByName("cam1")->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
@@ -43,7 +42,9 @@ int main()
     "shader1", new ShaderProgram({ new VertexShader(SHADERDIR "TexVertex.glsl"),
       new FragmentShader(SHADERDIR "TexFrag.glsl") })));
 
-  MeshNode *tri1 = new MeshNode("tri1", tri);
+  MeshNode *tri1 = new MeshNode("tri1", Mesh::GenerateTriangle());
+  tri1->tex = new Texture();
+  tri1->tex->LoadFromFile(TEXTUREDIR "brick.tga");
   r.Root()->Child("cs1")->Child("proj1")->Child("shader1")->AddChild(tri1);
   tri1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -10.0f)));
 

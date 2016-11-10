@@ -1,6 +1,9 @@
+/** @file */
+
 #include "MeshNode.h"
 
 #include "ShaderProgram.h"
+#include "Texture.h"
 
 namespace GraphicsCoursework
 {
@@ -26,10 +29,10 @@ void MeshNode::Render(RenderState & state)
       if (state.shader != nullptr)
         glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false, (float*)&m_worldTransform);
 
-      // Texture TODO
-      glActiveTexture(GL_TEXTURE0 + 2);
-      glBindTexture(GL_TEXTURE_2D, m_mesh->GetTexture());
-      glUniform1i(glGetUniformLocation(state.shader->Program(), "diffuseTex"), 2);
+      // Textures
+      //TODO: testing only
+      if (tex != nullptr)
+        tex->BindToShader(state.shader->Program(), "diffuseTex", 10);
 
       // Draw mesh
       m_mesh->Draw();

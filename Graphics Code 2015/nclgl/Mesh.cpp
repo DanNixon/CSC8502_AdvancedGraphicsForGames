@@ -127,7 +127,9 @@ Mesh::~Mesh()
 
 void Mesh::Draw()
 {
-  glBindTexture(GL_TEXTURE_2D, m_texture);
+  if (m_texture != 0)
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+
   glBindVertexArray(m_arrayObject);
 
   if (m_bufferObjects[INDEX_BUFFER] > 0)
@@ -136,7 +138,9 @@ void Mesh::Draw()
     glDrawArrays(m_type, 0, m_numVertices);
 
   glBindVertexArray(0);
-  glBindTexture(GL_TEXTURE_2D, 0);
+
+  if (m_texture != 0)
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void *Mesh::GetBuffer(Buffer b, GLenum mode)
