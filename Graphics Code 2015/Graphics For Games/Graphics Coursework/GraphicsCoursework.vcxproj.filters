@@ -15,6 +15,7 @@
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="CameraSelectorNode.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MeshNode.h" />
@@ -32,5 +33,6 @@
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraSelectorNode.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureNode.h" />
   </ItemGroup>
 </Project>

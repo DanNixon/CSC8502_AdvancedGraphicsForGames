@@ -3,7 +3,6 @@
 #include "MeshNode.h"
 
 #include "ShaderProgram.h"
-#include "Texture.h"
 
 namespace GraphicsCoursework
 {
@@ -28,11 +27,6 @@ void MeshNode::Render(RenderState & state)
       // Set model matrix
       if (state.shader != nullptr)
         glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false, (float*)&m_worldTransform);
-
-      // Textures
-      //TODO: testing only
-      if (tex != nullptr)
-        tex->BindToShader(state.shader->Program(), "diffuseTex", 10);
 
       // Draw mesh
       m_mesh->Draw();

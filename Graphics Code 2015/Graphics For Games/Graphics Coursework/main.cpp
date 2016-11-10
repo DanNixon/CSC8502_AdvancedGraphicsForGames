@@ -15,6 +15,7 @@
 #include "CameraNode.h"
 #include "CameraSelectorNode.h"
 #include "Texture.h"
+#include "TextureNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -28,10 +29,16 @@ int main()
   if (!r.HasInitialised())
     return 1;
 
+  Texture * tex1 = new Texture();
+  tex1->LoadFromFile(TEXTUREDIR "brick.tga");
+
+  Texture * tex2 = new Texture();
+  tex2->LoadFromFile(TEXTUREDIR "Barren Reds.jpg");
+
   r.Root()->AddChild(new CameraNode("cam1"));
   r.Root()->FindFirstChildByName("cam1")->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
 
-  auto cs1 = new CameraSelectorNode("cs1");
+  CameraSelectorNode * cs1 = new CameraSelectorNode("cs1");
   r.Root()->AddChild(cs1);
   cs1->SetCamera("cam1");
   cs1->SetActive(true);
@@ -42,10 +49,10 @@ int main()
     "shader1", new ShaderProgram({ new VertexShader(SHADERDIR "TexVertex.glsl"),
       new FragmentShader(SHADERDIR "TexFrag.glsl") })));
 
+  r.Root()->Child("cs1")->Child("proj1")->Child("shader1")->AddChild(new TextureNode("texm1", { {tex1, "diffuseTex", 1}, { tex2, "diffuseTex2", 2 } }));
+
   MeshNode *tri1 = new MeshNode("tri1", Mesh::GenerateTriangle());
-  tri1->tex = new Texture();
-  tri1->tex->LoadFromFile(TEXTUREDIR "brick.tga");
-  r.Root()->Child("cs1")->Child("proj1")->Child("shader1")->AddChild(tri1);
+  r.Root()->Child("cs1")->Child("proj1")->Child("shader1")->Child("texm1")->AddChild(tri1);
   tri1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -10.0f)));
 
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))

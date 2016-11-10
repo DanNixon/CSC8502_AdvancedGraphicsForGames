@@ -1,6 +1,15 @@
+/** @file */
+
 #include "Light.h"
 
 namespace GraphicsCoursework
 {
-  // TODO
+  Light::Light(const std::string & name)
+    : SceneNode(name)
+  {
+  }
+
+  Light::~Light()
+  {
+  }
 }

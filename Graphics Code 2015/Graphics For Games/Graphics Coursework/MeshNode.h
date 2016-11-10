@@ -6,9 +6,6 @@
 
 namespace GraphicsCoursework
 {
-  //TODO: testing only
-  class Texture;
-
 class MeshNode : public SceneNode
 {
 public:
@@ -21,9 +18,5 @@ public:
 private:
   bool m_transparent;
   Mesh *m_mesh;
-
-  //TODO: testing only
-public:
-  Texture *tex;
 };
 }

@@ -11,7 +11,7 @@ namespace GraphicsCoursework
   class Texture
   {
   public:
-    static void UnBind(GLuint target);
+    static void UnBind(GLuint idx);
 
   public:
     Texture();
@@ -29,8 +29,9 @@ namespace GraphicsCoursework
       return m_textureID;
     }
 
-    void BindTo(GLint target);
-    void BindToShader(GLuint program, const std::string &uniformName, GLint idx);
+    void BindTo(GLuint target);
+    void BindToShader(GLuint program, const std::string &uniformName, GLuint idx);
+    void UnBindFromShader(GLuint program, const std::string &uniformName, GLuint idx);
 
   protected:
     GLuint m_textureID;

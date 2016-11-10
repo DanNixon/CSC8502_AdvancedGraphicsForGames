@@ -1,6 +1,7 @@
 #version 150 core
 
 uniform sampler2D diffuseTex;
+uniform sampler2D diffuseTex2;
 
 in Vertex
 {
@@ -11,5 +12,5 @@ out vec4 fragColor;
 
 void main(void)
 {
-  fragColor = texture(diffuseTex, IN.texCoord);
+  fragColor = (texture(diffuseTex, IN.texCoord) * 0.5) + (texture(diffuseTex2, IN.texCoord) * 0.5);
 }

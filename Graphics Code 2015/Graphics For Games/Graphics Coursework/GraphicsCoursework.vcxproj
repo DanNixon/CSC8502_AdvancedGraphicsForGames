@@ -83,6 +83,7 @@
     <ClCompile Include="ShaderNode.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraNode.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
