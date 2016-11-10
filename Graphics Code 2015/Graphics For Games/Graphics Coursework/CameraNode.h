@@ -4,11 +4,11 @@
 
 namespace GraphicsCoursework
 {
-class Camera : public SceneNode
+class CameraNode : public SceneNode
 {
 public:
-  Camera(const std::string &name);
-  virtual ~Camera();
+  CameraNode(const std::string &name);
+  virtual ~CameraNode();
 
   inline float GetYaw() const
   {
@@ -30,15 +30,7 @@ public:
     m_pitchAngle = pitch;
   }
 
-  inline Matrix4 ViewMatrix() const
-  {
-    return
-      Matrix4::Rotation(-m_pitchAngle, Vector3(1, 0, 0)) *
-      Matrix4::Rotation(-m_yawAngle, Vector3(0, 1, 0)) *
-      Matrix4::Translation(-m_worldTransform.GetPositionVector());
-  }
-
-  virtual void Render(RenderState & state);
+  Matrix4 ViewMatrix() const;
 
 protected:
   float m_yawAngle;

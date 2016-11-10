@@ -6,8 +6,8 @@ namespace GraphicsCoursework
 {
 MeshNode::MeshNode(const std::string &name, Mesh *mesh, bool transparent)
     : SceneNode(name)
-    , m_transparent(transparent),
-  m_mesh(mesh)
+    , m_transparent(transparent)
+    , m_mesh(mesh)
 {
 }
 
@@ -26,8 +26,12 @@ void MeshNode::Render(RenderState & state)
       if (state.shader != nullptr)
         glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false, (float*)&m_worldTransform);
 
+      // Texture TODO
+      glActiveTexture(GL_TEXTURE0 + 2);
+      glBindTexture(GL_TEXTURE_2D, m_mesh->GetTexture());
+      glUniform1i(glGetUniformLocation(state.shader->Program(), "diffuseTex"), 2);
+
       // Draw mesh
-      glUniform1i(glGetUniformLocation(state.shader->Program(), "diffuseTex"), m_mesh->GetTexture());
       m_mesh->Draw();
     }
     else

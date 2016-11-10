@@ -5,7 +5,7 @@
 
 namespace GraphicsCoursework
 {
-  class Camera;
+  class CameraNode;
   class ShaderProgram;
   class MeshNode;
 

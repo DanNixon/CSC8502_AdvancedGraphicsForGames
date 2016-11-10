@@ -14,7 +14,7 @@ class Renderer;
 class SceneNode
 {
 public:
-  SceneNode(const std::string &name);
+  SceneNode(const std::string &name, Renderer *renderer = nullptr);
   virtual ~SceneNode();
 
   inline std::string Name() const
@@ -37,6 +37,7 @@ public:
   bool RemoveChild(const std::string &name);
 
   SceneNode * Child(const std::string &name);
+  SceneNode * FindFirstChildByName(const std::string &name);
 
   virtual void SetLocalTransformation(const Matrix4 &t)
   {

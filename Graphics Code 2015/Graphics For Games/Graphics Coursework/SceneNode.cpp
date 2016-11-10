@@ -4,8 +4,9 @@
 
 namespace GraphicsCoursework
 {
-SceneNode::SceneNode(const std::string &name)
+SceneNode::SceneNode(const std::string &name, Renderer *renderer)
     : m_name(name)
+    , m_renderer(renderer)
     , m_parent(nullptr)
     , m_localTransform(Matrix4())
     , m_worldTransform(Matrix4())
@@ -67,6 +68,26 @@ SceneNode * SceneNode::Child(const std::string & name)
 {
   auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode * n) {return n->Name() == name; });
   return (it == m_children.end() ? nullptr : *it);
+}
+
+SceneNode * SceneNode::FindFirstChildByName(const std::string & name)
+{
+  SceneNode *retVal = nullptr;
+
+  for (auto it = m_children.begin(); it != m_children.end(); ++it)
+  {
+    if ((*it)->Name() == name)
+    {
+      retVal = *it;
+      break;
+    }
+
+    retVal = (*it)->FindFirstChildByName(name);
+    if (retVal != nullptr)
+      break;
+  }
+
+  return retVal;
 }
 
 void SceneNode::UpdateTransformations()

@@ -19,8 +19,7 @@ ShaderNode::~ShaderNode()
 
 void ShaderNode::SetActive(bool active)
 {
-  bool canUse = m_program != nullptr && m_program->Valid();
-  m_active = active ? canUse : false;
+  m_active = active && m_program != nullptr && m_program->Valid();
 }
 
 void ShaderNode::Render(RenderState & state)

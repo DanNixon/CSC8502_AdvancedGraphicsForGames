@@ -7,10 +7,10 @@ namespace GraphicsCoursework
 {
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
-    , m_sceneGraphRoot(new SceneNode("root"))
+    , m_sceneGraphRoot(new SceneNode("root", this))
 {
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
+  //glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
   this->init = true;

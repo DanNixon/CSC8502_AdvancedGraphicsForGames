@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MeshNode.cpp" />
     <ClCompile Include="PerformanceMonitorNode.cpp" />
     <ClCompile Include="PositionableCamera.cpp" />
@@ -13,9 +12,11 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="ProjectionNode.cpp" />
+    <ClCompile Include="CameraNode.cpp" />
+    <ClCompile Include="CameraSelectorNode.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="PerformanceMonitorNode.h" />
     <ClInclude Include="PositionableCamera.h" />
@@ -28,5 +29,8 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="ProjectionNode.h" />
+    <ClInclude Include="CameraNode.h" />
+    <ClInclude Include="CameraSelectorNode.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
 </Project>

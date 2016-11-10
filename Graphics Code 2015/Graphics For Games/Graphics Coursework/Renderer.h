@@ -2,11 +2,10 @@
 
 #include "../../nclgl/OGLRenderer.h"
 
-#include "SceneNode.h"
-#include "Camera.h"
-
 namespace GraphicsCoursework
 {
+class SceneNode;
+
 class Renderer : public OGLRenderer
 {
 public:

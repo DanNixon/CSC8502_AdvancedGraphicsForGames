@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Camera.h"
+#include "CameraNode.h"
 
 namespace GraphicsCoursework
 {
-class PositionableCamera : public Camera
+class PositionableCamera : public CameraNode
 {
   // TODO
 };
