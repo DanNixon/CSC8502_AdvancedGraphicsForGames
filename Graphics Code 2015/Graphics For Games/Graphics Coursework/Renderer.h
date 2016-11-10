@@ -7,12 +7,6 @@
 
 namespace GraphicsCoursework
 {
-struct RenderList
-{
-  Camera * camera;
-  std::vector<SceneNode *> nodes;
-};
-
 class Renderer : public OGLRenderer
 {
 public:
@@ -23,8 +17,6 @@ public:
   {
     return m_sceneGraphRoot;
   }
-
-  void UpdateRenderLists();
 
   virtual void RenderScene();
 

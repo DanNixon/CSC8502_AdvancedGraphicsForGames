@@ -9,12 +9,14 @@ namespace GraphicsCoursework
 class MeshNode : public SceneNode
 {
 public:
-  MeshNode(const std::string &name, Mesh *mesh);
+  MeshNode(const std::string &name, Mesh *mesh, bool transparent = false);
   virtual ~MeshNode();
 
-  virtual void Render();
+  virtual void Render(RenderState & state);
+  virtual void RenderSingle(RenderState & state);
 
 private:
+  bool m_transparent;
   Mesh *m_mesh;
 };
 }

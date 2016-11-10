@@ -75,6 +75,7 @@
     <ClCompile Include="MeshNode.cpp" />
     <ClCompile Include="PerformanceMonitorNode.cpp" />
     <ClCompile Include="PositionableCamera.cpp" />
+    <ClCompile Include="ProjectionNode.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -87,7 +88,9 @@
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="PerformanceMonitorNode.h" />
     <ClInclude Include="PositionableCamera.h" />
+    <ClInclude Include="ProjectionNode.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderState.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderNode.h" />

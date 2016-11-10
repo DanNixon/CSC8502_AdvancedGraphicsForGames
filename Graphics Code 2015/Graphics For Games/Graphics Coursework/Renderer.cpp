@@ -1,5 +1,8 @@
 #include "Renderer.h"
 
+#include "RenderState.h"
+#include "MeshNode.h"
+
 namespace GraphicsCoursework
 {
 Renderer::Renderer(Window &parent)
@@ -23,7 +26,23 @@ void Renderer::RenderScene()
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  m_sceneGraphRoot->Render();
+  // Update transformations
+  m_sceneGraphRoot->UpdateTransformations();
+
+  RenderState state;
+
+  // Render graph
+  m_sceneGraphRoot->Render(state);
+
+  // Sort transparent nodes
+  // TODO
+
+  // Render transparent nodes
+  for (auto it = state.transparentNodes.begin(); it != state.transparentNodes.end(); ++it)
+  {
+    RenderState s;
+    (*it)->RenderSingle(s);
+  }
 
   SwapBuffers();
 }

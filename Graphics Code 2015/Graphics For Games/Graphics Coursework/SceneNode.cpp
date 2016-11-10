@@ -22,6 +22,7 @@ SceneNode::~SceneNode()
 
 void SceneNode::AddChild(SceneNode *child)
 {
+  child->m_renderer = m_renderer;
   child->m_parent = this;
   m_children.push_back(child);
 }
@@ -33,6 +34,7 @@ bool SceneNode::RemoveChild(SceneNode *child)
   auto it = std::find(m_children.begin(), m_children.end(), child);
   if (it != m_children.end())
   {
+    child->m_renderer = nullptr;
     child->m_parent = nullptr;
     child->m_worldTransform.ToIdentity();
     m_children.erase(it);
@@ -50,6 +52,7 @@ bool SceneNode::RemoveChild(const std::string & name)
   auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode * n) {return n->Name() == name; });
   if (it != m_children.end())
   {
+    (*it)->m_renderer = nullptr;
     (*it)->m_parent = nullptr;
     (*it)->m_worldTransform.ToIdentity();
     m_children.erase(it);
@@ -77,9 +80,9 @@ void SceneNode::UpdateTransformations()
     (*it)->UpdateTransformations();
 }
 
-void SceneNode::Render()
+void SceneNode::Render(RenderState & state)
 {
   for (auto it = m_children.begin(); it != m_children.end(); ++it)
-    (*it)->Render();
+    (*it)->Render(state);
 }
 }

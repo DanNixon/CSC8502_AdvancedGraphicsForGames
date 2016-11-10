@@ -152,6 +152,7 @@ bool Mesh::ReturnBuffer(Buffer b)
 void Mesh::BufferData()
 {
   glBindVertexArray(m_arrayObject);
+
   glGenBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
   glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
   glBufferData(GL_ARRAY_BUFFER, m_numVertices * sizeof(Vector3), m_vertices, GL_STATIC_DRAW);

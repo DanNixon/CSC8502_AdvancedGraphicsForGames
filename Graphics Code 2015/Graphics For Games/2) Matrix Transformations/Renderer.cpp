@@ -3,7 +3,7 @@
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
 {
-  mesh = Mesh::GenerateSphere();
+  mesh = Mesh::GenerateTriangle();
   camera = new Camera();
 
   currentShader = new Shader(SHADERDIR "MatrixVertex.glsl", SHADERDIR "ColourFragment.glsl");
@@ -56,7 +56,7 @@ void Renderer::RenderScene()
 
 void Renderer::UpdateScene(float msec)
 {
-  camera->UpdateCamera(msec);
+  //camera->UpdateCamera(msec);
   viewMatrix = camera->BuildViewMatrix();
 }
 

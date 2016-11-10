@@ -9,7 +9,7 @@ in Vertex
   vec2 texCoord;
 } IN;
 
-out vec4 gl_FragColor;
+out vec4 fragColor;
 
 void main(void)
 {
@@ -20,5 +20,5 @@ void main(void)
   if (col.a < 0.05f)
     discard;
 
-  gl_FragColor = col;
+  fragColor = col;
 }

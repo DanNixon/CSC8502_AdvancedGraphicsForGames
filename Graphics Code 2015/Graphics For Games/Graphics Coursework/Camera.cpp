@@ -1,22 +1,28 @@
 #include "Camera.h"
 
+#include "../nclgl/Matrix4.h"
+
 namespace GraphicsCoursework
 {
-  Camera::Camera()
-    : SceneNode("camera")
+  Camera::Camera(const std::string &name)
+    : SceneNode(name)
     , m_yawAngle(0.0f)
     , m_pitchAngle(0.0f)
   {
-    m_projectionMatrix.ToIdentity();
-    CacheMatrices();
   }
 
   Camera::~Camera()
   {
   }
 
-  void Camera::CacheMatrices()
+  void Camera::Render(RenderState & state)
   {
-    // TODO
+    if (m_active)
+      state.viewMatrix = ViewMatrix();
+
+    SceneNode::Render(state);
+
+    if (m_active)
+      state.viewMatrix.ToIdentity();
   }
 }

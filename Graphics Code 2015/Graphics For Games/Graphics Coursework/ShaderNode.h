@@ -12,17 +12,10 @@ public:
   ShaderNode(const std::string &name, ShaderProgram *program);
   virtual ~ShaderNode();
 
-  inline bool Use() const
-  {
-    return m_use;
-  }
-
-  void SetUse(bool use);
-
-  virtual void Render();
+  virtual void SetActive(bool active);
+  virtual void Render(RenderState & state);
 
 private:
-  bool m_use;
   ShaderProgram *m_program;
 };
 }

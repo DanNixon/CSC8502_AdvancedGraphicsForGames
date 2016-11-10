@@ -77,6 +77,7 @@ bool Shader::Compile(std::string filename)
   {
     char errorMsg[2048];
     glGetInfoLogARB(m_shaderObject, sizeof(errorMsg), nullptr, errorMsg);
+    std::cerr << errorMsg << '\n';
   }
 
   return success;

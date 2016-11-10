@@ -23,6 +23,7 @@ ShaderProgram::ShaderProgram()
 }
 
 ShaderProgram::ShaderProgram(std::vector<Shader *> shaders)
+  : m_valid(false)
 {
   size_t i = 0;
 
@@ -79,12 +80,6 @@ bool ShaderProgram::Link()
   if (m_valid)
     return false;
 
-  glBindAttribLocation(m_program, VERTEX_BUFFER, "position");
-  glBindAttribLocation(m_program, COLOUR_BUFFER, "colour");
-  glBindAttribLocation(m_program, TEXTURE_BUFFER, "texCoord");
-  // glBindAttribLocation(m_program, NORMAL_BUFFER, "normal");
-  // glBindAttribLocation(m_program, TANGENT_BUFFER, "tangent");
-
   for (size_t i = 0; i < NUM_SHADERS; i++)
   {
     if (m_shaders[i] != nullptr)
@@ -95,6 +90,12 @@ bool ShaderProgram::Link()
       glAttachShader(m_program, m_shaders[i]->Object());
     }
   }
+
+  glBindAttribLocation(m_program, VERTEX_BUFFER, "position");
+  glBindAttribLocation(m_program, COLOUR_BUFFER, "colour");
+  glBindAttribLocation(m_program, TEXTURE_BUFFER, "texCoord");
+  // glBindAttribLocation(m_program, NORMAL_BUFFER, "normal");
+  // glBindAttribLocation(m_program, TANGENT_BUFFER, "tangent");
 
   glLinkProgram(m_program);
 

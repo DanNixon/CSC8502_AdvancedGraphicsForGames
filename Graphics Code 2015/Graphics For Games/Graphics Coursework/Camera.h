@@ -7,13 +7,8 @@ namespace GraphicsCoursework
 class Camera : public SceneNode
 {
 public:
-  Camera();
+  Camera(const std::string &name);
   virtual ~Camera();
-
-  inline Matrix4 GetProjectionViewMatrix() const
-  {
-    return m_pvMatrix;
-  }
 
   inline float GetYaw() const
   {
@@ -23,7 +18,6 @@ public:
   inline void SetYaw(float yaw)
   {
     m_yawAngle = yaw;
-    CacheMatrices();
   }
 
   inline float GetPitch() const
@@ -34,28 +28,20 @@ public:
   inline void SetPitch(float pitch)
   {
     m_pitchAngle = pitch;
-    CacheMatrices();
   }
 
-  inline Matrix4 GetProjectionMatrix() const
+  inline Matrix4 ViewMatrix() const
   {
-    return m_projectionMatrix;
+    return
+      Matrix4::Rotation(-m_pitchAngle, Vector3(1, 0, 0)) *
+      Matrix4::Rotation(-m_yawAngle, Vector3(0, 1, 0)) *
+      Matrix4::Translation(-m_worldTransform.GetPositionVector());
   }
 
-  inline void SetProjectionMatrix(const Matrix4 &proj)
-  {
-    m_projectionMatrix = proj;
-    CacheMatrices();
-  }
-
-protected:
-  void CacheMatrices();
+  virtual void Render(RenderState & state);
 
 protected:
   float m_yawAngle;
   float m_pitchAngle;
-
-  Matrix4 m_projectionMatrix;
-  Matrix4 m_pvMatrix;
 };
 }

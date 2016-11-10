@@ -12,6 +12,7 @@
     <ClCompile Include="ShaderNode.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="ProjectionNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -25,5 +26,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="RenderState.h" />
+    <ClInclude Include="ProjectionNode.h" />
   </ItemGroup>
 </Project>
