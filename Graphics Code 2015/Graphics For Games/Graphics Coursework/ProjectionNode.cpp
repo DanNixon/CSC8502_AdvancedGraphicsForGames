@@ -1,3 +1,5 @@
+/** @file */
+
 #include "ProjectionNode.h"
 
 namespace GraphicsCoursework

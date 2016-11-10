@@ -1,3 +1,5 @@
+/** @file */
+
 #include "CameraSelectorNode.h"
 
 #include "CameraNode.h"

@@ -1,3 +1,5 @@
+/** @file */
+
 #include "ShaderNode.h"
 
 #include "ShaderProgram.h"

@@ -1,3 +1,5 @@
+/** @file */
+
 #include "SceneNode.h"
 
 #include <algorithm>

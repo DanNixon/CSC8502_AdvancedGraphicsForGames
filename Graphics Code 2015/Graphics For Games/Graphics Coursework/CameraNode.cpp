@@ -1,3 +1,5 @@
+/** @file */
+
 #include "CameraNode.h"
 
 #include "../nclgl/Matrix4.h"
