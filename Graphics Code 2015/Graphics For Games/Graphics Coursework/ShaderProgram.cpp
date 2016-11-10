@@ -7,7 +7,6 @@
 #include "../nclgl/Buffer.h"
 
 #include "Shader.h"
-#include "Renderer.h"
 
 namespace GraphicsCoursework
 {
@@ -120,10 +119,5 @@ bool ShaderProgram::Link()
   }
 
   return m_valid;
-}
-
-void ShaderProgram::Use(Renderer * r)
-{
-  // TODO
 }
 }

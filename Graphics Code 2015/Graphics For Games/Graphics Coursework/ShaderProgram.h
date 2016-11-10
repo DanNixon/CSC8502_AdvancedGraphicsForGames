@@ -8,7 +8,6 @@
 namespace GraphicsCoursework
 {
 class Shader;
-class Renderer;
 
 /**
  * @class ShaderProgram
@@ -52,8 +51,6 @@ public:
   {
     return m_valid;
   }
-
-  void Use(Renderer *r);
 
 private:
   GLuint m_program;               //!< GL shader program
