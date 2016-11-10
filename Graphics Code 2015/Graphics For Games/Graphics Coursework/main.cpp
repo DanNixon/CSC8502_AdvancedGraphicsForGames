@@ -6,7 +6,6 @@
 
 #include "MeshNode.h"
 #include "Renderer.h"
-#include "ShaderNode.h"
 #include "ShaderProgram.h"
 #include "Shaders.h"
 
@@ -26,11 +25,10 @@ int main()
   tri->SetTexture(
       SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
-  r.Root()->AddChild(new ShaderNode(
-      "shader1", new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"),
-                                    new FragmentShader(SHADERDIR "TexturedFragment.glsl")})));
+  ShaderProgram *sp1 = new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"),
+                                          new FragmentShader(SHADERDIR "TexturedFragment.glsl")});
 
-  r.Root()->Child("shader1")->AddChild(new MeshNode("tri1", tri));
+  r.Root()->Child("shader1")->AddChild(new MeshNode("tri1", tri, sp1));
 
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {

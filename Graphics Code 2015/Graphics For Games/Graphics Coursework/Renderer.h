@@ -2,16 +2,11 @@
 
 #include "../../nclgl/OGLRenderer.h"
 
-#include "SceneNode.h"
-#include "Camera.h"
-
 namespace GraphicsCoursework
 {
-struct RenderList
-{
-  Camera * camera;
-  std::vector<SceneNode *> nodes;
-};
+class SceneNode;
+class Camera;
+class MeshNode;
 
 class Renderer : public OGLRenderer
 {
@@ -24,11 +19,20 @@ public:
     return m_sceneGraphRoot;
   }
 
-  void UpdateRenderLists();
+  inline Matrix4 GetProjectionViewMatrix() const
+  {
+    return *m_pvMatrix;
+  }
+
+  void UpdateRenderList();
 
   virtual void RenderScene();
 
 protected:
   SceneNode *m_sceneGraphRoot;
+  Matrix4 *m_pvMatrix;
+
+  Camera *m_camera;
+  std::vector<MeshNode *> m_transparentNodes;
 };
 }

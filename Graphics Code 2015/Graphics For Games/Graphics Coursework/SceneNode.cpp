@@ -2,11 +2,15 @@
 
 #include <algorithm>
 
+#include "ShaderProgram.h"
+
 namespace GraphicsCoursework
 {
-SceneNode::SceneNode(const std::string &name)
+SceneNode::SceneNode(const std::string &name, Renderer *renderer)
     : m_name(name)
+    , m_renderer(renderer)
     , m_parent(nullptr)
+    , m_active(true)
     , m_localTransform(Matrix4())
     , m_worldTransform(Matrix4())
 {
@@ -23,6 +27,7 @@ SceneNode::~SceneNode()
 void SceneNode::AddChild(SceneNode *child)
 {
   child->m_parent = this;
+  child->m_renderer = m_renderer;
   m_children.push_back(child);
 }
 
@@ -34,6 +39,7 @@ bool SceneNode::RemoveChild(SceneNode *child)
   if (it != m_children.end())
   {
     child->m_parent = nullptr;
+    child->m_renderer = nullptr;
     child->m_worldTransform.ToIdentity();
     m_children.erase(it);
 
@@ -43,26 +49,23 @@ bool SceneNode::RemoveChild(SceneNode *child)
   return retVal;
 }
 
-bool SceneNode::RemoveChild(const std::string & name)
+bool SceneNode::RemoveChild(const std::string &name)
 {
   bool retVal = false;
 
-  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode * n) {return n->Name() == name; });
-  if (it != m_children.end())
-  {
-    (*it)->m_parent = nullptr;
-    (*it)->m_worldTransform.ToIdentity();
-    m_children.erase(it);
+  auto it = std::find_if(m_children.begin(), m_children.end(),
+                         [name](SceneNode *n) { return n->Name() == name; });
 
-    retVal = true;
-  }
+  if (it != m_children.end())
+    retVal = RemoveChild(*it);
 
   return retVal;
 }
 
-SceneNode * SceneNode::Child(const std::string & name)
+SceneNode *SceneNode::Child(const std::string &name)
 {
-  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode * n) {return n->Name() == name; });
+  auto it = std::find_if(m_children.begin(), m_children.end(),
+                         [name](SceneNode *n) { return n->Name() == name; });
   return (it == m_children.end() ? nullptr : *it);
 }
 
@@ -75,11 +78,5 @@ void SceneNode::UpdateTransformations()
 
   for (auto it = m_children.begin(); it != m_children.end(); ++it)
     (*it)->UpdateTransformations();
-}
-
-void SceneNode::Render()
-{
-  for (auto it = m_children.begin(); it != m_children.end(); ++it)
-    (*it)->Render();
 }
 }
