@@ -16,6 +16,8 @@
     <ClCompile Include="CameraSelectorNode.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureNode.cpp" />
+    <ClCompile Include="ShaderDataNode.cpp" />
+    <ClCompile Include="ShaderSyncNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MeshNode.h" />
@@ -34,5 +36,7 @@
     <ClInclude Include="CameraSelectorNode.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureNode.h" />
+    <ClInclude Include="ShaderDataNode.h" />
+    <ClInclude Include="ShaderSyncNode.h" />
   </ItemGroup>
 </Project>

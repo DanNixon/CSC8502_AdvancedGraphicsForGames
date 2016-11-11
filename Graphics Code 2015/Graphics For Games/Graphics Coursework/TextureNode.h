@@ -4,7 +4,7 @@
 
 #include <GL/glew.h>
 
-#include "SceneNode.h"
+#include "ShaderDataNode.h"
 #include "Texture.h"
 
 namespace GraphicsCoursework
@@ -26,7 +26,7 @@ struct TextureMapping
   GLuint textureBuffer;
 };
 
-class TextureNode : public SceneNode
+class TextureNode : public ShaderDataNode
 {
 public:
   typedef std::vector<TextureMapping> TextureMappingList;
@@ -35,8 +35,8 @@ public:
   TextureNode(const std::string &name, const TextureMappingList &mappings);
   virtual ~TextureNode();
 
-  virtual void PreRender(RenderState &state);
-  virtual void PostRender(RenderState &state);
+  virtual void ShaderBind(ShaderProgram * s);
+  virtual void ShaderUnBind(ShaderProgram * s);
 
 private:
   TextureMappingList m_mappings;

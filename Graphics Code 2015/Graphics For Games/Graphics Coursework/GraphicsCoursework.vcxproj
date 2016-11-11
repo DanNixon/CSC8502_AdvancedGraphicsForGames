@@ -80,8 +80,10 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderDataNode.cpp" />
     <ClCompile Include="ShaderNode.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="ShaderSyncNode.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureNode.cpp" />
   </ItemGroup>
@@ -97,9 +99,11 @@
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderDataNode.h" />
     <ClInclude Include="ShaderNode.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shaders.h" />
+    <ClInclude Include="ShaderSyncNode.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureNode.h" />
   </ItemGroup>

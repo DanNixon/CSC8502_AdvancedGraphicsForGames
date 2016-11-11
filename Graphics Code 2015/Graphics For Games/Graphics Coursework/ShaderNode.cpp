@@ -30,8 +30,6 @@ void ShaderNode::PreRender(RenderState & state)
 
     glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "viewMatrix"), 1, false,
       (float *)&state.viewMatrix);
-    glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "projMatrix"), 1, false,
-      (float *)&state.projectionMatrix);
 }
 
 void ShaderNode::PostRender(RenderState & state)

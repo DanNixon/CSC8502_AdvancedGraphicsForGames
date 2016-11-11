@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "SceneNode.h"
+#include "ShaderDataNode.h"
 
 namespace GraphicsCoursework
 {
-class Light : public SceneNode
+class Light : public ShaderDataNode
 {
 public:
   Light(const std::string &name);

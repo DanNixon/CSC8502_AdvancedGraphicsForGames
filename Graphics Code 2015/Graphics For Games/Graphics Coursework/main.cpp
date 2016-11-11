@@ -16,6 +16,7 @@
 #include "Shaders.h"
 #include "Texture.h"
 #include "TextureNode.h"
+#include "ShaderSyncNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -53,15 +54,17 @@ int main()
   cs1->SetActive(true);
 
   r.Root()->FindFirstChildByName("cs1")->AddChild(
-      new ProjectionNode("proj1", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 110.0f)));
+      new ProjectionNode("proj1", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
 
   r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode("shader1", shader1));
 
   r.Root()->FindFirstChildByName("shader1")->AddChild(
       new TextureNode("texm1", {{tex1, "diffuseTex", 1}, {tex2, "diffuseTex2", 2}}));
 
+  r.Root()->FindFirstChildByName("texm1")->AddChild(new ShaderSyncNode("ss1"));
+
   MeshNode *tri1 = new MeshNode("tri1", Mesh::GenerateTriangle());
-  r.Root()->FindFirstChildByName("texm1")->AddChild(tri1);
+  r.Root()->FindFirstChildByName("ss1")->AddChild(tri1);
   tri1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -10.0f)));
 
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))

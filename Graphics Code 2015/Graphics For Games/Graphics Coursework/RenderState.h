@@ -7,30 +7,24 @@
 
 namespace GraphicsCoursework
 {
-class CameraNode;
 class ShaderProgram;
 class MeshNode;
-class TextureNode;
-class Light;
+class ShaderDataNode;
+class CameraNode;
 
 struct RenderState
 {
   RenderState()
-      : shader(nullptr)
-      , camera(nullptr)
+      : camera(nullptr)
+      , shader(nullptr)
   {
-    viewMatrix.ToIdentity();
-    projectionMatrix.ToIdentity();
   }
 
   CameraNode * camera;
   Matrix4 viewMatrix;
-  Matrix4 projectionMatrix;
 
   ShaderProgram *shader;
-
-  std::vector<TextureNode *> textures;
-  std::vector<Light *> lights;
+  std::vector<ShaderDataNode *> shaderDataNodeStack;
 
   std::vector<MeshNode *> transparentNodes;
 };

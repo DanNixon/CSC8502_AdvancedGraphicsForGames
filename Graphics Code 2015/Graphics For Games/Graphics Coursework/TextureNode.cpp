@@ -7,7 +7,7 @@
 namespace GraphicsCoursework
 {
 TextureNode::TextureNode(const std::string &name, const TextureMappingList &mappings)
-    : SceneNode(name)
+    : ShaderDataNode(name)
     , m_mappings(mappings)
 {
 }
@@ -16,15 +16,15 @@ TextureNode::~TextureNode()
 {
 }
 
-void TextureNode::PreRender(RenderState & state)
+void TextureNode::ShaderBind(ShaderProgram *s)
 {
   for (auto it = m_mappings.begin(); it != m_mappings.end(); ++it)
-     it->Map(state.shader->Program());
+     it->Map(s->Program());
 }
 
-void TextureNode::PostRender(RenderState & state)
+void TextureNode::ShaderUnBind(ShaderProgram *s)
 {
   for (auto it = m_mappings.begin(); it != m_mappings.end(); ++it)
-    it->UnMap(state.shader->Program());
+    it->UnMap(s->Program());
 }
 }
