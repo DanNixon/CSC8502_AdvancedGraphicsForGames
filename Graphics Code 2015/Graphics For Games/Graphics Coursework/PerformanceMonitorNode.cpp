@@ -4,5 +4,12 @@
 
 namespace GraphicsCoursework
 {
-// TODO
+PerformanceMonitorNode::PerformanceMonitorNode(const std::string &name)
+    : SceneNode(name)
+{
+}
+
+PerformanceMonitorNode::~PerformanceMonitorNode()
+{
+}
 }

@@ -36,5 +36,8 @@ public:
 
 protected:
   float m_speed;
+
+  float m_pitchRate;
+  float m_yawRate;
 };
 }

@@ -11,6 +11,8 @@ namespace GraphicsCoursework
 PositionableCamera::PositionableCamera(const std::string &name)
     : CameraNode(name)
     , m_speed(1.0f)
+    , m_pitchRate(0.0f)
+    , m_yawRate(0.0f)
 {
 }
 
@@ -25,14 +27,11 @@ void PositionableCamera::Update(float msec)
   if (!m_active)
     return;
 
-  // TODO: mouse should give delta angle
+  m_pitchRate += Window::GetMouse()->GetRelativePosition().y;
+  m_yawRate += Window::GetMouse()->GetRelativePosition().x;
 
-  Vector2 normalisedMousePos =
-      Window::GetMouse()->GetAbsolutePosition() / m_renderer->ParentWindow().GetScreenSize();
-  std::cout << normalisedMousePos << '\n';
-
-  m_pitchAngle -= Window::GetMouse()->GetRelativePosition().y;
-  m_yawAngle -= Window::GetMouse()->GetRelativePosition().x;
+  m_pitchAngle += m_pitchRate;
+  m_yawAngle += m_yawRate;
 
   m_pitchAngle = min(m_pitchAngle, 90.0f);
   m_pitchAngle = max(m_pitchAngle, -90.0f);
