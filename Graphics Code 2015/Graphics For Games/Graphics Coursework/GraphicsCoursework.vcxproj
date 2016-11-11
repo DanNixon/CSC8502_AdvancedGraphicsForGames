@@ -73,6 +73,7 @@
     <ClCompile Include="CameraSelectorNode.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MemoryMonitoring.cpp" />
     <ClCompile Include="MeshNode.cpp" />
     <ClCompile Include="PerformanceMonitorNode.cpp" />
     <ClCompile Include="PositionableCamera.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraSelectorNode.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MemoryMonitoring.h" />
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="PerformanceMonitorNode.h" />
     <ClInclude Include="PositionableCamera.h" />

@@ -18,8 +18,9 @@ ProjectionNode::~ProjectionNode()
 {
 }
 
-void ProjectionNode::ShaderBind(ShaderProgram * s)
+void ProjectionNode::ShaderBind(ShaderProgram *s)
 {
-  glUniformMatrix4fv(glGetUniformLocation(s->Program(), "projMatrix"), 1, false, (float *)&m_projectionMatrix);
+  glUniformMatrix4fv(glGetUniformLocation(s->Program(), "projMatrix"), 1, false,
+                     (float *)&m_projectionMatrix);
 }
 }

@@ -2,8 +2,6 @@
 
 #pragma comment(lib, "nclgl.lib")
 
-#include <iostream>
-
 #include "../../nclgl/Window.h"
 
 #include "CameraSelectorNode.h"
@@ -13,10 +11,10 @@
 #include "Renderer.h"
 #include "ShaderNode.h"
 #include "ShaderProgram.h"
+#include "ShaderSyncNode.h"
 #include "Shaders.h"
 #include "Texture.h"
 #include "TextureNode.h"
-#include "ShaderSyncNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -45,8 +43,6 @@ int main()
   PositionableCamera *cam1 = new PositionableCamera("cam1");
   r.Root()->AddChild(cam1);
   cam1->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
-  //cam1->LinearSpeed() = 0.001f;
-  cam1->AngularSpeed() = 1.0f;
 
   CameraSelectorNode *cs1 = new CameraSelectorNode("cs1");
   r.Root()->AddChild(cs1);

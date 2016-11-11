@@ -35,8 +35,8 @@ public:
   TextureNode(const std::string &name, const TextureMappingList &mappings);
   virtual ~TextureNode();
 
-  virtual void ShaderBind(ShaderProgram * s);
-  virtual void ShaderUnBind(ShaderProgram * s);
+  virtual void ShaderBind(ShaderProgram *s);
+  virtual void ShaderUnBind(ShaderProgram *s);
 
 private:
   TextureMappingList m_mappings;

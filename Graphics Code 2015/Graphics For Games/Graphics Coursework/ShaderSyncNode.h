@@ -6,13 +6,13 @@
 
 namespace GraphicsCoursework
 {
-  class ShaderSyncNode : public SceneNode
-  {
-  public:
-    ShaderSyncNode(const std::string &name);
-    virtual ~ShaderSyncNode();
+class ShaderSyncNode : public SceneNode
+{
+public:
+  ShaderSyncNode(const std::string &name);
+  virtual ~ShaderSyncNode();
 
-    virtual void PreRender(RenderState &state);
-    virtual void PostRender(RenderState &state);
-  };
+  virtual void PreRender(RenderState &state);
+  virtual void PostRender(RenderState &state);
+};
 }

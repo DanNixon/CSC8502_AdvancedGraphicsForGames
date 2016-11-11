@@ -20,7 +20,7 @@ struct RenderState
   {
   }
 
-  CameraNode * camera;
+  CameraNode *camera;
   Matrix4 viewMatrix;
 
   ShaderProgram *shader;

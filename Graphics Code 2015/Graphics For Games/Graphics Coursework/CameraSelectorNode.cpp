@@ -36,13 +36,13 @@ void CameraSelectorNode::SetActive(bool active)
   m_active = active && m_camera != nullptr;
 }
 
-void CameraSelectorNode::PreRender(RenderState & state)
+void CameraSelectorNode::PreRender(RenderState &state)
 {
   state.camera = m_camera;
   state.viewMatrix = m_camera->ViewMatrix();
 }
 
-void CameraSelectorNode::PostRender(RenderState & state)
+void CameraSelectorNode::PostRender(RenderState &state)
 {
   state.camera = nullptr;
   state.viewMatrix.ToIdentity();

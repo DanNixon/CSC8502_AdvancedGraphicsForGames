@@ -19,7 +19,7 @@ TextureNode::~TextureNode()
 void TextureNode::ShaderBind(ShaderProgram *s)
 {
   for (auto it = m_mappings.begin(); it != m_mappings.end(); ++it)
-     it->Map(s->Program());
+    it->Map(s->Program());
 }
 
 void TextureNode::ShaderUnBind(ShaderProgram *s)
