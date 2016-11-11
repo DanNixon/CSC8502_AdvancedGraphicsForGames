@@ -15,9 +15,11 @@ public:
   virtual ~ShaderNode();
 
   virtual void SetActive(bool active);
-  virtual void Render(RenderState &state);
+  virtual void PreRender(RenderState &state);
+  virtual void PostRender(RenderState &state);
 
 private:
   ShaderProgram *m_program;
+  GLint m_prevProgram;
 };
 }

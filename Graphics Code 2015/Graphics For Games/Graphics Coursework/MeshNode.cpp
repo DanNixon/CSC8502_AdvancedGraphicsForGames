@@ -18,27 +18,22 @@ MeshNode::~MeshNode()
   delete m_mesh;
 }
 
-void MeshNode::Render(RenderState &state)
+void MeshNode::PreRender(RenderState & state)
 {
-  if (m_active)
+  if (!m_transparent)
   {
-    if (!m_transparent)
-    {
-      // Set model matrix
-      if (state.shader != nullptr)
-        glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false,
-                           (float *)&m_worldTransform);
+    // Process shader
+    if (state.shader != nullptr)
+      glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false,
+        (float *)&m_worldTransform);
 
-      // Draw mesh
-      m_mesh->Draw();
-    }
-    else
-    {
-      state.transparentNodes.push_back(this);
-    }
+    // Draw mesh
+    m_mesh->Draw();
   }
-
-  SceneNode::Render(state);
+  else
+  {
+    state.transparentNodes.push_back(this);
+  }
 }
 
 void MeshNode::RenderSingle(RenderState &state)

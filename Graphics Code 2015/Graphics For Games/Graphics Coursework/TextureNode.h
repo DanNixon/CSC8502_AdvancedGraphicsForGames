@@ -9,8 +9,6 @@
 
 namespace GraphicsCoursework
 {
-// class Texture;
-
 struct TextureMapping
 {
   void Map(GLuint program)
@@ -37,7 +35,8 @@ public:
   TextureNode(const std::string &name, const TextureMappingList &mappings);
   virtual ~TextureNode();
 
-  virtual void Render(RenderState &state);
+  virtual void PreRender(RenderState &state);
+  virtual void PostRender(RenderState &state);
 
 private:
   TextureMappingList m_mappings;

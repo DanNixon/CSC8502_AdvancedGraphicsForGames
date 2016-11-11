@@ -14,7 +14,8 @@ public:
   MeshNode(const std::string &name, Mesh *mesh, bool transparent = false);
   virtual ~MeshNode();
 
-  virtual void Render(RenderState &state);
+  virtual void PreRender(RenderState &state);
+
   virtual void RenderSingle(RenderState &state);
 
 private:

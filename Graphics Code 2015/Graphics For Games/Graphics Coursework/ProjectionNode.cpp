@@ -14,14 +14,13 @@ ProjectionNode::~ProjectionNode()
 {
 }
 
-void ProjectionNode::Render(RenderState &state)
+void ProjectionNode::PreRender(RenderState & state)
 {
-  if (m_active)
     state.projectionMatrix = m_projectionMatrix;
+}
 
-  SceneNode::Render(state);
-
-  if (m_active)
+void ProjectionNode::PostRender(RenderState & state)
+{
     state.projectionMatrix.ToIdentity();
 }
 }

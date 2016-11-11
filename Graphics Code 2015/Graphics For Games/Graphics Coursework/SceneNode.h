@@ -61,6 +61,14 @@ public:
   virtual void Update(float msec);
   virtual void Render(RenderState &state);
 
+  virtual void PreRender(RenderState &state)
+  {
+  }
+
+  virtual void PostRender(RenderState &state)
+  {
+  }
+
 protected:
   const std::string m_name;
 

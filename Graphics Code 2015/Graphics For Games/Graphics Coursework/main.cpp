@@ -25,6 +25,9 @@ int main()
   if (!w.HasInitialised())
     return 1;
 
+  w.LockMouseToWindow(true);
+  w.ShowOSPointer(false);
+
   Renderer r(w);
   if (!r.HasInitialised())
     return 1;
@@ -41,7 +44,8 @@ int main()
   PositionableCamera *cam1 = new PositionableCamera("cam1");
   r.Root()->AddChild(cam1);
   cam1->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
-  cam1->SetSpeed(0.001f);
+  //cam1->LinearSpeed() = 0.001f;
+  cam1->AngularSpeed() = 1.0f;
 
   CameraSelectorNode *cs1 = new CameraSelectorNode("cs1");
   r.Root()->AddChild(cs1);

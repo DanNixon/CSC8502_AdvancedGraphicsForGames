@@ -113,7 +113,13 @@ void SceneNode::Update(float msec)
 
 void SceneNode::Render(RenderState &state)
 {
+  if (m_active)
+    PreRender(state);
+
   for (auto it = m_children.begin(); it != m_children.end(); ++it)
     (*it)->Render(state);
+
+  if (m_active)
+    PostRender(state);
 }
 }

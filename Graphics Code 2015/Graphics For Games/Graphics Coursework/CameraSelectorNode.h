@@ -27,7 +27,9 @@ public:
   }
 
   virtual void SetActive(bool active);
-  virtual void Render(RenderState &state);
+
+  virtual void PreRender(RenderState &state);
+  virtual void PostRender(RenderState &state);
 
 protected:
   CameraNode *m_camera;

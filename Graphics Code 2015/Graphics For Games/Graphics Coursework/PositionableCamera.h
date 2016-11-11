@@ -22,22 +22,20 @@ public:
   PositionableCamera(const std::string &name);
   virtual ~PositionableCamera();
 
-  inline float GetSpeed() const
+  inline float &LinearSpeed()
   {
-    return m_speed;
+    return m_linearSpeed;
   }
 
-  virtual void SetSpeed(float s)
+  inline float &AngularSpeed()
   {
-    m_speed = s;
+    return m_angularSpeed;
   }
 
   virtual void Update(float msec);
 
 protected:
-  float m_speed;
-
-  float m_pitchRate;
-  float m_yawRate;
+  float m_linearSpeed;
+  float m_angularSpeed;
 };
 }

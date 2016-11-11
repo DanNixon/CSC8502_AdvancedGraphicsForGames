@@ -22,28 +22,21 @@ void ShaderNode::SetActive(bool active)
   m_active = active && m_program != nullptr && m_program->Valid();
 }
 
-void ShaderNode::Render(RenderState &state)
+void ShaderNode::PreRender(RenderState & state)
 {
-  GLint prevProgram = 0;
-
-  if (m_active)
-  {
-    glGetIntegerv(GL_CURRENT_PROGRAM, &prevProgram);
+    glGetIntegerv(GL_CURRENT_PROGRAM, &m_prevProgram);
     glUseProgram(m_program->Program());
     state.shader = m_program;
 
     glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "viewMatrix"), 1, false,
-                       (float *)&state.viewMatrix);
+      (float *)&state.viewMatrix);
     glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "projMatrix"), 1, false,
-                       (float *)&state.projectionMatrix);
-  }
+      (float *)&state.projectionMatrix);
+}
 
-  SceneNode::Render(state);
-
-  if (m_active)
-  {
-    glUseProgram(prevProgram);
+void ShaderNode::PostRender(RenderState & state)
+{
+    glUseProgram(m_prevProgram);
     state.shader = nullptr;
-  }
 }
 }
