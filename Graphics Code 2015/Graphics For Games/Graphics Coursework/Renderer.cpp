@@ -2,8 +2,8 @@
 
 #include "Renderer.h"
 
-#include "RenderState.h"
 #include "MeshNode.h"
+#include "RenderState.h"
 
 namespace GraphicsCoursework
 {

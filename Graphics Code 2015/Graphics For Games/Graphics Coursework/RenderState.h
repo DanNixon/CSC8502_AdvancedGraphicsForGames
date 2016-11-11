@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <vector>
 #include <../nclgl/Matrix4.h>
+#include <vector>
 
 namespace GraphicsCoursework
 {
