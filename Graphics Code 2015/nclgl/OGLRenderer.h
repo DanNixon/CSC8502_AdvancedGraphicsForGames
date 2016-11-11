@@ -100,6 +100,11 @@ public:
 	OGLRenderer(Window &parent);
 	virtual ~OGLRenderer(void);
 
+  inline Window &ParentWindow()
+  {
+    return m_parent;
+  }
+
 	virtual void	RenderScene()		= 0;
 	virtual void	UpdateScene(float msec);
 	void			SwapBuffers();
@@ -132,6 +137,8 @@ protected:
 	void			DrawDebugOrtho(Matrix4*matrix = 0);
 
 protected:
+  Window &m_parent;
+
 	Shader* currentShader;
 
 	Matrix4 projMatrix;		//Projection matrix

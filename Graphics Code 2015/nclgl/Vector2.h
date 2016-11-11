@@ -39,12 +39,19 @@ public:
 		return o;
 	}
 
-	inline Vector2  operator-(const Vector2  &a) const{
+	inline Vector2  operator-(const Vector2  &a) const
+  {
 		return Vector2(x - a.x,y - a.y);
 	}
 
-	inline Vector2  operator+(const Vector2  &a) const{
+	inline Vector2  operator+(const Vector2  &a) const
+  {
 		return Vector2(x + a.x,y + a.y);
 	}
+
+  inline Vector2 operator/(const Vector2 &other) const
+  {
+    return Vector2(x / other.x, y / other.y);
+  }
 };
 

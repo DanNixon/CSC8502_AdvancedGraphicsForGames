@@ -4,6 +4,8 @@
 
 #include <../nclgl/Window.h>
 
+#include "Renderer.h"
+
 namespace GraphicsCoursework
 {
   PositionableCamera::PositionableCamera(const std::string &name)
@@ -25,8 +27,11 @@ namespace GraphicsCoursework
 
     // TODO: mouse should give delta angle
 
-    m_pitchAngle -= (Window::GetMouse()->GetRelativePosition().y);
-    m_yawAngle -= (Window::GetMouse()->GetRelativePosition().x);
+    Vector2 normalisedMousePos = Window::GetMouse()->GetAbsolutePosition() / m_renderer->ParentWindow().GetScreenSize();
+    std::cout << normalisedMousePos << '\n';
+
+    m_pitchAngle -= Window::GetMouse()->GetRelativePosition().y;
+    m_yawAngle -= Window::GetMouse()->GetRelativePosition().x;
 
     m_pitchAngle = min(m_pitchAngle, 90.0f);
     m_pitchAngle = max(m_pitchAngle, -90.0f);

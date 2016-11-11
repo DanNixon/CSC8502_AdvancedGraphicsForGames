@@ -30,7 +30,9 @@ Creates an OpenGL 3.2 CORE PROFILE rendering context. Sets itself
 as the current renderer of the passed 'parent' Window. Not the best
 way to do it - but it kept the Tutorial code down to a minimum!
 */
-OGLRenderer::OGLRenderer(Window &window)	{
+OGLRenderer::OGLRenderer(Window &window)
+  : m_parent(window)
+{
 	init					= false;
 	drawnDebugOrtho			= false;
 	drawnDebugPerspective	= false;
