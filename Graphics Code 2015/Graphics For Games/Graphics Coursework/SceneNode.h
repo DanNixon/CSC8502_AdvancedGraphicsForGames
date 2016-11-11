@@ -58,6 +58,7 @@ public:
 
   void UpdateTransformations();
 
+  virtual void Update(float msec);
   virtual void Render(RenderState &state);
 
 protected:

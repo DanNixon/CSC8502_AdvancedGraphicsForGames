@@ -15,8 +15,6 @@ ShaderNode::ShaderNode(const std::string &name, ShaderProgram *program)
 
 ShaderNode::~ShaderNode()
 {
-  if (m_program != nullptr)
-    delete m_program;
 }
 
 void ShaderNode::SetActive(bool active)

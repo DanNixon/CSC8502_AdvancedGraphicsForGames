@@ -109,6 +109,12 @@ void SceneNode::UpdateTransformations()
     (*it)->UpdateTransformations();
 }
 
+void SceneNode::Update(float msec)
+{
+  for (auto it = m_children.begin(); it != m_children.end(); ++it)
+    (*it)->Update(msec);
+}
+
 void SceneNode::Render(RenderState &state)
 {
   for (auto it = m_children.begin(); it != m_children.end(); ++it)
