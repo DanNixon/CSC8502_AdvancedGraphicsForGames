@@ -4,7 +4,6 @@
 
 #include "../../nclgl/Window.h"
 
-#include "WindowsSystemMonitor.h"
 #include "CameraSelectorNode.h"
 #include "MeshNode.h"
 #include "PositionableCamera.h"
@@ -16,6 +15,7 @@
 #include "Shaders.h"
 #include "Texture.h"
 #include "TextureNode.h"
+#include "WindowsSystemMonitor.h"
 
 using namespace GraphicsCoursework;
 
@@ -44,13 +44,13 @@ int main()
   ShaderProgram *shader1 = new ShaderProgram(
       {new VertexShader(SHADERDIR "TexVertex.glsl"), new FragmentShader(SHADERDIR "TexFrag.glsl")});
 
-  ShaderProgram *shader2 = new ShaderProgram(
-      {new VertexShader(SHADERDIR "TexVertex.glsl"), new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});
+  ShaderProgram *shader2 = new ShaderProgram({new VertexShader(SHADERDIR "TexVertex.glsl"),
+                                              new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});
 
   PositionableCamera *cam1 = new PositionableCamera("cam1");
   r.Root()->AddChild(cam1);
   cam1->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
-  cam1->LinearSpeed() = 0.05f;
+  cam1->LinearSpeed() = 0.01f;
 
   CameraSelectorNode *cs1 = new CameraSelectorNode("cs1");
   r.Root()->AddChild(cs1);
@@ -67,11 +67,11 @@ int main()
 
   r.Root()->FindFirstChildByName("texm1")->AddChild(new ShaderSyncNode("ss1"));
 
-  MeshNode *tri1 = new MeshNode("tri1", Mesh::GenerateTriangle());
+  MeshNode *tri1 = new MeshNode("tri1", Mesh::GenerateSphere());
   r.Root()->FindFirstChildByName("ss1")->AddChild(tri1);
   tri1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -20.0f)));
 
-  tri1->AddChild(new TextureNode("texm2", { { tex3, "diffuseTex", 1 } }));
+  tri1->AddChild(new TextureNode("texm2", {{tex3, "diffuseTex", 1}}));
   r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader2));
   r.Root()->FindFirstChildByName("shader2")->AddChild(new ShaderSyncNode("ss2"));
 
@@ -94,9 +94,11 @@ int main()
     r.Root()->Update(w.GetTimer()->GetTimedMS());
     r.RenderScene();
 
-    // TODO: dev only
+// TODO: dev only
+#if 0
     mon.Update();
     std::cout << mon << '\n';
+#endif
   }
 
   delete tex1;

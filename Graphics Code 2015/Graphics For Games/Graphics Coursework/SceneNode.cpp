@@ -23,7 +23,7 @@ SceneNode::~SceneNode()
   m_children.clear();
 }
 
-void SceneNode::GetStack(std::vector<SceneNode*>& stack)
+void SceneNode::GetStack(std::vector<SceneNode *> &stack)
 {
   SceneNode *n = this;
   while (n != nullptr)

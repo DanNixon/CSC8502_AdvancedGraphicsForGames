@@ -20,6 +20,6 @@ public:
 
 private:
   ShaderProgram *m_program;
-  ShaderProgram * m_previousProgram;
+  ShaderProgram *m_previousProgram;
 };
 }

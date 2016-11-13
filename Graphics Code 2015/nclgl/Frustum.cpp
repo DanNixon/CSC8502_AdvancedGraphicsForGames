@@ -4,7 +4,8 @@ bool Frustum::InsideFrustum(SceneNode &n)
 {
   for (int p = 0; p < 6; ++p)
   {
-    if (!m_planes[p].SphereInPlane(n.GetWorldTransform().GetPositionVector(), n.GetBoundingRadius()))
+    if (!m_planes[p].SphereInPlane(n.GetWorldTransform().GetPositionVector(),
+                                   n.GetBoundingRadius()))
       return false;
   }
 

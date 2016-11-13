@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OGLRenderer.h"
 #include "Buffer.h"
+#include "OGLRenderer.h"
 
 class Mesh
 {
@@ -44,7 +44,7 @@ protected:
   GLuint m_type;
   GLuint m_numVertices;
   GLuint m_numIndices;
-  
+
   GLuint m_texture;
 
   Vector3 *m_vertices;

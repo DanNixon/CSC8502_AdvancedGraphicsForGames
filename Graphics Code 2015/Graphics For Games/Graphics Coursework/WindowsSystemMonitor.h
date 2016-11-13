@@ -4,12 +4,12 @@
 
 namespace GraphicsCoursework
 {
-  class WindowsSystemMonitor : public ISystemMonitor
-  {
-  public:
-    WindowsSystemMonitor();
-    virtual ~WindowsSystemMonitor();
+class WindowsSystemMonitor : public ISystemMonitor
+{
+public:
+  WindowsSystemMonitor();
+  virtual ~WindowsSystemMonitor();
 
-    virtual void Update();
-  };
+  virtual void Update();
+};
 }

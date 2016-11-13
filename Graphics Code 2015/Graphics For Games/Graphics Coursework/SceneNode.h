@@ -58,9 +58,10 @@ public:
     return m_worldTransform;
   }
 
-  inline float DistanceFrom(SceneNode * other) const
+  inline float DistanceFrom(SceneNode *other) const
   {
-    Vector3 dir = m_worldTransform.GetPositionVector() - other->m_worldTransform.GetPositionVector();
+    Vector3 dir =
+        m_worldTransform.GetPositionVector() - other->m_worldTransform.GetPositionVector();
     return Vector3::Dot(dir, dir);
   }
 

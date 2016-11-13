@@ -4,8 +4,8 @@
 
 #include <algorithm>
 
-#include "RenderableNode.h"
 #include "RenderState.h"
+#include "RenderableNode.h"
 
 namespace GraphicsCoursework
 {
@@ -17,9 +17,6 @@ Renderer::Renderer(Window &parent)
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  // glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
 
   this->init = true;
 }
@@ -44,7 +41,9 @@ void Renderer::RenderScene()
 
   // Sort transparent nodes
   std::sort(state.transparentNodes.begin(), state.transparentNodes.end(),
-            [](RenderableNode * a, RenderableNode * b) { return a->CameraDistance() > b->CameraDistance(); });
+            [](RenderableNode *a, RenderableNode *b) {
+              return a->CameraDistance() > b->CameraDistance();
+            });
 
   // Render transparent nodes
   for (auto it = state.transparentNodes.begin(); it != state.transparentNodes.end(); ++it)

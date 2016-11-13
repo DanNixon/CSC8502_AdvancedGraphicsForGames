@@ -6,7 +6,7 @@
 
 namespace GraphicsCoursework
 {
-  RenderableNode::RenderableNode(const std::string &name, bool transparent)
+RenderableNode::RenderableNode(const std::string &name, bool transparent)
     : SceneNode(name)
     , m_transparent(transparent)
     , m_cameraDistance(0.0f)
@@ -40,7 +40,7 @@ void RenderableNode::Draw(RenderState &state)
   {
     // Set model matrix
     glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false,
-      (float *)&m_worldTransform);
+                       (float *)&m_worldTransform);
   }
 }
 
@@ -52,7 +52,7 @@ void RenderableNode::PreRender(RenderState &state)
   }
   else
   {
-    m_cameraDistance = DistanceFrom((SceneNode *) state.camera);
+    m_cameraDistance = DistanceFrom((SceneNode *)state.camera);
     state.transparentNodes.push_back(this);
   }
 }
