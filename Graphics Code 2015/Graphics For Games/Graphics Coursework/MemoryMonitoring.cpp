@@ -6,6 +6,7 @@
 
 namespace GraphicsCoursework
 {
+#if 0
 void MemoryMonitoring::Init()
 {
   m_memInfo.dwLength = sizeof(MEMORYSTATUSEX);
@@ -35,4 +36,5 @@ float MemoryMonitoring::SelfUsedPhysicalMemory()
   GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
   return (float)pmc.WorkingSetSize;
 }
+#endif
 }

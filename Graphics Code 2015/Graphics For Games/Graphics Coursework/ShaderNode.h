@@ -20,6 +20,6 @@ public:
 
 private:
   ShaderProgram *m_program;
-  GLint m_prevProgram;
+  ShaderProgram * m_previousProgram;
 };
 }

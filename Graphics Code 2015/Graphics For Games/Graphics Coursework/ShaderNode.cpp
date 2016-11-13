@@ -9,6 +9,7 @@ namespace GraphicsCoursework
 ShaderNode::ShaderNode(const std::string &name, ShaderProgram *program)
     : SceneNode(name)
     , m_program(program)
+    , m_previousProgram(nullptr)
 {
   SetActive(true);
 }
@@ -24,9 +25,9 @@ void ShaderNode::SetActive(bool active)
 
 void ShaderNode::PreRender(RenderState &state)
 {
-  glGetIntegerv(GL_CURRENT_PROGRAM, &m_prevProgram);
-  glUseProgram(m_program->Program());
+  m_previousProgram = state.shader;
   state.shader = m_program;
+  glUseProgram(m_program->Program());
 
   glUniformMatrix4fv(glGetUniformLocation(m_program->Program(), "viewMatrix"), 1, false,
                      (float *)&state.viewMatrix);
@@ -34,7 +35,11 @@ void ShaderNode::PreRender(RenderState &state)
 
 void ShaderNode::PostRender(RenderState &state)
 {
-  glUseProgram(m_prevProgram);
-  state.shader = nullptr;
+  if (m_previousProgram != nullptr)
+    glUseProgram(m_previousProgram->Program());
+  else
+    glUseProgram(0);
+
+  state.shader = m_previousProgram;
 }
 }

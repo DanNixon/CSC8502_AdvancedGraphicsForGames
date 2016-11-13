@@ -4,6 +4,8 @@
 
 #include "SceneNode.h"
 
+#include "Frustum.h"
+
 namespace GraphicsCoursework
 {
 class CameraNode : public SceneNode
@@ -32,10 +34,23 @@ public:
     m_pitchAngle = pitch;
   }
 
-  Matrix4 ViewMatrix() const;
+  virtual void UpdateCaches();
+
+  inline Matrix4 ViewMatrix() const
+  {
+    return m_viewMatrix;
+  }
+
+  inline Frustum Frustum() const
+  {
+    return m_viewFrustum;
+  }
 
 protected:
   float m_yawAngle;
   float m_pitchAngle;
+
+  Matrix4 m_viewMatrix;
+  Frustum m_viewFrustum;
 };
 }
