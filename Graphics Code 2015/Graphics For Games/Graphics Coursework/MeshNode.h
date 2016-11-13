@@ -2,24 +2,21 @@
 
 #pragma once
 
-#include "SceneNode.h"
+#include "RenderableNode.h"
 
 #include "../nclgl/Mesh.h"
 
 namespace GraphicsCoursework
 {
-class MeshNode : public SceneNode
+class MeshNode : public RenderableNode
 {
 public:
   MeshNode(const std::string &name, Mesh *mesh, bool transparent = false);
   virtual ~MeshNode();
 
-  virtual void PreRender(RenderState &state);
+  virtual void Draw(RenderState &state);
 
-  virtual void RenderSingle(RenderState &state);
-
-private:
-  bool m_transparent;
+protected:
   Mesh *m_mesh;
 };
 }

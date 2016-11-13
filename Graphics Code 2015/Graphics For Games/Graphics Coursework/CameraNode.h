@@ -34,23 +34,10 @@ public:
     m_pitchAngle = pitch;
   }
 
-  virtual void UpdateCaches();
-
-  inline Matrix4 ViewMatrix() const
-  {
-    return m_viewMatrix;
-  }
-
-  inline Frustum Frustum() const
-  {
-    return m_viewFrustum;
-  }
+  Matrix4 ViewMatrix() const;
 
 protected:
   float m_yawAngle;
   float m_pitchAngle;
-
-  Matrix4 m_viewMatrix;
-  Frustum m_viewFrustum;
 };
 }

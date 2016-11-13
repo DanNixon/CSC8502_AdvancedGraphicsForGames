@@ -34,6 +34,8 @@ public:
     m_active = active;
   }
 
+  void GetStack(std::vector<SceneNode *> &stack);
+
   void AddChild(SceneNode *child);
   bool RemoveChild(SceneNode *child);
   bool RemoveChild(const std::string &name);
@@ -54,6 +56,12 @@ public:
   inline Matrix4 GetWorldTransformation() const
   {
     return m_worldTransform;
+  }
+
+  inline float DistanceFrom(SceneNode * other) const
+  {
+    Vector3 dir = m_worldTransform.GetPositionVector() - other->m_worldTransform.GetPositionVector();
+    return Vector3::Dot(dir, dir);
   }
 
   void UpdateTransformations();

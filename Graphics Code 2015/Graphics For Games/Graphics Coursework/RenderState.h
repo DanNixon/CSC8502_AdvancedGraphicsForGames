@@ -8,7 +8,7 @@
 namespace GraphicsCoursework
 {
 class ShaderProgram;
-class MeshNode;
+class RenderableNode;
 class ShaderDataNode;
 class CameraNode;
 
@@ -26,6 +26,6 @@ struct RenderState
   ShaderProgram *shader;
   std::vector<ShaderDataNode *> shaderDataNodeStack;
 
-  std::vector<MeshNode *> transparentNodes;
+  std::vector<RenderableNode *> transparentNodes;
 };
 }

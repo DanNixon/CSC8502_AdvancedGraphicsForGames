@@ -1,6 +1,6 @@
 #include "Frustum.h"
 
-#include "SceneNode.h"
+#include "RenderableNode.h"
 
 namespace GraphicsCoursework
 {
@@ -33,11 +33,11 @@ namespace GraphicsCoursework
     m_planes[5] = Plane(wAxis + zAxis, (m.values[15] + m.values[14]), true);
   }
 
-  bool Frustum::ContainsSceneNode(SceneNode &n)
+  bool Frustum::ContainsSceneNode(RenderableNode &n)
   {
     for (int p = 0; p < 6; ++p)
     {
-      if (!m_planes[p].SphereInPlane(n.GetWorldTransformation().GetPositionVector(), n.GetBoundingRadius()))
+      //if (!m_planes[p].SphereInPlane(n.GetWorldTransformation().GetPositionVector(), n.GetBoundingRadius()))
         return false;
     }
 

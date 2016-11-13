@@ -23,6 +23,16 @@ SceneNode::~SceneNode()
   m_children.clear();
 }
 
+void SceneNode::GetStack(std::vector<SceneNode*>& stack)
+{
+  SceneNode *n = this;
+  while (n != nullptr)
+  {
+    stack.push_back(n);
+    n = n->m_parent;
+  }
+}
+
 void SceneNode::AddChild(SceneNode *child)
 {
   child->m_renderer = m_renderer;

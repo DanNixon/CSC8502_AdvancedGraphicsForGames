@@ -5,7 +5,7 @@
 
 namespace GraphicsCoursework
 {
-  class SceneNode;
+  class RenderableNode;
 
   class Frustum
   {
@@ -14,7 +14,7 @@ namespace GraphicsCoursework
     virtual ~Frustum();
 
     void FromMatrix(const Matrix4 &m);
-    bool ContainsSceneNode(SceneNode &n);
+    bool ContainsSceneNode(RenderableNode &n);
 
   protected:
     Plane m_planes[6];

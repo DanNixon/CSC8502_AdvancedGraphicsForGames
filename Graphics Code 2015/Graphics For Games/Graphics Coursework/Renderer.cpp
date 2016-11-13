@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-#include "MeshNode.h"
+#include "RenderableNode.h"
 #include "RenderState.h"
 
 namespace GraphicsCoursework
@@ -43,15 +43,12 @@ void Renderer::RenderScene()
   m_sceneGraphRoot->Render(state);
 
   // Sort transparent nodes
-  // TODO
-  std::sort(state.transparentNodes.begin(), state.transparentNodes.end(), [](MeshNode * a, MeshNode * b) { return a < b; });
+  std::sort(state.transparentNodes.begin(), state.transparentNodes.end(),
+            [](RenderableNode * a, RenderableNode * b) { return a->CameraDistance() > b->CameraDistance(); });
 
   // Render transparent nodes
   for (auto it = state.transparentNodes.begin(); it != state.transparentNodes.end(); ++it)
-  {
-    RenderState s;
-    (*it)->RenderSingle(s);
-  }
+    (*it)->RenderSingle();
 
   SwapBuffers();
 }

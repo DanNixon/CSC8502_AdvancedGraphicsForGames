@@ -19,6 +19,8 @@
     <ClCompile Include="ShaderDataNode.cpp" />
     <ClCompile Include="ShaderSyncNode.cpp" />
     <ClCompile Include="MemoryMonitoring.cpp" />
+    <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="RenderableNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MeshNode.h" />
@@ -40,5 +42,7 @@
     <ClInclude Include="ShaderDataNode.h" />
     <ClInclude Include="ShaderSyncNode.h" />
     <ClInclude Include="MemoryMonitoring.h" />
+    <ClInclude Include="Frustum.h" />
+    <ClInclude Include="RenderableNode.h" />
   </ItemGroup>
 </Project>
