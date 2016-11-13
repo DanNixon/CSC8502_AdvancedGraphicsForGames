@@ -72,9 +72,9 @@
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="CameraSelectorNode.cpp" />
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="ISystemMonitor.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MemoryMonitoring.cpp" />
     <ClCompile Include="MeshNode.cpp" />
     <ClCompile Include="PerformanceMonitorNode.cpp" />
     <ClCompile Include="PositionableCamera.cpp" />
@@ -89,13 +89,14 @@
     <ClCompile Include="ShaderSyncNode.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureNode.cpp" />
+    <ClCompile Include="WindowsSystemMonitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraSelectorNode.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="ISystemMonitor.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="MemoryMonitoring.h" />
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="PerformanceMonitorNode.h" />
     <ClInclude Include="PositionableCamera.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="ShaderSyncNode.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureNode.h" />
+    <ClInclude Include="WindowsSystemMonitor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

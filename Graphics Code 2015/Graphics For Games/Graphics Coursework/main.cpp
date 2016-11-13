@@ -4,6 +4,7 @@
 
 #include "../../nclgl/Window.h"
 
+#include "WindowsSystemMonitor.h"
 #include "CameraSelectorNode.h"
 #include "MeshNode.h"
 #include "PositionableCamera.h"
@@ -86,10 +87,16 @@ int main()
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
 
+  WindowsSystemMonitor mon;
+
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
     r.Root()->Update(w.GetTimer()->GetTimedMS());
     r.RenderScene();
+
+    // TODO: dev only
+    mon.Update();
+    std::cout << mon << '\n';
   }
 
   delete tex1;

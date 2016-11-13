@@ -2,47 +2,159 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MeshNode.cpp" />
-    <ClCompile Include="PerformanceMonitorNode.cpp" />
-    <ClCompile Include="PositionableCamera.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="SceneNode.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="ShaderNode.cpp" />
-    <ClCompile Include="ShaderProgram.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="ProjectionNode.cpp" />
-    <ClCompile Include="CameraNode.cpp" />
-    <ClCompile Include="CameraSelectorNode.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TextureNode.cpp" />
-    <ClCompile Include="ShaderDataNode.cpp" />
-    <ClCompile Include="ShaderSyncNode.cpp" />
-    <ClCompile Include="MemoryMonitoring.cpp" />
-    <ClCompile Include="Frustum.cpp" />
-    <ClCompile Include="RenderableNode.cpp" />
+    <ClCompile Include="PerformanceMonitorNode.cpp">
+      <Filter>Performance Monitoring</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsSystemMonitor.cpp">
+      <Filter>Performance Monitoring</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraNode.cpp">
+      <Filter>Camera &amp; View</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSelectorNode.cpp">
+      <Filter>Camera &amp; View</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectionNode.cpp">
+      <Filter>Camera &amp; View</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionableCamera.cpp">
+      <Filter>Camera &amp; View</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Shader Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderDataNode.cpp">
+      <Filter>Shader Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderNode.cpp">
+      <Filter>Shader Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Shader Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderSyncNode.cpp">
+      <Filter>Shader Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Texture Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureNode.cpp">
+      <Filter>Texture Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNode.cpp">
+      <Filter>Renderables</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableNode.cpp">
+      <Filter>Renderables</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneNode.cpp">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="ISystemMonitor.cpp">
+      <Filter>Performance Monitoring</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MeshNode.h" />
-    <ClInclude Include="PerformanceMonitorNode.h" />
-    <ClInclude Include="PositionableCamera.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="SceneNode.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="ShaderNode.h" />
-    <ClInclude Include="ShaderProgram.h" />
-    <ClInclude Include="Shaders.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="RenderState.h" />
-    <ClInclude Include="ProjectionNode.h" />
-    <ClInclude Include="CameraNode.h" />
-    <ClInclude Include="CameraSelectorNode.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TextureNode.h" />
-    <ClInclude Include="ShaderDataNode.h" />
-    <ClInclude Include="ShaderSyncNode.h" />
-    <ClInclude Include="MemoryMonitoring.h" />
-    <ClInclude Include="Frustum.h" />
-    <ClInclude Include="RenderableNode.h" />
+    <ClInclude Include="PerformanceMonitorNode.h">
+      <Filter>Performance Monitoring</Filter>
+    </ClInclude>
+    <ClInclude Include="ISystemMonitor.h">
+      <Filter>Performance Monitoring</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsSystemMonitor.h">
+      <Filter>Performance Monitoring</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraNode.h">
+      <Filter>Camera &amp; View</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSelectorNode.h">
+      <Filter>Camera &amp; View</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectionNode.h">
+      <Filter>Camera &amp; View</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionableCamera.h">
+      <Filter>Camera &amp; View</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders.h">
+      <Filter>Shader Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Shader Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderDataNode.h">
+      <Filter>Shader Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderNode.h">
+      <Filter>Shader Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Shader Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderSyncNode.h">
+      <Filter>Shader Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureNode.h">
+      <Filter>Texture Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Texture Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableNode.h">
+      <Filter>Renderables</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNode.h">
+      <Filter>Renderables</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneNode.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderState.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Performance Monitoring">
+      <UniqueIdentifier>{7b1e9347-0fd4-4853-990c-0fad80ac3aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera &amp; View">
+      <UniqueIdentifier>{568b39b6-24f8-4d95-928f-1edaf80abf07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Managment">
+      <UniqueIdentifier>{816f2ca9-5954-4716-bf28-0dc15212383f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture Managment">
+      <UniqueIdentifier>{9d1b6f72-a022-4e8a-86bd-3b6a3b63a9b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderables">
+      <UniqueIdentifier>{26749f05-7221-4fcb-a3d0-fe2cf54d5533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{b1f3b77a-f6f8-476b-9928-0a2b66054b2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene Managment &amp; Rendering">
+      <UniqueIdentifier>{59c8dbb0-5c06-4e17-8b6b-0cf0a0ae6661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Environment">
+      <UniqueIdentifier>{f6c6a77c-9a4f-4a66-86e0-f29e97df27f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
