@@ -71,6 +71,12 @@
     <ClCompile Include="Font.cpp">
       <Filter>Texture Managment</Filter>
     </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>Generation</Filter>
+    </ClCompile>
+    <ClCompile Include="FractalBrownianMotion.cpp">
+      <Filter>Generation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -148,6 +154,12 @@
     <ClInclude Include="Font.h">
       <Filter>Texture Managment</Filter>
     </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Generation</Filter>
+    </ClInclude>
+    <ClInclude Include="FractalBrownianMotion.h">
+      <Filter>Generation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Performance Monitoring">
@@ -173,6 +185,9 @@
     </Filter>
     <Filter Include="Environment">
       <UniqueIdentifier>{f6c6a77c-9a4f-4a66-86e0-f29e97df27f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generation">
+      <UniqueIdentifier>{dda4db5a-f743-4bfd-8347-2eb2f4c35eb4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,3 +1,5 @@
+/** @file */
+
 #include "WindowsSystemMonitor.h"
 
 // clang-format off
