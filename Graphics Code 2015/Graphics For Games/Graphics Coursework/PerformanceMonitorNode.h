@@ -6,7 +6,7 @@
 
 namespace GraphicsCoursework
 {
-  class ISystemMonitor;
+class ISystemMonitor;
 
 class PerformanceMonitorNode : public TextNode
 {
@@ -17,6 +17,6 @@ public:
   virtual void Update(float msec);
 
 protected:
-  ISystemMonitor * m_monitor;
+  ISystemMonitor *m_monitor;
 };
 }

@@ -6,17 +6,17 @@
 
 namespace GraphicsCoursework
 {
-  TextNode::TextNode(const std::string & name, Font * font, size_t len)
+TextNode::TextNode(const std::string &name, Font *font, size_t len)
     : MeshNode(name, new TextMesh(len, font))
-  {
-  }
+{
+}
 
-  TextNode::~TextNode()
-  {
-  }
+TextNode::~TextNode()
+{
+}
 
-  void TextNode::SetText(const std::string & text)
-  {
-    ((TextMesh *)m_mesh)->SetText(text);
-  }
+void TextNode::SetText(const std::string &text)
+{
+  ((TextMesh *)m_mesh)->SetText(text);
+}
 }

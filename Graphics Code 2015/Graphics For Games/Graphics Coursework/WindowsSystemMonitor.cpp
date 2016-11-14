@@ -46,7 +46,8 @@ void WindowsSystemMonitor::Update(float dTimeMs)
   m_metrics[PHYSICAL_MEMORY_TOTAL] = ((float)memInfo.ullTotalPhys) * BYTES_TO_MB;
   m_metrics[VIRTUAL_MEMORY_TOTAL] = ((float)memInfo.ullTotalPageFile) * BYTES_TO_MB;
 
-  m_metrics[PHYSICAL_MEMORY_USED] = ((float)(memInfo.ullTotalPhys - memInfo.ullAvailPhys)) * BYTES_TO_MB;
+  m_metrics[PHYSICAL_MEMORY_USED] =
+      ((float)(memInfo.ullTotalPhys - memInfo.ullAvailPhys)) * BYTES_TO_MB;
   m_metrics[VIRTUAL_MEMORY_USED] =
       ((float)(memInfo.ullTotalPageFile - memInfo.ullAvailPageFile)) * BYTES_TO_MB;
 
@@ -71,8 +72,9 @@ void WindowsSystemMonitor::Update(float dTimeMs)
   memcpy(&sys, &fsys, sizeof(FILETIME));
   memcpy(&user, &fuser, sizeof(FILETIME));
 
-  m_metrics[ISystemMonitor::CPU_SELF_USAGE] = (100.0f * (sys.QuadPart - m_lastSystemCPU.QuadPart) + (user.QuadPart - m_lastUserCPU.QuadPart))
-    / (now.QuadPart - m_lastCPU.QuadPart) * m_numProcessors;
+  m_metrics[ISystemMonitor::CPU_SELF_USAGE] = (100.0f * (sys.QuadPart - m_lastSystemCPU.QuadPart) +
+                                               (user.QuadPart - m_lastUserCPU.QuadPart)) /
+                                              (now.QuadPart - m_lastCPU.QuadPart) * m_numProcessors;
 
   m_lastCPU = now;
   m_lastUserCPU = user;

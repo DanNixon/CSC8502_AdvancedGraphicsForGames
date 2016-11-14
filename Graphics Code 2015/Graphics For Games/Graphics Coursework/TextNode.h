@@ -6,14 +6,14 @@
 
 namespace GraphicsCoursework
 {
-  class Font;
+class Font;
 
-  class TextNode : public MeshNode
-  {
-  public:
-    TextNode(const std::string & name, Font * font, size_t len = 32);
-    virtual ~TextNode();
+class TextNode : public MeshNode
+{
+public:
+  TextNode(const std::string &name, Font *font, size_t len = 32);
+  virtual ~TextNode();
 
-    void SetText(const std::string &text);
-  };
+  void SetText(const std::string &text);
+};
 }

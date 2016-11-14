@@ -9,24 +9,24 @@
 
 namespace GraphicsCoursework
 {
-  class PerlinNoise
-  {
-  public:
-    static const std::vector<int> REFERENCE_PERMUTATION;
+class PerlinNoise
+{
+public:
+  static const std::vector<int> REFERENCE_PERMUTATION;
 
-  public:
-    PerlinNoise();
-    PerlinNoise(unsigned int seed);
-    virtual ~PerlinNoise();
+public:
+  PerlinNoise();
+  PerlinNoise(unsigned int seed);
+  virtual ~PerlinNoise();
 
-    float Noise(float x, float y, float z) const;
+  float Noise(float x, float y, float z) const;
 
-  protected:
-    float Fade(float t) const;
-    float Lerp(float t, float a, float b) const;
-    float Grad(int hash, float x, float y, float z) const;
+protected:
+  float Fade(float t) const;
+  float Lerp(float t, float a, float b) const;
+  float Grad(int hash, float x, float y, float z) const;
 
-  protected:
-    std::vector<int> m_permutation; //!< The permutation vector
-  };
+protected:
+  std::vector<int> m_permutation; //!< The permutation vector
+};
 }

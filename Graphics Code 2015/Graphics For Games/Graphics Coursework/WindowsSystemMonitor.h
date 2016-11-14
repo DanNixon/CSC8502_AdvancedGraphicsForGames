@@ -16,7 +16,7 @@ public:
 
   virtual void Update(float dTimeMs);
 
-protected:  
+protected:
   size_t m_numProcessors;
 
   HANDLE m_self;
