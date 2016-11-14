@@ -19,14 +19,14 @@ CameraNode::~CameraNode()
 
 Matrix4 CameraNode::ViewMatrix() const
 {
-  return m_localRotation * Matrix4::Translation(-m_worldTransform.GetPositionVector());
+  return m_localRotation.GetTransposedRotation() * Matrix4::Translation(-m_worldTransform.GetPositionVector());
 }
 
 void CameraNode::Update(float msec)
 {
   SceneNode::Update(msec);
 
-  m_localRotation = Matrix4::Rotation(-m_pitchAngle, Vector3(1, 0, 0)) *
+  m_localRotation = Matrix4::Rotation(m_pitchAngle, Vector3(1, 0, 0)) *
                     Matrix4::Rotation(-m_yawAngle, Vector3(0, 1, 0));
 }
 }

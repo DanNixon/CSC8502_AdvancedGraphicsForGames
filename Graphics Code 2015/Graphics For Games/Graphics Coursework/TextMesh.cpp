@@ -49,9 +49,9 @@ void TextMesh::SetText(const std::string &text)
   (0,0) (top LEFT of the screen intuitively), the text
   'hangs down' from the top left, and is visible.
   */
-  for (unsigned int i = 0; i < min(text.length(), m_maxLength); ++i)
+  for (unsigned int i = 0; i < m_maxLength; ++i)
   {
-    unsigned int c = (unsigned int)text[i];
+    char c = (i < text.length() ? text[i] : ' ');
 
     // We can use the modulus operator to wrap around the
     // position of the character, using the cell counts

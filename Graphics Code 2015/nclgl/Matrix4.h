@@ -89,7 +89,7 @@ public:
   static Matrix4 BuildViewMatrix(const Vector3 &from, const Vector3 &lookingAt,
                                  const Vector3 up = Vector3(0, 1, 0));
 
-  Matrix4 GetTransposedRotation();
+  Matrix4 GetTransposedRotation() const;
 
   // Multiplies 'this' matrix by matrix 'a'. Performs the multiplication in 'OpenGL' order (ie,
   // backwards)
