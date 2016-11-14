@@ -17,7 +17,7 @@ public:
   Texture();
   virtual ~Texture();
 
-  bool LoadFromFile(const std::string &filename);
+  bool LoadFromFile(const std::string &filename, unsigned int flags = 0);
 
   inline bool Valid() const
   {

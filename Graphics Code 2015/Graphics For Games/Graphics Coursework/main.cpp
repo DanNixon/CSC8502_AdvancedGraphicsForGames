@@ -17,7 +17,7 @@
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
 #include "Font.h"
-#include "TextNode.h"
+#include "PerformanceMonitorNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -34,6 +34,40 @@ int main()
   if (!r.HasInitialised())
     return 1;
 
+  // SYSTEM MONITOR STUFF
+
+  Font * sysMonFont = new Font(16, 16);
+  sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
+
+  ShaderProgram *sysMonShader = new ShaderProgram(
+  { new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
+    new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl") });
+
+  r.Root()->AddChild(new CameraNode("sysMonCamera"));
+
+  CameraSelectorNode *sysMonCameraSelect = new CameraSelectorNode("sysMonCameraSelect");
+  r.Root()->AddChild(sysMonCameraSelect);
+  sysMonCameraSelect->SetCamera("sysMonCamera");
+
+  auto dims = r.ParentWindow().GetScreenSize();
+  r.Root()->FindFirstChildByName("sysMonCameraSelect")->AddChild(
+    new ProjectionNode("sysMonProj", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
+
+  r.Root()->FindFirstChildByName("sysMonProj")->AddChild(new ShaderNode("sysMonShader", sysMonShader));
+
+  r.Root()->FindFirstChildByName("sysMonShader")->AddChild(
+    new TextureNode("sysMonFontTex", { { sysMonFont, "diffuseTex", 1 } }));
+
+  r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
+
+  // TODO
+  TextNode * sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont);
+  r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
+  sysMonNode->SetLocalTransformation(Matrix4::Scale(20.0f) * Matrix4::Translation(Vector3(0.0, 1.0, 0.0)));
+  sysMonNode->SetText("Test");
+
+  // END SYSTEM MONITOR STUFF
+
   Texture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
 
@@ -43,17 +77,11 @@ int main()
   Texture *tex3 = new Texture();
   tex3->LoadFromFile(TEXTUREDIR "stainedglass.tga");
 
-  Font * font = new Font(16, 16);
-  font->LoadFromFile(TEXTUREDIR "tahoma.tga");
-
   ShaderProgram *shader1 = new ShaderProgram(
       {new VertexShader(SHADERDIR "TexVertex.glsl"), new FragmentShader(SHADERDIR "TexFrag.glsl")});
 
   ShaderProgram *shader2 = new ShaderProgram({new VertexShader(SHADERDIR "TexVertex.glsl"),
                                               new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});
-
-  ShaderProgram *basicTexShader = new ShaderProgram({ new VertexShader(SHADERDIR "TexVertex.glsl"),
-    new FragmentShader(SHADERDIR "TexFrag.glsl") });
 
   PositionableCamera *cam1 = new PositionableCamera("cam1");
   r.Root()->AddChild(cam1);
@@ -63,17 +91,6 @@ int main()
   CameraSelectorNode *cs1 = new CameraSelectorNode("cs1");
   r.Root()->AddChild(cs1);
   cs1->SetCamera("cam1");
-  cs1->SetActive(true);
-
-  r.Root()->FindFirstChildByName("cs1")->AddChild(
-    new ProjectionNode("orth", Matrix4::Orthographic(-1.0f, 1.0f, 800.0f, 0.0f, 600.0f, 0.0f)));
-  r.Root()->FindFirstChildByName("orth")->AddChild(new ShaderNode("basicTexShader", basicTexShader));
-  r.Root()->FindFirstChildByName("basicTexShader")->AddChild(
-    new TextureNode("fontTexture", { { font, "diffuseTex", 1 } }));
-  r.Root()->FindFirstChildByName("fontTexture")->AddChild(new ShaderSyncNode("hudSS"));
-  TextNode * textNode = new TextNode("textNode", font);
-  r.Root()->FindFirstChildByName("hudSS")->AddChild(textNode);
-  textNode->SetText("Test");
 
   r.Root()->FindFirstChildByName("cs1")->AddChild(
       new ProjectionNode("proj1", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
@@ -110,7 +127,10 @@ int main()
 
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
-    r.Root()->Update(w.GetTimer()->GetTimedMS());
+    float msec = w.GetTimer()->GetTimedMS();
+    sysMonNode->SetText("msec = " + std::to_string(msec));
+
+    r.Root()->Update(msec);
     r.RenderScene();
 
 // TODO: dev only

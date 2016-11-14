@@ -18,6 +18,19 @@ TextMesh::TextMesh(size_t maxLength, Font *font)
   m_vertices = new Vector3[m_numVertices];
   m_textureCoords = new Vector2[m_numVertices];
 
+  for (size_t i = 0; i < maxLength; ++i)
+  {
+    m_vertices[(i * 4)] = Vector3((float)i, 0, 0);
+    m_vertices[(i * 4) + 1] = Vector3((float)i, -1, 0);
+    m_vertices[(i * 4) + 2] = Vector3((float)i + 1, 0, 0);
+    m_vertices[(i * 4) + 3] = Vector3((float)i + 1, -1, 0);
+
+    m_textureCoords[(i * 4)] = Vector2();
+    m_textureCoords[(i * 4) + 1] = Vector2();
+    m_textureCoords[(i * 4) + 2] = Vector2();
+    m_textureCoords[(i * 4) + 3] = Vector2();
+  }
+
   SetText("");
 }
 
@@ -48,11 +61,6 @@ void TextMesh::SetText(const std::string &text)
 
     float x = (float)(c % m_font->XDim());
     float y = (float)((c / m_font->XDim()) % m_font->YDim());
-
-    m_vertices[(i * 4)] = Vector3((float)i, 0, 0);
-    m_vertices[(i * 4) + 1] = Vector3((float)i, -1, 0);
-    m_vertices[(i * 4) + 2] = Vector3((float)i + 1, 0, 0);
-    m_vertices[(i * 4) + 3] = Vector3((float)i + 1, -1, 0);
 
     // Now we can simply use our worked out font character sizes
     // to generate the correct texture coordinates for each glyph...
