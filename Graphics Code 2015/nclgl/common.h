@@ -14,7 +14,7 @@ _-_-_-_-_-_-_-""  ""
 
 #define WEEK_2_CODE
 //#define USE_MD5MESH
-//#define WEEK_3_CODE
+#define WEEK_3_CODE
 
 // It's pi(ish)...
 static const float PI = 3.14159265358979323846f;
