@@ -36,6 +36,8 @@ public:
 
   Matrix4 ViewMatrix() const;
 
+  virtual void Update(float msec);
+
 protected:
   float m_yawAngle;
   float m_pitchAngle;

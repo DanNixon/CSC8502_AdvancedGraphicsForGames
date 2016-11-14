@@ -13,8 +13,6 @@ class PositionableCamera : public CameraNode
 public:
   static const KeyboardKeys KEY_MOVE_FORWARDS = KEYBOARD_W;
   static const KeyboardKeys KEY_MOVE_BACKWARS = KEYBOARD_S;
-  static const KeyboardKeys KEY_MOVE_UP = KEYBOARD_SHIFT;
-  static const KeyboardKeys KEY_MOVE_DOWN = KEYBOARD_SPACE;
   static const KeyboardKeys KEY_MOVE_LEFT = KEYBOARD_A;
   static const KeyboardKeys KEY_MOVE_RIGHT = KEYBOARD_D;
 

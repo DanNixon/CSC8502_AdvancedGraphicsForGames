@@ -54,7 +54,7 @@ public:
     return Vector3(values[4], values[5], values[6]);
   }
 
-  Vector3 GetFacingVector() const
+  Vector3 GetBackVector() const
   {
     return Vector3(values[8], values[9], values[10]);
   }
