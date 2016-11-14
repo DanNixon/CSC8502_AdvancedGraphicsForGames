@@ -8,6 +8,7 @@ namespace GraphicsCoursework
 {
 TextMesh::TextMesh(size_t maxLength, Font *font)
     : m_font(font)
+    , m_maxLength(maxLength)
     , m_texelWidth(1.0f / font->XDim())
     , m_texelHeight(1.0f / font->YDim())
 {
@@ -31,7 +32,7 @@ TextMesh::TextMesh(size_t maxLength, Font *font)
     m_textureCoords[(i * 4) + 3] = Vector2();
   }
 
-  SetText("");
+  BufferData();
 }
 
 TextMesh::~TextMesh()
@@ -48,7 +49,7 @@ void TextMesh::SetText(const std::string &text)
   (0,0) (top LEFT of the screen intuitively), the text
   'hangs down' from the top left, and is visible.
   */
-  for (unsigned int i = 0; i < text.length(); ++i)
+  for (unsigned int i = 0; i < min(text.length(), m_maxLength); ++i)
   {
     unsigned int c = (unsigned int)text[i];
 
@@ -70,6 +71,9 @@ void TextMesh::SetText(const std::string &text)
     m_textureCoords[(i * 4) + 3] = Vector2((x + 1) * m_texelWidth, (y + 1) * m_texelHeight);
   }
 
-  BufferData();
+  glBindVertexArray(m_arrayObject);
+  glDeleteBuffers(1, &m_bufferObjects[TEXTURE_BUFFER]);
+  RegisterBuffer(TEXTURE_BUFFER, 2, m_textureCoords);
+  glBindVertexArray(0);
 }
 }

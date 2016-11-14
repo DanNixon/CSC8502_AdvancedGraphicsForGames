@@ -157,29 +157,13 @@ void Mesh::BufferData()
 {
   glBindVertexArray(m_arrayObject);
 
-  glGenBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
-  glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
-  glBufferData(GL_ARRAY_BUFFER, m_numVertices * sizeof(Vector3), m_vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(VERTEX_BUFFER);
+  RegisterBuffer(VERTEX_BUFFER, 3, m_vertices);
 
   if (m_textureCoords)
-  {
-    glGenBuffers(1, &m_bufferObjects[TEXTURE_BUFFER]);
-    glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[TEXTURE_BUFFER]);
-    glBufferData(GL_ARRAY_BUFFER, m_numVertices * sizeof(Vector2), m_textureCoords, GL_STATIC_DRAW);
-    glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(TEXTURE_BUFFER);
-  }
-
+    RegisterBuffer(TEXTURE_BUFFER, 2, m_textureCoords);
+  
   if (m_colours)
-  {
-    glGenBuffers(1, &m_bufferObjects[COLOUR_BUFFER]);
-    glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[COLOUR_BUFFER]);
-    glBufferData(GL_ARRAY_BUFFER, m_numVertices * sizeof(Vector4), m_colours, GL_STATIC_DRAW);
-    glVertexAttribPointer(COLOUR_BUFFER, 4, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(COLOUR_BUFFER);
-  }
+    RegisterBuffer(COLOUR_BUFFER, 4, m_colours);
 
   if (m_indices)
   {
@@ -189,4 +173,13 @@ void Mesh::BufferData()
   }
 
   glBindVertexArray(0);
+}
+
+void Mesh::RegisterBuffer(Buffer b, GLuint width, void * data)
+{
+  glGenBuffers(1, &m_bufferObjects[b]);
+  glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[b]);
+  glBufferData(GL_ARRAY_BUFFER, m_numVertices * width * sizeof(float), data, GL_STATIC_DRAW);
+  glVertexAttribPointer(b, width, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(b);
 }

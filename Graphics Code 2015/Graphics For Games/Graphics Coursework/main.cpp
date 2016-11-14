@@ -23,7 +23,7 @@ using namespace GraphicsCoursework;
 
 int main()
 {
-  Window w("Planet", 800, 600, false);
+  Window w("Planet", 1440, 720, false);
   if (!w.HasInitialised())
     return 1;
 
@@ -33,6 +33,8 @@ int main()
   Renderer r(w);
   if (!r.HasInitialised())
     return 1;
+
+  WindowsSystemMonitor sysMon;
 
   // SYSTEM MONITOR STUFF
 
@@ -60,11 +62,9 @@ int main()
 
   r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
 
-  // TODO
-  TextNode * sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont);
+  TextNode * sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
   r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
-  sysMonNode->SetLocalTransformation(Matrix4::Scale(20.0f) * Matrix4::Translation(Vector3(0.0, 1.0, 0.0)));
-  sysMonNode->SetText("Test");
+  sysMonNode->SetLocalTransformation(Matrix4::Translation(Vector3(0.f, 16.f, 0.0f)) * Matrix4::Scale(16.0f));
 
   // END SYSTEM MONITOR STUFF
 
@@ -123,21 +123,11 @@ int main()
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
 
-  WindowsSystemMonitor sysMon;
-
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
-    float msec = w.GetTimer()->GetTimedMS();
-    sysMonNode->SetText("msec = " + std::to_string(msec));
-
-    r.Root()->Update(msec);
-    r.RenderScene();
-
-// TODO: dev only
-#if 0
     sysMon.Update();
-    std::cout << sysMon << '\n';
-#endif
+    r.Root()->Update(w.GetTimer()->GetTimedMS());
+    r.RenderScene();
   }
 
   delete tex1;

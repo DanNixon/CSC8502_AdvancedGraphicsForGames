@@ -19,6 +19,8 @@ WindowsSystemMonitor::~WindowsSystemMonitor()
 
 void WindowsSystemMonitor::Update()
 {
+  ISystemMonitor::Update();
+
   MEMORYSTATUSEX memInfo;
   memInfo.dwLength = sizeof(MEMORYSTATUSEX);
   GlobalMemoryStatusEx(&memInfo);
@@ -38,5 +40,7 @@ void WindowsSystemMonitor::Update()
 
   m_metrics[VIRTUAL_MEMORY_SELF_USED] = ((float)pmc.PagefileUsage) * BYTES_TO_MB;
   m_metrics[VIRTUAL_MEMORY_SELF_USED_PEAK] = ((float)pmc.PeakPagefileUsage) * BYTES_TO_MB;
+
+  // TODO: CPU
 }
 }

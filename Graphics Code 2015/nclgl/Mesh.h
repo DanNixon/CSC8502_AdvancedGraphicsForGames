@@ -36,6 +36,7 @@ public:
 
 protected:
   void BufferData();
+  void RegisterBuffer(Buffer b, GLuint width, void *data);
 
 protected:
   GLuint m_arrayObject;

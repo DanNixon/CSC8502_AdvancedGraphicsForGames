@@ -21,6 +21,12 @@ public:
     VIRTUAL_MEMORY_SELF_USED,
     VIRTUAL_MEMORY_SELF_USED_PEAK,
 
+    CPU_USAGE,
+    CPU_SELF_USAGE,
+
+    AVERAGE_FRAMES_PER_SECOND,
+    AVERAGE_MS_PER_FRAME,
+
     METRIC_COUNT
   };
 
@@ -31,7 +37,7 @@ public:
   ISystemMonitor();
   virtual ~ISystemMonitor();
 
-  virtual void Update() = 0;
+  virtual void Update();
 
   inline float Metric(Metrics m) const
   {
