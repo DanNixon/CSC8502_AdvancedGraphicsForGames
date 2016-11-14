@@ -82,6 +82,7 @@ int main()
   MeshNode *s2 = new MeshNode("s2", Mesh::GenerateSquare(), true);
   r.Root()->FindFirstChildByName("ss2")->AddChild(s2);
   s2->SetLocalTransformation(Matrix4::Translation(Vector3(2.0f, 2.0f, 10.0f)));
+  s2->SetLocalRotation(Matrix4::Rotation(30.0f, Vector3(1, 0, 0)));
 
   MeshNode *s3 = new MeshNode("s3", Mesh::GenerateSquare(), true);
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);

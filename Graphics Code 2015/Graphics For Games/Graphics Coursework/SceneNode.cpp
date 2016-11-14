@@ -104,19 +104,13 @@ SceneNode *SceneNode::FindFirstChildByName(const std::string &name)
   return retVal;
 }
 
-void SceneNode::UpdateTransformations()
-{
-  if (m_parent == nullptr)
-    m_worldTransform = m_localTransform;
-  else
-    m_worldTransform = m_parent->m_worldTransform * m_localTransform;
-
-  for (auto it = m_children.begin(); it != m_children.end(); ++it)
-    (*it)->UpdateTransformations();
-}
-
 void SceneNode::Update(float msec)
 {
+  if (m_parent == nullptr)
+    m_worldTransform = m_localTransform * m_localRotation;
+  else
+    m_worldTransform = m_parent->m_worldTransform * m_localTransform * m_localRotation;
+
   for (auto it = m_children.begin(); it != m_children.end(); ++it)
     (*it)->Update(msec);
 }

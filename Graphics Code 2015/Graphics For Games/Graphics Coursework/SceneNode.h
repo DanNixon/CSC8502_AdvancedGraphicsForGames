@@ -43,6 +43,16 @@ public:
   SceneNode *Child(const std::string &name);
   SceneNode *FindFirstChildByName(const std::string &name);
 
+  virtual void SetLocalRotation(const Matrix4 &r)
+  {
+    m_localRotation = r;
+  }
+
+  inline Matrix4 GetLocalRotation() const
+  {
+    return m_localRotation;
+  }
+
   virtual void SetLocalTransformation(const Matrix4 &t)
   {
     m_localTransform = t;
@@ -65,8 +75,6 @@ public:
     return Vector3::Dot(dir, dir);
   }
 
-  void UpdateTransformations();
-
   virtual void Update(float msec);
   virtual void Render(RenderState &state);
 
@@ -86,6 +94,7 @@ protected:
 
   bool m_active;
 
+  Matrix4 m_localRotation;
   Matrix4 m_localTransform;
   Matrix4 m_worldTransform;
 
