@@ -62,6 +62,9 @@
     <ClCompile Include="ISystemMonitor.cpp">
       <Filter>Performance Monitoring</Filter>
     </ClCompile>
+    <ClCompile Include="TextNode.cpp">
+      <Filter>Renderables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -129,6 +132,9 @@
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="TextNode.h">
+      <Filter>Renderables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -87,6 +87,7 @@
     <ClCompile Include="ShaderNode.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShaderSyncNode.cpp" />
+    <ClCompile Include="TextNode.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureNode.cpp" />
     <ClCompile Include="WindowsSystemMonitor.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="ShaderSyncNode.h" />
+    <ClInclude Include="TextNode.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureNode.h" />
     <ClInclude Include="WindowsSystemMonitor.h" />
