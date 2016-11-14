@@ -5,7 +5,9 @@
 #include "../../nclgl/Window.h"
 
 #include "CameraSelectorNode.h"
+#include "Font.h"
 #include "MeshNode.h"
+#include "PerformanceMonitorNode.h"
 #include "PositionableCamera.h"
 #include "ProjectionNode.h"
 #include "Renderer.h"
@@ -16,8 +18,6 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
-#include "Font.h"
-#include "PerformanceMonitorNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -38,12 +38,12 @@ int main()
 
   // SYSTEM MONITOR STUFF
 
-  Font * sysMonFont = new Font(16, 16);
+  Font *sysMonFont = new Font(16, 16);
   sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
 
-  ShaderProgram *sysMonShader = new ShaderProgram(
-  { new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
-    new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl") });
+  ShaderProgram *sysMonShader =
+      new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
+                         new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")});
 
   r.Root()->AddChild(new CameraNode("sysMonCamera"));
 
@@ -52,19 +52,25 @@ int main()
   sysMonCameraSelect->SetCamera("sysMonCamera");
 
   auto dims = r.ParentWindow().GetScreenSize();
-  r.Root()->FindFirstChildByName("sysMonCameraSelect")->AddChild(
-    new ProjectionNode("sysMonProj", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
+  r.Root()
+      ->FindFirstChildByName("sysMonCameraSelect")
+      ->AddChild(new ProjectionNode(
+          "sysMonProj", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
 
-  r.Root()->FindFirstChildByName("sysMonProj")->AddChild(new ShaderNode("sysMonShader", sysMonShader));
+  r.Root()
+      ->FindFirstChildByName("sysMonProj")
+      ->AddChild(new ShaderNode("sysMonShader", sysMonShader));
 
-  r.Root()->FindFirstChildByName("sysMonShader")->AddChild(
-    new TextureNode("sysMonFontTex", { { sysMonFont, "diffuseTex", 1 } }));
+  r.Root()
+      ->FindFirstChildByName("sysMonShader")
+      ->AddChild(new TextureNode("sysMonFontTex", {{sysMonFont, "diffuseTex", 1}}));
 
   r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
 
-  TextNode * sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
+  TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
   r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
-  sysMonNode->SetLocalTransformation(Matrix4::Translation(Vector3(0.f, 16.f, 0.0f)) * Matrix4::Scale(16.0f));
+  sysMonNode->SetLocalTransformation(Matrix4::Translation(Vector3(0.f, 16.f, 0.0f)) *
+                                     Matrix4::Scale(16.0f));
 
   // END SYSTEM MONITOR STUFF
 
@@ -123,9 +129,13 @@ int main()
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
 
+  GameTimer sysMonTimer;
+
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
-    sysMon.Update();
+    if (sysMonTimer.GetTimedMS(false) > 1000.0f)
+      sysMon.Update(sysMonTimer.GetTimedMS());
+
     r.Root()->Update(w.GetTimer()->GetTimedMS());
     r.RenderScene();
   }

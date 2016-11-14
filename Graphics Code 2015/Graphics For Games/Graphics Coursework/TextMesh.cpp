@@ -67,7 +67,7 @@ void TextMesh::SetText(const std::string &text)
     // to generate the correct texture coordinates for each glyph...
     m_textureCoords[(i * 4)] = Vector2(x * m_texelWidth, (y)*m_texelHeight);
     m_textureCoords[(i * 4) + 1] = Vector2(x * m_texelWidth, (y + 1) * m_texelHeight);
-    m_textureCoords[(i * 4) + 2] = Vector2((x + 1) * m_texelWidth, (y) * m_texelHeight);
+    m_textureCoords[(i * 4) + 2] = Vector2((x + 1) * m_texelWidth, (y)*m_texelHeight);
     m_textureCoords[(i * 4) + 3] = Vector2((x + 1) * m_texelWidth, (y + 1) * m_texelHeight);
   }
 

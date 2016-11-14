@@ -21,7 +21,6 @@ public:
     VIRTUAL_MEMORY_SELF_USED,
     VIRTUAL_MEMORY_SELF_USED_PEAK,
 
-    CPU_USAGE,
     CPU_SELF_USAGE,
 
     AVERAGE_FRAMES_PER_SECOND,
@@ -37,16 +36,24 @@ public:
   ISystemMonitor();
   virtual ~ISystemMonitor();
 
-  virtual void Update();
+  inline void MarkFrame()
+  {
+    m_frameCount++;
+  }
 
   inline float Metric(Metrics m) const
   {
     return m_metrics[m];
   }
 
+  bool HaveNewData();
+  virtual void Update(float dTimeMs);
+
   friend std::ostream &operator<<(std::ostream &stream, const ISystemMonitor &o);
 
 protected:
+  bool m_haveNewData;
   float m_metrics[METRIC_COUNT];
+  size_t m_frameCount;
 };
 }
