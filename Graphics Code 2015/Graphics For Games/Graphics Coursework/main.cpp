@@ -16,6 +16,8 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
+#include "Font.h"
+#include "TextNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -41,11 +43,17 @@ int main()
   Texture *tex3 = new Texture();
   tex3->LoadFromFile(TEXTUREDIR "stainedglass.tga");
 
+  Font * font = new Font(16, 16);
+  font->LoadFromFile(TEXTUREDIR "tahoma.tga");
+
   ShaderProgram *shader1 = new ShaderProgram(
       {new VertexShader(SHADERDIR "TexVertex.glsl"), new FragmentShader(SHADERDIR "TexFrag.glsl")});
 
   ShaderProgram *shader2 = new ShaderProgram({new VertexShader(SHADERDIR "TexVertex.glsl"),
                                               new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});
+
+  ShaderProgram *basicTexShader = new ShaderProgram({ new VertexShader(SHADERDIR "TexVertex.glsl"),
+    new FragmentShader(SHADERDIR "TexFrag.glsl") });
 
   PositionableCamera *cam1 = new PositionableCamera("cam1");
   r.Root()->AddChild(cam1);
@@ -56,6 +64,16 @@ int main()
   r.Root()->AddChild(cs1);
   cs1->SetCamera("cam1");
   cs1->SetActive(true);
+
+  r.Root()->FindFirstChildByName("cs1")->AddChild(
+    new ProjectionNode("orth", Matrix4::Orthographic(-1.0f, 1.0f, 800.0f, 0.0f, 600.0f, 0.0f)));
+  r.Root()->FindFirstChildByName("orth")->AddChild(new ShaderNode("basicTexShader", basicTexShader));
+  r.Root()->FindFirstChildByName("basicTexShader")->AddChild(
+    new TextureNode("fontTexture", { { font, "diffuseTex", 1 } }));
+  r.Root()->FindFirstChildByName("fontTexture")->AddChild(new ShaderSyncNode("hudSS"));
+  TextNode * textNode = new TextNode("textNode", font);
+  r.Root()->FindFirstChildByName("hudSS")->AddChild(textNode);
+  textNode->SetText("Test");
 
   r.Root()->FindFirstChildByName("cs1")->AddChild(
       new ProjectionNode("proj1", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
@@ -88,7 +106,7 @@ int main()
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
 
-  WindowsSystemMonitor mon;
+  WindowsSystemMonitor sysMon;
 
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
@@ -97,8 +115,8 @@ int main()
 
 // TODO: dev only
 #if 0
-    mon.Update();
-    std::cout << mon << '\n';
+    sysMon.Update();
+    std::cout << sysMon << '\n';
 #endif
   }
 

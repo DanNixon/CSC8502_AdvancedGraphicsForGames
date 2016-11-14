@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="CameraSelectorNode.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="ISystemMonitor.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -87,6 +88,7 @@
     <ClCompile Include="ShaderNode.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShaderSyncNode.cpp" />
+    <ClCompile Include="TextMesh.cpp" />
     <ClCompile Include="TextNode.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureNode.cpp" />
@@ -95,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraSelectorNode.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="ISystemMonitor.h" />
     <ClInclude Include="Light.h" />
@@ -112,6 +115,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="ShaderSyncNode.h" />
+    <ClInclude Include="TextMesh.h" />
     <ClInclude Include="TextNode.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureNode.h" />
