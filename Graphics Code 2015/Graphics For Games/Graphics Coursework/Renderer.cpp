@@ -25,6 +25,20 @@ Renderer::~Renderer()
   delete m_sceneGraphRoot;
 }
 
+void Renderer::AddPersistentDataNode(ShaderDataNode * node)
+{
+  m_state.shaderDataNodeStack.push_back(node);
+}
+
+bool Renderer::RemovePersistentDataNode(ShaderDataNode * node)
+{
+  auto it = std::find(m_state.shaderDataNodeStack.begin(), m_state.shaderDataNodeStack.end(), node);
+  bool found = (it != m_state.shaderDataNodeStack.end());
+  if (found)
+    m_state.shaderDataNodeStack.erase(it);
+  return found;
+}
+
 void Renderer::RenderScene()
 {
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -42,6 +56,8 @@ void Renderer::RenderScene()
   // Render transparent nodes
   for (auto it = m_state.transparentNodes.begin(); it != m_state.transparentNodes.end(); ++it)
     (*it)->RenderSingle(m_state);
+
+  m_state.transparentNodes.clear();
 
   SwapBuffers();
 }

@@ -22,6 +22,7 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
+#include "Light.h"
 
 using namespace GraphicsCoursework;
 
@@ -78,6 +79,13 @@ int main()
 
   // END SYSTEM MONITOR STUFF
 
+  Light *sun = new Light("sun");
+  r.Root()->AddChild(sun);
+  r.AddPersistentDataNode(sun);
+  sun->Radius() = 500.0f;
+  sun->Colour() = Vector4(0.25f, 1.0f, 0.25f, 1.0f);
+  sun->SetLocalTransformation(Matrix4::Translation(Vector3(25.0f, 25.0f, 10.0f)));
+
   ITexture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
 
@@ -94,7 +102,7 @@ int main()
   });
 
   ShaderProgram *shader1 = new ShaderProgram(
-      {new VertexShader(SHADERDIR "TexVertex.glsl"), new FragmentShader(SHADERDIR "TexFrag.glsl")});
+      {new VertexShader(SHADERDIR "PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "PerPixelFragment.glsl")});
 
   ShaderProgram *shader2 = new ShaderProgram({new VertexShader(SHADERDIR "TexVertex.glsl"),
                                               new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});
@@ -123,7 +131,7 @@ int main()
   tri1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -20.0f)));
 
   tri1->AddChild(new TextureNode("texm2", {{tex3, "diffuseTex", 1}}));
-  r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader2));
+  r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader1));
   r.Root()->FindFirstChildByName("shader2")->AddChild(new ShaderSyncNode("ss2"));
 
   MeshNode *s1 = new MeshNode("s1", Mesh::GenerateQuad(), true);

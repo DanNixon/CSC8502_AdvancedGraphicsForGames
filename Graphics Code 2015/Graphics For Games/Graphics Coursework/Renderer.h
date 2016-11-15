@@ -21,11 +21,12 @@ public:
     return m_sceneGraphRoot;
   }
 
+  virtual void AddPersistentDataNode(ShaderDataNode * node);
+  virtual bool RemovePersistentDataNode(ShaderDataNode * node);
+
   virtual void RenderScene();
 
 protected:
-  friend class Light;
-
   SceneNode *m_sceneGraphRoot;
   RenderState m_state;
 };

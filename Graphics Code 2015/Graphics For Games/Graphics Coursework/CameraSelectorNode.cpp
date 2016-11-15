@@ -4,11 +4,12 @@
 
 #include "CameraNode.h"
 #include "Renderer.h"
+#include "ShaderProgram.h"
 
 namespace GraphicsCoursework
 {
 CameraSelectorNode::CameraSelectorNode(const std::string &name)
-    : SceneNode(name)
+    : ShaderDataNode(name)
     , m_camera(nullptr)
 {
 }
@@ -36,15 +37,21 @@ void CameraSelectorNode::SetActive(bool active)
   m_active = active && m_camera != nullptr;
 }
 
-void CameraSelectorNode::PreRender(RenderState &state)
+void CameraSelectorNode::PreRender(RenderState & state)
 {
+  ShaderDataNode::PreRender(state);
   state.camera = m_camera;
-  state.viewMatrix = m_camera->ViewMatrix();
 }
 
-void CameraSelectorNode::PostRender(RenderState &state)
+void CameraSelectorNode::PostRender(RenderState & state)
 {
+  ShaderDataNode::PostRender(state);
   state.camera = nullptr;
-  state.viewMatrix.ToIdentity();
+}
+
+void CameraSelectorNode::ShaderBind(ShaderProgram * s)
+{
+  glUniformMatrix4fv(glGetUniformLocation(s->Program(), "viewMatrix"), 1, false, (float *)&m_camera->ViewMatrix());
+  glUniform3fv(glGetUniformLocation(s->Program(), "cameraPos"), 1, (float *)&m_camera->GetWorldTransformation().GetPositionVector());
 }
 }

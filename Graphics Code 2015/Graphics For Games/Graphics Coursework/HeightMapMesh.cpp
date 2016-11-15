@@ -99,10 +99,16 @@ void HeightMapMesh::SetHeightmap(float *height)
   // Rebuild normals
   GenerateNormals();
 
-  // Rebuffer vertices
   glBindVertexArray(m_arrayObject);
+
+  // Rebuffer vertices
   glDeleteBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
   RegisterBuffer(VERTEX_BUFFER, 3, m_vertices);
+
+  // Rebuffer normals
+  glDeleteBuffers(1, &m_bufferObjects[NORMAL_BUFFER]);
+  RegisterBuffer(NORMAL_BUFFER, 3, m_normals);
+
   glBindVertexArray(0);
 }
 
@@ -118,10 +124,16 @@ void HeightMapMesh::SetHeightmapFromFBM(FractalBrownianMotion *fbm)
   // Rebuild normals
   GenerateNormals();
 
-  // Rebuffer vertices
   glBindVertexArray(m_arrayObject);
+
+  // Rebuffer vertices
   glDeleteBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
   RegisterBuffer(VERTEX_BUFFER, 3, m_vertices);
+
+  // Rebuffer normals
+  glDeleteBuffers(1, &m_bufferObjects[NORMAL_BUFFER]);
+  RegisterBuffer(NORMAL_BUFFER, 3, m_normals);
+
   glBindVertexArray(0);
 }
 }

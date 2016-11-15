@@ -22,7 +22,6 @@ struct RenderState
   }
 
   CameraNode *camera;
-  Matrix4 viewMatrix;
 
   ShaderProgram *shader;
   GLuint numLights;

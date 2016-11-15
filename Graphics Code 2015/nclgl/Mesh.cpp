@@ -10,6 +10,11 @@ Mesh *Mesh::GenerateTriangle()
   m->m_vertices[1] = Vector3(0.5f, -0.5f, 0.0f);
   m->m_vertices[2] = Vector3(-0.5f, -0.5f, 0.0f);
 
+  m->m_normals = new Vector3[m->m_numVertices];
+  m->m_normals[0] = Vector3(0.0f, 0.0f, 1.0f);
+  m->m_normals[1] = Vector3(0.0f, 0.0f, 1.0f);
+  m->m_normals[2] = Vector3(0.0f, 0.0f, 1.0f);
+
   m->m_colours = new Vector4[m->m_numVertices];
   m->m_colours[0] = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
   m->m_colours[1] = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
@@ -20,7 +25,6 @@ Mesh *Mesh::GenerateTriangle()
   m->m_textureCoords[1] = Vector2(1.0f, 1.0f);
   m->m_textureCoords[2] = Vector2(0.0f, 1.0f);
 
-  m->GenerateNormals();
   m->BufferData();
 
   return m;
@@ -33,10 +37,16 @@ Mesh *Mesh::GenerateQuad()
   m->m_type = GL_TRIANGLE_STRIP;
 
   m->m_vertices = new Vector3[m->m_numVertices];
-  m->m_vertices[0] = Vector3(-1.0f, -1.0f, 0.0f);
-  m->m_vertices[1] = Vector3(-1.0f, 1.0f, 0.0f);
-  m->m_vertices[2] = Vector3(1.0f, -1.0f, 0.0f);
-  m->m_vertices[3] = Vector3(1.0f, 1.0f, 0.0f);
+  m->m_vertices[0] = Vector3(-1.0f, 1.0f, 0.0f);
+  m->m_vertices[1] = Vector3(-1.0f, -1.0f, 0.0f);
+  m->m_vertices[2] = Vector3(1.0f, 1.0f, 0.0f);
+  m->m_vertices[3] = Vector3(1.0f, -1.0f, 0.0f);
+
+  m->m_normals = new Vector3[m->m_numVertices];
+  m->m_normals[0] = Vector3(0.0f, 0.0f, 1.0f);
+  m->m_normals[1] = Vector3(0.0f, 0.0f, 1.0f);
+  m->m_normals[2] = Vector3(0.0f, 0.0f, 1.0f);
+  m->m_normals[3] = Vector3(0.0f, 0.0f, 1.0f);
 
   m->m_colours = new Vector4[m->m_numVertices];
   m->m_colours[0] = Vector4(1.0f, 0.0f, 0.0f, 0.5f);
@@ -50,7 +60,6 @@ Mesh *Mesh::GenerateQuad()
   m->m_textureCoords[2] = Vector2(1.0f, 1.0f);
   m->m_textureCoords[3] = Vector2(1.0f, 0.0f);
 
-  m->GenerateNormals();
   m->BufferData();
 
   return m;
@@ -171,30 +180,21 @@ void Mesh::GenerateNormals()
   for (GLuint i = 0; i < m_numVertices; ++i)
     m_normals[i] = Vector3();
 
-  // Per vertex normals
   if (m_indices != nullptr)
   {
-    GLuint i = 0;
-    unsigned int a = m_indices[i++];
-    unsigned int b = m_indices[i++];
-    unsigned int c;
-
-    for (; i < m_numIndices; i++)
+    for (GLuint i = 0; i < m_numIndices - 3; i += 3)
     {
-      c = m_indices[i++];
-
-      Vector3 normal =
-          Vector3::Cross((m_vertices[b] - m_vertices[a]), (m_vertices[c] - m_vertices[a]));
-
+      unsigned int a = m_indices[i];
+      unsigned int b = m_indices[i + 1];
+      unsigned int c = m_indices[i + 2];
+      
+      Vector3 normal = Vector3::Cross((m_vertices[b] - m_vertices[a]), (m_vertices[c] - m_vertices[a]));
+      
       m_normals[a] += normal;
       m_normals[b] += normal;
       m_normals[c] += normal;
-
-      a = b;
-      b = c;
     }
   }
-  // Face normals
   else
   {
     for (GLuint i = 0; i < m_numVertices - 2; i++)

@@ -20,7 +20,7 @@ RenderableNode::~RenderableNode()
 void RenderableNode::RenderSingle(RenderState &state)
 {
   std::vector<SceneNode *> stack;
-  GetStack(stack);
+  m_parent->GetStack(stack);
 
   for (auto it = stack.rbegin(); it != stack.rend(); ++it)
     (*it)->PreRender(state);

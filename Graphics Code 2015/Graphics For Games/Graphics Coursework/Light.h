@@ -32,13 +32,10 @@ public:
     return m_radius;
   }
 
-  inline Vector3 &Colour()
+  inline Vector4 &Colour()
   {
     return m_colour;
   }
-
-  virtual void AddChild(SceneNode *child);
-  virtual bool RemoveChild(SceneNode *child);
 
   virtual void PreRender(RenderState &state);
   virtual void PostRender(RenderState &state);
@@ -49,6 +46,6 @@ protected:
   std::string m_shaderUniformNames[UNIFORM_COUNT];
 
   float m_radius;
-  Vector3 m_colour;
+  Vector4 m_colour;
 };
 }

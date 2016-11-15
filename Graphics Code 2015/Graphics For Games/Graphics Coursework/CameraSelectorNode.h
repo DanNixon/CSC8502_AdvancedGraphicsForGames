@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "SceneNode.h"
+#include "ShaderDataNode.h"
 
 namespace GraphicsCoursework
 {
 class CameraNode;
 
-class CameraSelectorNode : public SceneNode
+class CameraSelectorNode : public ShaderDataNode
 {
 public:
   CameraSelectorNode(const std::string &name);
@@ -30,6 +30,8 @@ public:
 
   virtual void PreRender(RenderState &state);
   virtual void PostRender(RenderState &state);
+
+  virtual void ShaderBind(ShaderProgram *s);
 
 protected:
   CameraNode *m_camera;
