@@ -74,6 +74,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FractalBrownianMotion.cpp" />
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="HeightMapMesh.cpp" />
     <ClCompile Include="ISystemMonitor.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="FractalBrownianMotion.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="HeightMapMesh.h" />
     <ClInclude Include="ISystemMonitor.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MeshNode.h" />

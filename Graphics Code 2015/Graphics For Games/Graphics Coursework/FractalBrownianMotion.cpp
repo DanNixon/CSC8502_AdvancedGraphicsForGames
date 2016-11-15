@@ -6,8 +6,10 @@
 
 namespace GraphicsCoursework
 {
-FractalBrownianMotion::FractalBrownianMotion(const PerlinNoise &perlin)
+  FractalBrownianMotion::FractalBrownianMotion(const PerlinNoise &perlin)
     : m_perlin(perlin)
+    , m_numOctaves(1)
+    , m_zValue(0.5f)
     , m_frequency(1.0f)
     , m_amplitude(1.0f)
     , m_lacunarity(2.0f)
@@ -19,7 +21,7 @@ FractalBrownianMotion::~FractalBrownianMotion()
 {
 }
 
-float FractalBrownianMotion::Fractal(size_t numOctaves, float x, float y, float z) const
+float FractalBrownianMotion::Fractal(float x, float y) const
 {
   float retVal = 0.0f;
 
@@ -27,9 +29,9 @@ float FractalBrownianMotion::Fractal(size_t numOctaves, float x, float y, float 
   float frequency(m_frequency);
   float amplitude(m_amplitude);
 
-  for (size_t i = 0; i < numOctaves; i++)
+  for (size_t i = 0; i < m_numOctaves; i++)
   {
-    retVal += (amplitude * m_perlin.Noise(x * frequency, y * frequency, z * frequency));
+    retVal += (amplitude * m_perlin.Noise(x * frequency, y * frequency, m_zValue * frequency));
 
     denom += amplitude;
 

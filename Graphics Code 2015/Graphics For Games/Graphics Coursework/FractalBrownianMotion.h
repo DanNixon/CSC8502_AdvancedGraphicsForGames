@@ -12,11 +12,13 @@ public:
   FractalBrownianMotion(const PerlinNoise &perlin);
   virtual ~FractalBrownianMotion();
 
-  float Fractal(size_t numOctaves, float x, float y, float z = 0.5f) const;
+  float Fractal(float x, float y) const;
 
 protected:
   const PerlinNoise &m_perlin;
 
+  size_t m_numOctaves;
+  float m_zValue;
   float m_frequency;
   float m_amplitude;
   float m_lacunarity;

@@ -18,6 +18,9 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
+#include "HeightMapMesh.h"
+#include "PerlinNoise.h"
+#include "FractalBrownianMotion.h"
 
 using namespace GraphicsCoursework;
 
@@ -128,6 +131,14 @@ int main()
   MeshNode *s3 = new MeshNode("s3", Mesh::GenerateSquare(), true);
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
+
+  HeightMapMesh *hmm = new HeightMapMesh(10.0f, 10.0f, 20, 20);
+  PerlinNoise noise;
+  FractalBrownianMotion fbm(noise);
+  hmm->SetHeightmapFromFBM(&fbm);
+  MeshNode *hm = new MeshNode("hm", hmm);
+  r.Root()->FindFirstChildByName("ss2")->AddChild(hm);
+  hm->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.0f, 0.0f)));
 
   GameTimer sysMonTimer;
 

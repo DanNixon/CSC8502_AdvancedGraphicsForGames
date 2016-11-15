@@ -77,6 +77,9 @@
     <ClCompile Include="FractalBrownianMotion.cpp">
       <Filter>Generation</Filter>
     </ClCompile>
+    <ClCompile Include="HeightMapMesh.cpp">
+      <Filter>Renderables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -159,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="FractalBrownianMotion.h">
       <Filter>Generation</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapMesh.h">
+      <Filter>Renderables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
