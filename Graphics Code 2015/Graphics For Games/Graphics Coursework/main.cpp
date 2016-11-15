@@ -83,7 +83,7 @@ int main()
   r.Root()->AddChild(sun);
   r.AddPersistentDataNode(sun);
   sun->Radius() = 500.0f;
-  //sun->Colour() = Vector4(1.0f, 1.0f, 0.25f, 1.0f);
+  sun->Colour() = Vector4(1.0f, 1.0f, 0.7f, 1.0f);
   sun->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 0.0f)));
 
   ITexture *tex1 = new Texture();
@@ -146,12 +146,13 @@ int main()
   MeshNode *s3 = new MeshNode("s3", Mesh::GenerateQuad(), true);
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
+  s3->SpecularPower() = 1000.0f;
 
   // Heightmap generation
-  PerlinNoise noise(237);
+  PerlinNoise noise;
   FractalBrownianMotion fbm(noise);
-  fbm.NumOctaves() = 3;
-  fbm.Frequency() = 15.0f;
+  fbm.NumOctaves() = 1;
+  fbm.Frequency() = 5.0f;
   fbm.ZValue() = 0.8f;
 
   HeightMapMesh *hmm = new HeightMapMesh(10.0f, 10.0f, 100, 100);

@@ -4,6 +4,9 @@ uniform sampler2D diffuseTex;
 
 uniform vec3 cameraPos;
 
+uniform float specularPower;
+uniform float specularIntensity;
+
 uniform int numLights;
 
 uniform vec4 sun_colour;
@@ -34,13 +37,13 @@ void main(void)
 	vec3 halfDir = normalize(incident + viewDir);
 
 	float rFactor = max(0.0, dot(halfDir, IN.normal));
-	float sFactor = pow(rFactor, 50.0);
+	float sFactor = pow(rFactor, specularPower);
 	
 	vec3 diffuseColour = diffuse.rgb * sun_colour.rgb;
-	vec3 specColour = (sun_colour.rgb * sFactor) * 0.33;
+	vec3 specColour = (sun_colour.rgb * sFactor) * specularIntensity;
 	
 	fragColor = vec4((diffuseColour + specColour) * atten * lambert, diffuse.a);
-	//fragColor.rgb += diffuseColour * 0.1;
+	fragColor.rgb += diffuseColour * 0.1;
 	
 	//fragColor = vec4(0, 0, lambert, 1);
 }

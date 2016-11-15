@@ -22,6 +22,16 @@ public:
     return m_cameraDistance;
   }
 
+  inline float &SpecularPower()
+  {
+    return m_specularPower;
+  }
+
+  inline float &SpecularIntensity()
+  {
+    return m_specularIntensity;
+  }
+
   virtual void RenderSingle(RenderState &state);
   virtual void Draw(RenderState &state);
 
@@ -30,5 +40,8 @@ public:
 protected:
   bool m_transparent;
   float m_cameraDistance;
+
+  float m_specularPower;
+  float m_specularIntensity;
 };
 }

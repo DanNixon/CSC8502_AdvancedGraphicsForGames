@@ -10,6 +10,8 @@ RenderableNode::RenderableNode(const std::string &name, bool transparent)
     : SceneNode(name)
     , m_transparent(transparent)
     , m_cameraDistance(0.0f)
+    , m_specularPower(10.0f)
+    , m_specularIntensity(0.33f)
 {
 }
 
@@ -33,13 +35,15 @@ void RenderableNode::RenderSingle(RenderState &state)
 
 void RenderableNode::Draw(RenderState &state)
 {
-  // Process shader
-  if (state.shader != nullptr)
-  {
-    // Set model matrix
-    glUniformMatrix4fv(glGetUniformLocation(state.shader->Program(), "modelMatrix"), 1, false,
-                       (float *)&m_worldTransform);
-  }
+  GLuint program = state.shader->Program();
+
+  // Set model matrix
+  glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, false,
+                     (float *)&m_worldTransform);
+
+  // Set lighting parameters
+  glUniform1f(glGetUniformLocation(program, "specularPower"), m_specularPower);
+  glUniform1f(glGetUniformLocation(program, "specularIntensity"), m_specularIntensity);
 }
 
 void RenderableNode::PreRender(RenderState &state)
