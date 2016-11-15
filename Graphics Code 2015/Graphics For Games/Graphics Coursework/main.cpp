@@ -5,6 +5,7 @@
 #include "../../nclgl/Window.h"
 
 #include "CameraSelectorNode.h"
+#include "CubeMapTexture.h"
 #include "Font.h"
 #include "FractalBrownianMotion.h"
 #include "HeightMapMesh.h"
@@ -85,6 +86,16 @@ int main()
 
   ITexture *tex3 = new Texture();
   tex3->LoadFromFile(TEXTUREDIR "stainedglass.tga");
+
+  ITexture *cubeMapTex = new CubeMapTexture();
+  cubeMapTex->LoadFromFiles({
+    TEXTUREDIR "rusted_west.jpg",
+    TEXTUREDIR "rusted_east.jpg",
+    TEXTUREDIR "rusted_up.jpg",
+    TEXTUREDIR "rusted_down.jpg",
+    TEXTUREDIR "rusted_south.jpg",
+    TEXTUREDIR "rusted_north.jpg",
+  });
 
   ShaderProgram *shader1 = new ShaderProgram(
       {new VertexShader(SHADERDIR "TexVertex.glsl"), new FragmentShader(SHADERDIR "TexFrag.glsl")});

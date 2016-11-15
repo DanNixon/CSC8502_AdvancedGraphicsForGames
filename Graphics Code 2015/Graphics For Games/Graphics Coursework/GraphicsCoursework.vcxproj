@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="CameraSelectorNode.cpp" />
+    <ClCompile Include="CubeMapTexture.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FractalBrownianMotion.cpp" />
     <ClCompile Include="Frustum.cpp" />
@@ -101,6 +102,7 @@
   <ItemGroup>
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraSelectorNode.h" />
+    <ClInclude Include="CubeMapTexture.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FractalBrownianMotion.h" />
     <ClInclude Include="Frustum.h" />

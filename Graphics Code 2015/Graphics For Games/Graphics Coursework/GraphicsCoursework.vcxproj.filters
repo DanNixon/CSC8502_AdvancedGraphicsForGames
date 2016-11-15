@@ -83,6 +83,9 @@
     <ClCompile Include="ITexture.cpp">
       <Filter>Texture Managment</Filter>
     </ClCompile>
+    <ClCompile Include="CubeMapTexture.cpp">
+      <Filter>Texture Managment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -170,6 +173,9 @@
       <Filter>Renderables</Filter>
     </ClInclude>
     <ClInclude Include="ITexture.h">
+      <Filter>Texture Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMapTexture.h">
       <Filter>Texture Managment</Filter>
     </ClInclude>
   </ItemGroup>

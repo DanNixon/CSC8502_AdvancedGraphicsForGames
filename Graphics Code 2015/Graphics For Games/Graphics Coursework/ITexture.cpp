@@ -20,6 +20,16 @@ ITexture::~ITexture()
   glDeleteTextures(1, &m_textureID);
 }
 
+bool ITexture::LoadFromFile(const std::string & filename, unsigned int flags)
+{
+  return false;
+}
+
+bool ITexture::LoadFromFiles(const std::vector<std::string>& filenames, unsigned int flags)
+{
+  return false;
+}
+
 void ITexture::BindTo(GLuint idx)
 {
   glActiveTexture(GL_TEXTURE0 + idx);

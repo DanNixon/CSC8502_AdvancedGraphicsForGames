@@ -4,7 +4,7 @@
 
 #include <GL/glew.h>
 #include <SOIL.h>
-#include <string>
+#include <vector>
 
 namespace GraphicsCoursework
 {
@@ -17,7 +17,8 @@ public:
   ITexture();
   virtual ~ITexture();
 
-  virtual bool LoadFromFile(const std::string &filename, unsigned int flags = 0) = 0;
+  virtual bool LoadFromFile(const std::string &filename, unsigned int flags = 0);
+  virtual bool LoadFromFiles(const std::vector<std::string> &filenames, unsigned int flags = 0);
 
   inline bool Valid() const
   {
