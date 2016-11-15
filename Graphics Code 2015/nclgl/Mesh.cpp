@@ -183,8 +183,9 @@ void Mesh::GenerateNormals()
     {
       c = m_indices[i++];
 
-      Vector3 normal = Vector3::Cross((m_vertices[b] - m_vertices[a]), (m_vertices[c] - m_vertices[a]));
-      
+      Vector3 normal =
+          Vector3::Cross((m_vertices[b] - m_vertices[a]), (m_vertices[c] - m_vertices[a]));
+
       m_normals[a] += normal;
       m_normals[b] += normal;
       m_normals[c] += normal;
@@ -198,18 +199,18 @@ void Mesh::GenerateNormals()
   {
     for (GLuint i = 0; i < m_numVertices - 2; i++)
     {
-      Vector3 & a = m_vertices[i];
-      Vector3 & b = m_vertices[i + 1];
-      Vector3 & c = m_vertices[i + 2];
+      Vector3 &a = m_vertices[i];
+      Vector3 &b = m_vertices[i + 1];
+      Vector3 &c = m_vertices[i + 2];
 
       Vector3 normal = Vector3::Cross(b - a, c - a);
-      
+
       m_normals[i] += normal;
       m_normals[i + 1] += normal;
       m_normals[i + 2] += normal;
     }
   }
-  
+
   // Normalise all normals
   for (GLuint i = 0; i < m_numVertices; ++i)
     m_normals[i].Normalise();
@@ -223,7 +224,7 @@ void Mesh::BufferData()
 
   if (m_textureCoords != nullptr)
     RegisterBuffer(TEXTURE_BUFFER, 2, m_textureCoords);
-  
+
   if (m_colours != nullptr)
     RegisterBuffer(COLOUR_BUFFER, 4, m_colours);
 
@@ -240,7 +241,7 @@ void Mesh::BufferData()
   glBindVertexArray(0);
 }
 
-void Mesh::RegisterBuffer(Buffer b, GLuint width, void * data)
+void Mesh::RegisterBuffer(Buffer b, GLuint width, void *data)
 {
   glGenBuffers(1, &m_bufferObjects[b]);
   glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[b]);
