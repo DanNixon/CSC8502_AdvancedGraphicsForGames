@@ -6,7 +6,7 @@
 
 namespace GraphicsCoursework
 {
-  FractalBrownianMotion::FractalBrownianMotion(const PerlinNoise &perlin)
+FractalBrownianMotion::FractalBrownianMotion(const PerlinNoise &perlin)
     : m_perlin(perlin)
     , m_numOctaves(1)
     , m_zValue(0.5f)

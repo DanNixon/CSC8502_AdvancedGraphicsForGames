@@ -6,8 +6,11 @@
 
 #include "CameraSelectorNode.h"
 #include "Font.h"
+#include "FractalBrownianMotion.h"
+#include "HeightMapMesh.h"
 #include "MeshNode.h"
 #include "PerformanceMonitorNode.h"
+#include "PerlinNoise.h"
 #include "PositionableCamera.h"
 #include "ProjectionNode.h"
 #include "Renderer.h"
@@ -18,9 +21,6 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
-#include "HeightMapMesh.h"
-#include "PerlinNoise.h"
-#include "FractalBrownianMotion.h"
 
 using namespace GraphicsCoursework;
 

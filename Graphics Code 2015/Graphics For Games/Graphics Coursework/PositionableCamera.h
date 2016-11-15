@@ -37,5 +37,8 @@ public:
 protected:
   float m_linearSpeed;
   float m_angularSpeed;
+
+  float m_yawAngle;
+  float m_pitchAngle;
 };
 }
