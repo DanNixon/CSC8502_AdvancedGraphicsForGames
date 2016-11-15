@@ -9,27 +9,32 @@ namespace GraphicsCoursework
 class Light : public ShaderDataNode
 {
 public:
+  enum ShaderUniforms
+  {
+    UNIFORM_POSITION,
+    UNIFORM_RADIUS,
+    UNIFORM_COLOUR,
+
+    UNIFORM_COUNT
+  };
+
+public:
   Light(const std::string &name);
   virtual ~Light();
 
-  inline float Radius() const
+  inline std::string ShaderUniformName(ShaderUniforms uniform) const
+  {
+    return m_shaderUniformNames[uniform];
+  }
+
+  inline float &Radius()
   {
     return m_radius;
   }
 
-  virtual void SetRadius(float radius)
-  {
-    m_radius = radius;
-  }
-
-  inline Vector3 Colour() const
+  inline Vector3 &Colour()
   {
     return m_colour;
-  }
-
-  virtual void SetColour(Vector3 colour)
-  {
-    m_colour = colour;
   }
 
   virtual void PreRender(RenderState &state);
@@ -38,6 +43,8 @@ public:
   virtual void ShaderBind(ShaderProgram *s);
 
 protected:
+  std::string m_shaderUniformNames[UNIFORM_COUNT];
+
   float m_radius;
   Vector3 m_colour;
 };

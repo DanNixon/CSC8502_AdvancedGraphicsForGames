@@ -89,12 +89,8 @@ int main()
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles({
-    TEXTUREDIR "rusted_west.jpg",
-    TEXTUREDIR "rusted_east.jpg",
-    TEXTUREDIR "rusted_up.jpg",
-    TEXTUREDIR "rusted_down.jpg",
-    TEXTUREDIR "rusted_south.jpg",
-    TEXTUREDIR "rusted_north.jpg",
+      TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
+      TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
   });
 
   ShaderProgram *shader1 = new ShaderProgram(

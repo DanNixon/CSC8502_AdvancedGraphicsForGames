@@ -4,8 +4,8 @@
 
 #include <GL/glew.h>
 
-#include "ShaderDataNode.h"
 #include "ITexture.h"
+#include "ShaderDataNode.h"
 
 namespace GraphicsCoursework
 {

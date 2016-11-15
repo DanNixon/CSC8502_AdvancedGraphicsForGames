@@ -10,7 +10,7 @@
 
 namespace GraphicsCoursework
 {
-class Texture: public ITexture
+class Texture : public ITexture
 {
 public:
   Texture();

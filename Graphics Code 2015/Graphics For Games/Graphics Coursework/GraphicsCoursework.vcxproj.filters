@@ -86,6 +86,9 @@
     <ClCompile Include="CubeMapTexture.cpp">
       <Filter>Texture Managment</Filter>
     </ClCompile>
+    <ClCompile Include="GLFeatureEnableNode.cpp">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -177,6 +180,9 @@
     </ClInclude>
     <ClInclude Include="CubeMapTexture.h">
       <Filter>Texture Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="GLFeatureEnableNode.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
