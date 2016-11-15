@@ -83,8 +83,8 @@ int main()
   r.Root()->AddChild(sun);
   r.AddPersistentDataNode(sun);
   sun->Radius() = 500.0f;
-  sun->Colour() = Vector4(0.25f, 1.0f, 0.25f, 1.0f);
-  sun->SetLocalTransformation(Matrix4::Translation(Vector3(25.0f, 25.0f, 10.0f)));
+  //sun->Colour() = Vector4(1.0f, 1.0f, 0.25f, 1.0f);
+  sun->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 0.0f)));
 
   ITexture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
