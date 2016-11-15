@@ -132,10 +132,16 @@ int main()
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
 
-  HeightMapMesh *hmm = new HeightMapMesh(10.0f, 10.0f, 20, 20);
-  PerlinNoise noise;
+  // Heightmap generation
+  PerlinNoise noise(237);
   FractalBrownianMotion fbm(noise);
+  fbm.NumOctaves() = 3;
+  fbm.Frequency() = 15.0f;
+  fbm.ZValue() = 0.8f;
+
+  HeightMapMesh *hmm = new HeightMapMesh(10.0f, 10.0f, 100, 100);
   hmm->SetHeightmapFromFBM(&fbm);
+
   MeshNode *hm = new MeshNode("hm", hmm);
   r.Root()->FindFirstChildByName("ss2")->AddChild(hm);
   hm->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.0f, 0.0f)));

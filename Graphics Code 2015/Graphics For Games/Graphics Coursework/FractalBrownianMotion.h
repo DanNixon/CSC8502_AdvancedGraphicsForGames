@@ -14,6 +14,36 @@ public:
 
   float Fractal(float x, float y) const;
 
+  size_t &NumOctaves()
+  {
+    return m_numOctaves;
+  }
+
+  float &ZValue()
+  {
+    return m_zValue;
+  }
+
+  float &Frequency()
+  {
+    return m_frequency;
+  }
+
+  float &Amplitude()
+  {
+    return m_amplitude;
+  }
+
+  float &Lacunarity()
+  {
+    return m_lacunarity;
+  }
+
+  float &Persistence()
+  {
+    return m_persistence;
+  }
+
 protected:
   const PerlinNoise &m_perlin;
 

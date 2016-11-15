@@ -104,9 +104,12 @@ namespace GraphicsCoursework
 
   void HeightMapMesh::SetHeightmapFromFBM(FractalBrownianMotion * fbm)
   {
+    float w = 1.0f / (float)m_widthSteps;
+    float d = 1.0f / (float)m_depthSteps;
+
     // Update y coordinates
     for (size_t i = 0; i < m_numVertices; i++)
-      m_vertices[i].y = fbm->Fractal((float)(i / m_widthSteps), (float)(i % m_widthSteps));
+      m_vertices[i].y = fbm->Fractal((float)(i % m_widthSteps) * d, (float)(i / m_widthSteps) * w);
 
     // Rebuffer vertices
     glBindVertexArray(m_arrayObject);
