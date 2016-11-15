@@ -29,7 +29,7 @@ void PositionableCamera::Update(float msec)
     return;
 
   m_pitchAngle += Window::GetMouse()->GetRelativePosition().y * m_angularSpeed;
-  m_yawAngle += Window::GetMouse()->GetRelativePosition().x * m_angularSpeed;
+  m_yawAngle -= Window::GetMouse()->GetRelativePosition().x * m_angularSpeed;
 
   m_pitchAngle = min(m_pitchAngle, 90.0f);
   m_pitchAngle = max(m_pitchAngle, -90.0f);
