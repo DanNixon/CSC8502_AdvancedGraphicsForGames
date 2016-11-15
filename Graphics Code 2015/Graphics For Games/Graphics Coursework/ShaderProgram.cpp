@@ -94,7 +94,7 @@ bool ShaderProgram::Link()
   glBindAttribLocation(m_program, VERTEX_BUFFER, "position");
   glBindAttribLocation(m_program, COLOUR_BUFFER, "colour");
   glBindAttribLocation(m_program, TEXTURE_BUFFER, "texCoord");
-  // glBindAttribLocation(m_program, NORMAL_BUFFER, "normal");
+  glBindAttribLocation(m_program, NORMAL_BUFFER, "normal");
   // glBindAttribLocation(m_program, TANGENT_BUFFER, "tangent");
 
   glLinkProgram(m_program);

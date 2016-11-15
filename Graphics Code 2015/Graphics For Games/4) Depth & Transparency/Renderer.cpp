@@ -7,7 +7,7 @@ Renderer::Renderer(Window &parent)
     , blendMode(0)
     , selectedObject(true)
 {
-  meshes[0] = Mesh::GenerateSquare();
+  meshes[0] = Mesh::GenerateQuad();
   meshes[1] = Mesh::GenerateTriangle();
 
   meshes[0]->SetTexture(

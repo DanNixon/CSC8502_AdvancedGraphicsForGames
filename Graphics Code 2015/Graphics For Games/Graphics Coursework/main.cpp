@@ -77,13 +77,13 @@ int main()
 
   // END SYSTEM MONITOR STUFF
 
-  Texture *tex1 = new Texture();
+  ITexture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
 
-  Texture *tex2 = new Texture();
+  ITexture *tex2 = new Texture();
   tex2->LoadFromFile(TEXTUREDIR "Barren Reds.jpg");
 
-  Texture *tex3 = new Texture();
+  ITexture *tex3 = new Texture();
   tex3->LoadFromFile(TEXTUREDIR "stainedglass.tga");
 
   ShaderProgram *shader1 = new ShaderProgram(
@@ -119,16 +119,16 @@ int main()
   r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader2));
   r.Root()->FindFirstChildByName("shader2")->AddChild(new ShaderSyncNode("ss2"));
 
-  MeshNode *s1 = new MeshNode("s1", Mesh::GenerateSquare(), true);
+  MeshNode *s1 = new MeshNode("s1", Mesh::GenerateQuad(), true);
   r.Root()->FindFirstChildByName("ss2")->AddChild(s1);
   s1->SetLocalTransformation(Matrix4::Translation(Vector3(3.0f, 3.0f, 15.0f)));
 
-  MeshNode *s2 = new MeshNode("s2", Mesh::GenerateSquare(), true);
+  MeshNode *s2 = new MeshNode("s2", Mesh::GenerateQuad(), true);
   r.Root()->FindFirstChildByName("ss2")->AddChild(s2);
   s2->SetLocalTransformation(Matrix4::Translation(Vector3(2.0f, 2.0f, 10.0f)));
   s2->SetLocalRotation(Matrix4::Rotation(30.0f, Vector3(1, 0, 0)));
 
-  MeshNode *s3 = new MeshNode("s3", Mesh::GenerateSquare(), true);
+  MeshNode *s3 = new MeshNode("s3", Mesh::GenerateQuad(), true);
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
 

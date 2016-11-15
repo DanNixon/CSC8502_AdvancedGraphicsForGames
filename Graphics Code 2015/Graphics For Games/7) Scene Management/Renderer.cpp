@@ -16,7 +16,7 @@ Renderer::Renderer(Window &parent)
 
   currentShader = new Shader(SHADERDIR "SceneVertex.glsl", SHADERDIR "SceneFragment.glsl");
 
-  quad = Mesh::GenerateSquare();
+  quad = Mesh::GenerateQuad();
   quad->SetTexture(
       SOIL_load_OGL_texture(TEXTUREDIR "stainedglass.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 

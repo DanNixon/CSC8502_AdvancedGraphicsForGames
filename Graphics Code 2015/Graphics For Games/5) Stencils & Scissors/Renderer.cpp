@@ -4,7 +4,7 @@ Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
 {
   triangle = Mesh::GenerateTriangle();
-  quad = Mesh::GenerateSquare();
+  quad = Mesh::GenerateQuad();
 
   currentShader = new Shader(SHADERDIR "TexturedVertex.glsl", SHADERDIR "StencilFragment.glsl");
 

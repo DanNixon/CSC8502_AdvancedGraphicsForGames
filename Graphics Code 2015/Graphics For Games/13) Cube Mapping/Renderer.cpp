@@ -5,7 +5,7 @@ Renderer::Renderer(Window &parent)
 {
   camera = new Camera();
   heightMap = new HeightMap("../ Textures / terrain .raw ");
-  quad = Mesh::GenerateSquare();
+  quad = Mesh::GenerateQuad();
 
   camera ->
       SetPosition(Vector3(RAW_WIDTH * HEIGHTMAP_X / 2.0 f, 500.0 f, RAW_WIDTH * HEIGHTMAP_X));

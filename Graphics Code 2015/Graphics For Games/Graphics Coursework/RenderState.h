@@ -3,6 +3,7 @@
 #pragma once
 
 #include <../nclgl/Matrix4.h>
+#include <GL/glew.h>
 #include <vector>
 
 namespace GraphicsCoursework
@@ -24,6 +25,7 @@ struct RenderState
   Matrix4 viewMatrix;
 
   ShaderProgram *shader;
+  GLuint numLights;
   std::vector<ShaderDataNode *> shaderDataNodeStack;
 
   std::vector<RenderableNode *> transparentNodes;

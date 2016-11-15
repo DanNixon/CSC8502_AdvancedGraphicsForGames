@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 
 #include "ShaderDataNode.h"
-#include "Texture.h"
+#include "ITexture.h"
 
 namespace GraphicsCoursework
 {
@@ -21,7 +21,7 @@ struct TextureMapping
     texture->UnBindFromShader(program, uniformName, textureBuffer);
   }
 
-  Texture *texture;
+  ITexture *texture;
   std::string uniformName;
   GLuint textureBuffer;
 };

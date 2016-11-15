@@ -76,6 +76,7 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="HeightMapMesh.cpp" />
     <ClCompile Include="ISystemMonitor.cpp" />
+    <ClCompile Include="ITexture.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshNode.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="HeightMapMesh.h" />
     <ClInclude Include="ISystemMonitor.h" />
+    <ClInclude Include="ITexture.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="PerformanceMonitorNode.h" />

@@ -7,7 +7,7 @@ Renderer::Renderer(Window &parent)
     meshes[i] = nullptr;
 
   //meshes[0] = Mesh::GenerateTriangle();
-  meshes[1] = Mesh::GenerateSquare();
+  meshes[1] = Mesh::GenerateQuad();
 
   currentShader = new Shader(SHADERDIR "BasicVertex.glsl", SHADERDIR "ColourFragment.glsl");
 

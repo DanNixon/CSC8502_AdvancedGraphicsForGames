@@ -7,12 +7,12 @@ class Mesh
 {
 public:
   static Mesh *GenerateTriangle();
-  static Mesh *GenerateSquare();
+  static Mesh *GenerateQuad();
   static Mesh *GenerateSphere(size_t resolution = 64);
 
 public:
   Mesh();
-  ~Mesh();
+  virtual ~Mesh();
 
   inline size_t NumVertices() const
   {
@@ -35,6 +35,8 @@ public:
   }
 
 protected:
+  void GenerateNormals();
+
   void BufferData();
   void RegisterBuffer(Buffer b, GLuint width, void *data);
 
@@ -51,5 +53,6 @@ protected:
   Vector3 *m_vertices;
   Vector4 *m_colours;
   Vector2 *m_textureCoords;
+  Vector3 *m_normals;
   unsigned int *m_indices;
 };

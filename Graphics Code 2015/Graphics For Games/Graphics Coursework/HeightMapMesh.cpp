@@ -82,6 +82,7 @@ HeightMapMesh::HeightMapMesh(float width, float depth, size_t widthSteps, size_t
     }
   }
 
+  GenerateNormals();
   BufferData();
 }
 
@@ -94,6 +95,9 @@ void HeightMapMesh::SetHeightmap(float *height)
   // Update y coordinates
   for (size_t i = 0; i < m_numVertices; i++)
     m_vertices[i].y = height[i];
+
+  // Rebuild normals
+  GenerateNormals();
 
   // Rebuffer vertices
   glBindVertexArray(m_arrayObject);
@@ -110,6 +114,9 @@ void HeightMapMesh::SetHeightmapFromFBM(FractalBrownianMotion *fbm)
   // Update y coordinates
   for (size_t i = 0; i < m_numVertices; i++)
     m_vertices[i].y = fbm->Fractal((float)(i % m_widthSteps) * d, (float)(i / m_widthSteps) * w);
+
+  // Rebuild normals
+  GenerateNormals();
 
   // Rebuffer vertices
   glBindVertexArray(m_arrayObject);
