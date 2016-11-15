@@ -22,7 +22,7 @@ public:
     return m_cameraDistance;
   }
 
-  virtual void RenderSingle();
+  virtual void RenderSingle(RenderState &state);
   virtual void Draw(RenderState &state);
 
   virtual void PreRender(RenderState &state);

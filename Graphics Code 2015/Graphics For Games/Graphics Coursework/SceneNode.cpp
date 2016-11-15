@@ -64,15 +64,9 @@ bool SceneNode::RemoveChild(const std::string &name)
 
   auto it = std::find_if(m_children.begin(), m_children.end(),
                          [name](SceneNode *n) { return n->Name() == name; });
-  if (it != m_children.end())
-  {
-    (*it)->m_renderer = nullptr;
-    (*it)->m_parent = nullptr;
-    (*it)->m_worldTransform.ToIdentity();
-    m_children.erase(it);
 
-    retVal = true;
-  }
+  if (it != m_children.end())
+    retVal = RemoveChild(*it);
 
   return retVal;
 }

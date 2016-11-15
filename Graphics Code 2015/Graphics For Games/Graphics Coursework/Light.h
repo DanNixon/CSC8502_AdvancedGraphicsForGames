@@ -37,6 +37,9 @@ public:
     return m_colour;
   }
 
+  virtual void AddChild(SceneNode *child);
+  virtual bool RemoveChild(SceneNode *child);
+
   virtual void PreRender(RenderState &state);
   virtual void PostRender(RenderState &state);
 

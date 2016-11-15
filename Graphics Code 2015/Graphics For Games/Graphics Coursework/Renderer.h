@@ -4,6 +4,8 @@
 
 #include "../../nclgl/OGLRenderer.h"
 
+#include "RenderState.h"
+
 namespace GraphicsCoursework
 {
 class SceneNode;
@@ -22,6 +24,9 @@ public:
   virtual void RenderScene();
 
 protected:
+  friend class Light;
+
   SceneNode *m_sceneGraphRoot;
+  RenderState m_state;
 };
 }

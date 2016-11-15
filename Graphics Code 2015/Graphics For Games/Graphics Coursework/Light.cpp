@@ -2,6 +2,7 @@
 
 #include "Light.h"
 
+#include "Renderer.h"
 #include "ShaderProgram.h"
 
 namespace GraphicsCoursework
@@ -17,6 +18,23 @@ Light::Light(const std::string &name)
 
 Light::~Light()
 {
+}
+
+void Light::AddChild(SceneNode *child)
+{
+  ShaderDataNode::AddChild(child);
+  m_renderer->m_state.shaderDataNodeStack.push_back(this);
+}
+
+bool Light::RemoveChild(SceneNode *child)
+{
+  auto it = std::find(m_renderer->m_state.shaderDataNodeStack.begin(),
+                      m_renderer->m_state.shaderDataNodeStack.end(), this);
+
+  if (it != m_renderer->m_state.shaderDataNodeStack.end())
+    m_renderer->m_state.shaderDataNodeStack.erase(it);
+
+  return ShaderDataNode::RemoveChild(child);
 }
 
 void Light::PreRender(RenderState &state)

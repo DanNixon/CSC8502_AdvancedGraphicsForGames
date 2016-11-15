@@ -17,20 +17,18 @@ RenderableNode::~RenderableNode()
 {
 }
 
-void RenderableNode::RenderSingle()
+void RenderableNode::RenderSingle(RenderState &state)
 {
   std::vector<SceneNode *> stack;
   GetStack(stack);
 
-  RenderState s;
-
   for (auto it = stack.rbegin(); it != stack.rend(); ++it)
-    (*it)->PreRender(s);
+    (*it)->PreRender(state);
 
-  Draw(s);
+  Draw(state);
 
   for (auto it = stack.begin(); it != stack.end(); ++it)
-    (*it)->PostRender(s);
+    (*it)->PostRender(state);
 }
 
 void RenderableNode::Draw(RenderState &state)

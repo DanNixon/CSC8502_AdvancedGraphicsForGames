@@ -4,7 +4,6 @@
 
 #include <algorithm>
 
-#include "RenderState.h"
 #include "RenderableNode.h"
 
 namespace GraphicsCoursework
@@ -31,20 +30,18 @@ void Renderer::RenderScene()
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  RenderState state;
-
   // Render graph
-  m_sceneGraphRoot->Render(state);
+  m_sceneGraphRoot->Render(m_state);
 
   // Sort transparent nodes
-  std::sort(state.transparentNodes.begin(), state.transparentNodes.end(),
+  std::sort(m_state.transparentNodes.begin(), m_state.transparentNodes.end(),
             [](RenderableNode *a, RenderableNode *b) {
               return a->CameraDistance() > b->CameraDistance();
             });
 
   // Render transparent nodes
-  for (auto it = state.transparentNodes.begin(); it != state.transparentNodes.end(); ++it)
-    (*it)->RenderSingle();
+  for (auto it = m_state.transparentNodes.begin(); it != m_state.transparentNodes.end(); ++it)
+    (*it)->RenderSingle(m_state);
 
   SwapBuffers();
 }
