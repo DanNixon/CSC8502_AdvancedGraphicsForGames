@@ -10,6 +10,8 @@ SceneNode::SceneNode(const std::string &name, Renderer *renderer)
     : m_name(name)
     , m_renderer(renderer)
     , m_parent(nullptr)
+    , m_active(true)
+    , m_owner(false)
     , m_localTransform(Matrix4())
     , m_worldTransform(Matrix4())
 {

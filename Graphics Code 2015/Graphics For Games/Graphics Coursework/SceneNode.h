@@ -34,6 +34,16 @@ public:
     m_active = active;
   }
 
+  inline bool IsOwner() const
+  {
+    return m_owner;
+  }
+
+  virtual void SetIsOwner(bool owner)
+  {
+    m_owner = owner;
+  }
+
   void GetStack(std::vector<SceneNode *> &stack);
 
   virtual void AddChild(SceneNode *child);
@@ -93,6 +103,7 @@ protected:
   SceneNode *m_parent;
 
   bool m_active;
+  bool m_owner;
 
   Matrix4 m_localRotation;
   Matrix4 m_localTransform;
