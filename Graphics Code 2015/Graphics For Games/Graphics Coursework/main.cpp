@@ -82,10 +82,10 @@ int main()
   Light *sun = new Light("sun");
   r.Root()->AddChild(sun);
   r.AddPersistentDataNode(sun);
-  sun->Radius() = 500.0f;
-  sun->AmbientIntensity() = 0.25f;
+  sun->Radius() = 100.0f;
+  sun->AmbientIntensity() = 0.1f;
   sun->Colour() = Vector4(1.0f, 1.0f, 0.7f, 1.0f);
-  sun->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 0.0f)));
+  sun->SetLocalTransformation(Matrix4::Translation(Vector3(50.0f, 50.0f, -50.0f)));
 
   ITexture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
@@ -123,7 +123,7 @@ int main()
   r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode("shader1", shader1));
 
   r.Root()->FindFirstChildByName("shader1")->AddChild(
-      new TextureNode("texm1", {{tex1, "diffuseTex", 1}, {tex2, "diffuseTex2", 2}}));
+      new TextureNode("texm1", {{tex1, "diffuseTex", 1}}));
 
   r.Root()->FindFirstChildByName("texm1")->AddChild(new ShaderSyncNode("ss1"));
 
@@ -133,10 +133,11 @@ int main()
   s0->SpecularIntensity() = 0.5f;
   s0->SpecularPower() = 100.0f;
 
-  s0->AddChild(new TextureNode("texm2", {{tex3, "diffuseTex", 1}}));
+  s0->AddChild(new TextureNode("texm2", {{tex2, "diffuseTex", 1}}));
   r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader1));
   r.Root()->FindFirstChildByName("shader2")->AddChild(new ShaderSyncNode("ss2"));
 
+#if 0
   MeshNode *s1 = new MeshNode("s1", Mesh::GenerateQuad(), true);
   r.Root()->FindFirstChildByName("ss2")->AddChild(s1);
   s1->SetLocalTransformation(Matrix4::Translation(Vector3(3.0f, 3.0f, 15.0f)));
@@ -150,15 +151,17 @@ int main()
   r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
   s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
   s3->SpecularPower() = 1000.0f;
+#endif
 
   // Heightmap generation
   PerlinNoise noise;
   FractalBrownianMotion fbm(noise);
-  fbm.NumOctaves() = 1;
+  fbm.NumOctaves() = 3;
+  fbm.Amplitude() = 10.0f;
   fbm.Frequency() = 15.0f;
   fbm.ZValue() = 0.8f;
 
-  HeightMapMesh *hmm = new HeightMapMesh(100.0f, 100.0f, 100, 100);
+  HeightMapMesh *hmm = new HeightMapMesh(100.0f, 100.0f, 800, 800);
   hmm->SetHeightmapFromFBM(&fbm);
 
   MeshNode *hm = new MeshNode("hm", hmm);
