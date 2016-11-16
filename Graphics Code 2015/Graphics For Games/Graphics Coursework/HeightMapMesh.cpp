@@ -11,15 +11,13 @@ HeightMapMesh::HeightMapMesh(float width, float depth, size_t widthSteps, size_t
     , m_widthSteps(widthSteps)
     , m_depthSteps(depthSteps)
 {
-  //m_type = GL_TRIANGLE_STRIP;
-  m_type = GL_LINE_STRIP;
+  m_type = GL_TRIANGLES;
 
   m_numVertices = m_widthSteps * m_depthSteps;
+  m_numIndices = (m_widthSteps - 1) * (m_depthSteps - 1) * 6;
   m_vertices = new Vector3[m_numVertices];
-  m_textureCoords = new Vector2[m_numVertices];
-
-  m_numIndices = (m_widthSteps * 2) * (m_depthSteps - 1) + (m_depthSteps - 2);
   m_indices = new GLuint[m_numIndices];
+  m_textureCoords = new Vector2[m_numVertices];
 
   // Half the plane size
   Vector3 halfSize(width / 2.0f, 0.0f, depth / 2.0f);
@@ -49,40 +47,27 @@ HeightMapMesh::HeightMapMesh(float width, float depth, size_t widthSteps, size_t
   }
 
   // Generate indices
-  int index = 0;
-  for (size_t z = 0; z < m_depthSteps - 1; z++)
+  idx = 0;
+  for (size_t x = 0; x < m_widthSteps - 1; ++x)
   {
-    int x;
-
-    // Even row (left to right)
-    if (z % 2 == 0)
+    for (size_t z = 0; z < m_depthSteps - 1; ++z)
     {
-      for (x = 0; x < m_widthSteps; x++)
-      {
-        m_indices[index++] = (GLuint)(x + (z * m_widthSteps));
-        m_indices[index++] = (GLuint)(x + (z * m_widthSteps) + m_widthSteps);
-      }
+      int a = (x * m_widthSteps) + z;
+      int b = ((x + 1) * m_widthSteps) + z;
+      int c = ((x + 1) * m_widthSteps) + (z + 1);
+      int d = (x * m_widthSteps) + (z + 1);
 
-      // Degenerate triangle at end of non-last row
-      if (z != m_depthSteps - 2)
-        m_indices[index++] = (GLuint)(--x + (z * m_widthSteps));
-    }
-    // Odd row (right to left)
-    else
-    {
-      for (x = m_widthSteps - 1; x >= 0; x--)
-      {
-        m_indices[index++] = (GLuint)(x + (z * m_widthSteps));
-        m_indices[index++] = (GLuint)(x + (z * m_widthSteps) + m_widthSteps);
-      }
+      m_indices[idx++] = c;
+      m_indices[idx++] = b;
+      m_indices[idx++] = a;
 
-      // Degenerate triangle at end of non-last row
-      if (z != m_depthSteps - 2)
-        m_indices[index++] = (GLuint)(++x + (z * m_widthSteps));
+      m_indices[idx++] = a;
+      m_indices[idx++] = d;
+      m_indices[idx++] = c;
     }
   }
 
-  //GenerateNormals();
+  GenerateNormals();
   BufferData();
 }
 
