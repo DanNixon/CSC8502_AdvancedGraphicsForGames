@@ -126,7 +126,7 @@ void SceneNode::Render(RenderState &state)
 
 void SceneNode::PrettyPrint(std::ostream &s, size_t level) const
 {
-  s << " " << (*this) << "\n";
+  s << " " << std::string(level, ' ') << " - " << (*this) << "\n";
 
   for (auto it = m_children.cbegin(); it != m_children.cend(); ++it)
     (*it)->PrettyPrint(s, level + 1);
