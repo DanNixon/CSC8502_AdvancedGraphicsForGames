@@ -23,7 +23,7 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
-#include "GLFeatureEnableNode.h"
+#include "GenericControlNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -41,53 +41,6 @@ int main()
     return 1;
 
   WindowsSystemMonitor sysMon;
-
-  // SYSTEM MONITOR STUFF
-
-  Font *sysMonFont = new Font(16, 16);
-  sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
-
-  ShaderProgram *sysMonShader =
-      new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
-                         new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")});
-
-  r.Root()->AddChild(new CameraNode("sysMonCamera"));
-
-  CameraSelectorNode *sysMonCameraSelect = new CameraSelectorNode("sysMonCameraSelect");
-  r.Root()->AddChild(sysMonCameraSelect);
-  sysMonCameraSelect->SetCamera("sysMonCamera");
-
-  auto dims = r.ParentWindow().GetScreenSize();
-  r.Root()
-      ->FindFirstChildByName("sysMonCameraSelect")
-      ->AddChild(new ProjectionNode(
-          "sysMonProj", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
-
-  r.Root()
-      ->FindFirstChildByName("sysMonProj")
-      ->AddChild(new ShaderNode("sysMonShader", sysMonShader));
-
-  r.Root()
-      ->FindFirstChildByName("sysMonShader")
-      ->AddChild(new TextureNode("sysMonFontTex", {{sysMonFont, "diffuseTex", 1}}));
-
-  r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
-
-  TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
-  r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
-  sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) *
-                                     Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
-
-  TextNode *loadingNode = new TextNode("loadingNode", sysMonFont, 10);
-  r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(loadingNode);
-  loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) *
-                                      Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
-  loadingNode->SetText("Loading...");
-
-  r.Root()->Update(w.GetTimer()->GetTimedMS());
-  r.RenderScene();
-
-  // END SYSTEM MONITOR STUFF
 
   ITexture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
@@ -117,10 +70,80 @@ int main()
   r.Root()->FindFirstChildByName("cs1")->AddChild(
       new ProjectionNode("proj1", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
 
+  // SKYBOX
+  {
+    ITexture *cubeMapTex = new CubeMapTexture();
+    cubeMapTex->LoadFromFiles({
+      TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
+      TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
+    });
+
+    r.SetTextureRepeating(cubeMapTex->GetTextureID(), true);
+
+    auto skyboxGLcontrol = new GenericControlNode("skyboxGLcontrol");
+    skyboxGLcontrol->OnBind() = [](ShaderProgram *) { glDepthMask(GL_FALSE); };
+    skyboxGLcontrol->OnUnBind() = [](ShaderProgram *) { glDepthMask(GL_TRUE); };
+    r.Root()->FindFirstChildByName("proj1")->AddChild(skyboxGLcontrol);
+
+    auto skyboxShader = skyboxGLcontrol->AddChild(new ShaderNode("skyboxShader", new ShaderProgram({ new VertexShader(SHADERDIR "SkyboxVertex.glsl"), new FragmentShader(SHADERDIR "SkyboxFragment.glsl") })));
+    auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", { { cubeMapTex, "skyboxTexture", 1 } }));
+    auto skyboxShaderSync = skyboxTexture->AddChild(new ShaderSyncNode("skyboxShaderSync"));
+    auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
+  }
+  // END SKYBOX
+
+  // SYSTEM MONITOR STUFF
+  ShaderProgram *sysMonShader;
+  TextNode *loadingNode;
+  {
+    Font *sysMonFont = new Font(16, 16);
+    sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
+
+    sysMonShader =
+      new ShaderProgram({ new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
+        new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl") });
+
+    r.Root()->AddChild(new CameraNode("sysMonCamera"));
+
+    CameraSelectorNode *sysMonCameraSelect = new CameraSelectorNode("sysMonCameraSelect");
+    r.Root()->AddChild(sysMonCameraSelect);
+    sysMonCameraSelect->SetCamera("sysMonCamera");
+
+    auto dims = r.ParentWindow().GetScreenSize();
+    r.Root()
+      ->FindFirstChildByName("sysMonCameraSelect")
+      ->AddChild(new ProjectionNode(
+        "sysMonProj", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
+
+    r.Root()
+      ->FindFirstChildByName("sysMonProj")
+      ->AddChild(new ShaderNode("sysMonShader", sysMonShader));
+
+    r.Root()
+      ->FindFirstChildByName("sysMonShader")
+      ->AddChild(new TextureNode("sysMonFontTex", { { sysMonFont, "diffuseTex", 1 } }));
+
+    r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
+
+    TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
+    r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
+    sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) *
+      Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
+
+    loadingNode = new TextNode("loadingNode", sysMonFont, 10);
+    r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(loadingNode);
+    loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) *
+      Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
+    loadingNode->SetText("Loading...");
+
+    r.Root()->Update(w.GetTimer()->GetTimedMS());
+    r.RenderScene();
+  }
+  // END SYSTEM MONITOR STUFF
+
   // LIGHTS
   Light *sun;
   Light *moon;
-
   {
     // TODO: don't use sysMonShader
     SceneNode *lightRenderShader = r.Root()->FindFirstChildByName("proj1")->AddChild(
@@ -170,22 +193,6 @@ int main()
   s0->AddChild(new TextureNode("texm2", {{tex2, "diffuseTex", 1}}));
   r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader1));
   r.Root()->FindFirstChildByName("shader2")->AddChild(new ShaderSyncNode("ss2"));
-
-  // SKYBOX
-  {
-    ITexture *cubeMapTex = new CubeMapTexture();
-    cubeMapTex->LoadFromFiles({
-      TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
-      TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
-    });
-
-    auto skyboxShader = r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "SkyboxVertex.glsl"), new FragmentShader(SHADERDIR "SkyboxFragment.glsl")})));
-    auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", { { cubeMapTex, "skyboxTex", 1 } }));
-    auto skyboxGLcontrol = skyboxTexture->AddChild(new GLFeatureEnableNode("skyboxGLcontrol", GL_DEPTH_TEST, GL_FALSE));
-    auto skyboxShaderSync = skyboxGLcontrol->AddChild(new ShaderSyncNode("skyboxShaderSync"));
-    auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
-  }
-  // END SKYBOX
 
   // HEIGHTMAP
   {

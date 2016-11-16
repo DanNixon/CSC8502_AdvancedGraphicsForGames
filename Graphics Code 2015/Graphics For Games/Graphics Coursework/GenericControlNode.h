@@ -18,6 +18,16 @@ public:
   GenericControlNode(const std::string &name);
   virtual ~GenericControlNode();
 
+  inline ControlCallbackFunc &OnBind()
+  {
+    return m_onBind;
+  }
+
+  inline ControlCallbackFunc &OnUnBind()
+  {
+    return m_onUnBind;
+  }
+
   virtual void ShaderBind(ShaderProgram *s);
   virtual void ShaderUnBind(ShaderProgram *s);
 

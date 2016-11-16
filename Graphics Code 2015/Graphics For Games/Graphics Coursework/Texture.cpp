@@ -5,7 +5,7 @@
 namespace GraphicsCoursework
 {
 Texture::Texture()
-    : ITexture()
+    : ITexture(GL_TEXTURE_2D)
 {
 }
 

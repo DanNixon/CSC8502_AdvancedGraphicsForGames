@@ -5,6 +5,7 @@
 namespace GraphicsCoursework
 {
 CubeMapTexture::CubeMapTexture()
+  : ITexture(GL_TEXTURE_CUBE_MAP)
 {
 }
 

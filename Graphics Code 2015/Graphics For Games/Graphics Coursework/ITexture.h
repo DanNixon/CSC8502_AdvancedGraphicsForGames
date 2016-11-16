@@ -11,10 +11,7 @@ namespace GraphicsCoursework
 class ITexture
 {
 public:
-  static void UnBind(GLuint idx);
-
-public:
-  ITexture();
+  ITexture(GLuint type);
   virtual ~ITexture();
 
   virtual bool LoadFromFile(const std::string &filename, unsigned int flags = 0);
@@ -30,11 +27,14 @@ public:
     return m_textureID;
   }
 
-  void BindTo(GLuint target);
+  void BindTo(GLuint idx);
+  void UnBind(GLuint idx);
+
   void BindToShader(GLuint program, const std::string &uniformName, GLuint idx);
   void UnBindFromShader(GLuint program, const std::string &uniformName, GLuint idx);
 
 protected:
+  GLuint m_type;
   GLuint m_textureID;
 };
 }

@@ -18,6 +18,7 @@ struct RenderState
   RenderState()
       : camera(nullptr)
       , shader(nullptr)
+      , numLights(0)
   {
   }
 

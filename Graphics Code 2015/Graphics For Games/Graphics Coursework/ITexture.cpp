@@ -4,14 +4,9 @@
 
 namespace GraphicsCoursework
 {
-void ITexture::UnBind(GLuint idx)
-{
-  glActiveTexture(GL_TEXTURE0 + idx);
-  glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-ITexture::ITexture()
+ITexture::ITexture(GLuint type)
     : m_textureID(0)
+    , m_type(type)
 {
 }
 
@@ -33,7 +28,13 @@ bool ITexture::LoadFromFiles(const std::vector<std::string> &filenames, unsigned
 void ITexture::BindTo(GLuint idx)
 {
   glActiveTexture(GL_TEXTURE0 + idx);
-  glBindTexture(GL_TEXTURE_2D, m_textureID);
+  glBindTexture(m_type, m_textureID);
+}
+
+void ITexture::UnBind(GLuint idx)
+{
+  glActiveTexture(GL_TEXTURE0 + idx);
+  glBindTexture(m_type, 0);
 }
 
 void ITexture::BindToShader(GLuint program, const std::string &uniformName, GLuint idx)
