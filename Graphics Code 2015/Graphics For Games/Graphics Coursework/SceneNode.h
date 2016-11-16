@@ -29,10 +29,7 @@ public:
     return m_active;
   }
 
-  virtual void SetActive(bool active)
-  {
-    m_active = active;
-  }
+  virtual void SetActive(bool active, bool recursive = false);
 
   inline bool IsOwner() const
   {

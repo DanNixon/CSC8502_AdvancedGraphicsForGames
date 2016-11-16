@@ -26,6 +26,17 @@ SceneNode::~SceneNode()
   m_children.clear();
 }
 
+void SceneNode::SetActive(bool active, bool recursive)
+{
+  m_active = active;
+
+  if (recursive)
+  {
+    for (auto it = m_children.begin(); it != m_children.end(); ++it)
+      (*it)->SetActive(active, true);
+  }
+}
+
 void SceneNode::GetStack(std::vector<SceneNode *> &stack)
 {
   SceneNode *n = this;

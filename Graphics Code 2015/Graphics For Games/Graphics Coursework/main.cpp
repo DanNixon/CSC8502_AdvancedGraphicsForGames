@@ -210,10 +210,10 @@ int main()
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
     if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
-      sun->SetActive(!sun->IsActive());
+      sun->SetActive(!sun->IsActive(), true);
 
     if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
-      moon->SetActive(!moon->IsActive());
+      moon->SetActive(!moon->IsActive(), true);
 
     if (sysMonTimer.GetTimedMS(false) > 1000.0f)
       sysMon.Update(sysMonTimer.GetTimedMS());
