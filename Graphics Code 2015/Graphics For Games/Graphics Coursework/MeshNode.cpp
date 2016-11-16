@@ -14,7 +14,8 @@ MeshNode::MeshNode(const std::string &name, Mesh *mesh, bool transparent)
 
 MeshNode::~MeshNode()
 {
-  delete m_mesh;
+  if (m_owner)
+    delete m_mesh;
 }
 
 void MeshNode::Draw(RenderState &state)

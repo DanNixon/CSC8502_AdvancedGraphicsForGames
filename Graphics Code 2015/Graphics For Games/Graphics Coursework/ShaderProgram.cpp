@@ -46,7 +46,10 @@ ShaderProgram::~ShaderProgram()
   for (size_t i = 0; i < NUM_SHADERS; i++)
   {
     if (m_shaders[i] != nullptr)
+    {
       glDetachShader(m_program, m_shaders[i]->Object());
+      delete m_shaders[i];
+    }
   }
 
   glDeleteProgram(m_program);
@@ -95,7 +98,7 @@ bool ShaderProgram::Link()
   glBindAttribLocation(m_program, COLOUR_BUFFER, "colour");
   glBindAttribLocation(m_program, TEXTURE_BUFFER, "texCoord");
   glBindAttribLocation(m_program, NORMAL_BUFFER, "normal");
-  // glBindAttribLocation(m_program, TANGENT_BUFFER, "tangent");
+  glBindAttribLocation(m_program, TANGENT_BUFFER, "tangent");
 
   glLinkProgram(m_program);
 

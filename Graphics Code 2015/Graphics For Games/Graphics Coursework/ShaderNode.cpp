@@ -11,11 +11,14 @@ ShaderNode::ShaderNode(const std::string &name, ShaderProgram *program)
     , m_program(program)
     , m_previousProgram(nullptr)
 {
+  m_owner = false;
   SetActive(true);
 }
 
 ShaderNode::~ShaderNode()
 {
+  if (m_owner)
+    delete[] m_program;
 }
 
 void ShaderNode::SetActive(bool active)

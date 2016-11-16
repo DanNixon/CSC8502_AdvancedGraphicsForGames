@@ -6,21 +6,22 @@ Mesh *Mesh::GenerateTriangle()
   m->m_numVertices = 3;
 
   m->m_vertices = new Vector3[m->m_numVertices];
+  m->m_normals = new Vector3[m->m_numVertices];
+  m->m_colours = new Vector4[m->m_numVertices];
+  m->m_textureCoords = new Vector2[m->m_numVertices];
+
   m->m_vertices[0] = Vector3(0.0f, 0.5f, 0.0f);
   m->m_vertices[1] = Vector3(0.5f, -0.5f, 0.0f);
   m->m_vertices[2] = Vector3(-0.5f, -0.5f, 0.0f);
 
-  m->m_normals = new Vector3[m->m_numVertices];
   m->m_normals[0] = Vector3(0.0f, 0.0f, 1.0f);
   m->m_normals[1] = Vector3(0.0f, 0.0f, 1.0f);
   m->m_normals[2] = Vector3(0.0f, 0.0f, 1.0f);
-
-  m->m_colours = new Vector4[m->m_numVertices];
+  
   m->m_colours[0] = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
   m->m_colours[1] = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
   m->m_colours[2] = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-
-  m->m_textureCoords = new Vector2[m->m_numVertices];
+  
   m->m_textureCoords[0] = Vector2(0.5f, 0.0f);
   m->m_textureCoords[1] = Vector2(1.0f, 1.0f);
   m->m_textureCoords[2] = Vector2(0.0f, 1.0f);
@@ -37,28 +38,27 @@ Mesh *Mesh::GenerateQuad()
   m->m_type = GL_TRIANGLE_STRIP;
 
   m->m_vertices = new Vector3[m->m_numVertices];
+  m->m_textureCoords = new Vector2[m->m_numVertices];
+  m->m_colours = new Vector4[m->m_numVertices];
+  m->m_normals = new Vector3[m->m_numVertices];
+  m->m_tangents = new Vector3[m->m_numVertices];
+
   m->m_vertices[0] = Vector3(-1.0f, 1.0f, 0.0f);
   m->m_vertices[1] = Vector3(-1.0f, -1.0f, 0.0f);
   m->m_vertices[2] = Vector3(1.0f, 1.0f, 0.0f);
   m->m_vertices[3] = Vector3(1.0f, -1.0f, 0.0f);
 
-  m->m_normals = new Vector3[m->m_numVertices];
-  m->m_normals[0] = Vector3(0.0f, 0.0f, 1.0f);
-  m->m_normals[1] = Vector3(0.0f, 0.0f, 1.0f);
-  m->m_normals[2] = Vector3(0.0f, 0.0f, 1.0f);
-  m->m_normals[3] = Vector3(0.0f, 0.0f, 1.0f);
-
-  m->m_colours = new Vector4[m->m_numVertices];
-  m->m_colours[0] = Vector4(1.0f, 0.0f, 0.0f, 0.5f);
-  m->m_colours[1] = Vector4(0.0f, 1.0f, 0.0f, 0.5f);
-  m->m_colours[2] = Vector4(0.0f, 0.0f, 1.0f, 0.5f);
-  m->m_colours[3] = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-
-  m->m_textureCoords = new Vector2[m->m_numVertices];
   m->m_textureCoords[0] = Vector2(0.0f, 1.0f);
   m->m_textureCoords[1] = Vector2(0.0f, 0.0f);
   m->m_textureCoords[2] = Vector2(1.0f, 1.0f);
   m->m_textureCoords[3] = Vector2(1.0f, 0.0f);
+
+  for (size_t i = 0; i < m->m_numVertices; i++)
+  {
+    m->m_normals[i] = Vector3(0.0f, 0.0f, -1.0f);
+    m->m_tangents[i] = Vector3(1.0f, 0.0f, 0.0f);
+    m->m_colours[i] = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+  }
 
   m->BufferData();
 
@@ -121,6 +121,7 @@ Mesh::Mesh()
     , m_colours(nullptr)
     , m_textureCoords(nullptr)
     , m_normals(nullptr)
+    , m_tangents(nullptr)
     , m_indices(nullptr)
 {
   for (int i = 0; i < MAX_BUFFER; ++i)
@@ -145,6 +146,9 @@ Mesh::~Mesh()
 
   if (m_normals != nullptr)
     delete[] m_normals;
+
+  if (m_tangents != nullptr)
+    delete[] m_tangents;
 
   if (m_indices != nullptr)
     delete[] m_indices;
@@ -243,6 +247,9 @@ void Mesh::BufferData()
 
   if (m_normals != nullptr)
     RegisterBuffer(NORMAL_BUFFER, 3, m_normals);
+
+  if (m_tangents != nullptr)
+    RegisterBuffer(TANGENT_BUFFER, 3, m_tangents);
 
   if (m_indices != nullptr)
   {

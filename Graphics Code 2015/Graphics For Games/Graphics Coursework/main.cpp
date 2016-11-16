@@ -23,6 +23,7 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
+#include "GLFeatureEnableNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -97,12 +98,6 @@ int main()
   ITexture *tex3 = new Texture();
   tex3->LoadFromFile(TEXTUREDIR "stainedglass.tga");
 
-  ITexture *cubeMapTex = new CubeMapTexture();
-  cubeMapTex->LoadFromFiles({
-      TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
-      TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
-  });
-
   ShaderProgram *shader1 =
       new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
                          new FragmentShader(SHADERDIR "PerPixelFragment.glsl")});
@@ -128,7 +123,8 @@ int main()
 
   {
     // TODO: don't use sysMonShader
-    SceneNode * lightRenderShader = r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode("lightRenderShader", sysMonShader));
+    SceneNode *lightRenderShader = r.Root()->FindFirstChildByName("proj1")->AddChild(
+        new ShaderNode("lightRenderShader", sysMonShader));
 
     sun = new Light("sun");
     lightRenderShader->AddChild(sun);
@@ -139,7 +135,9 @@ int main()
     sun->SetLocalTransformation(Matrix4::Translation(Vector3(50.0f, 50.0f, -50.0f)));
 
     MeshNode *sunMesh = new MeshNode("sunMesh", Mesh::GenerateSphere());
-    sun->AddChild(new TextureNode("sunTexture", {{ tex3, "diffuseTex", 1 }}))->AddChild(new ShaderSyncNode("sunShaderSync"))->AddChild(sunMesh);
+    sun->AddChild(new TextureNode("sunTexture", {{tex3, "diffuseTex", 1}}))
+        ->AddChild(new ShaderSyncNode("sunShaderSync"))
+        ->AddChild(sunMesh);
 
     moon = new Light("moon");
     lightRenderShader->AddChild(moon);
@@ -150,7 +148,9 @@ int main()
     moon->SetLocalTransformation(Matrix4::Translation(Vector3(-50.0f, 50.0f, -50.0f)));
 
     MeshNode *moonMesh = new MeshNode("moonMesh", Mesh::GenerateSphere());
-    moon->AddChild(new TextureNode("moonTexture", { { tex3, "diffuseTex", 1 } }))->AddChild(new ShaderSyncNode("moonShaderSync"))->AddChild(moonMesh);
+    moon->AddChild(new TextureNode("moonTexture", {{tex3, "diffuseTex", 1}}))
+        ->AddChild(new ShaderSyncNode("moonShaderSync"))
+        ->AddChild(moonMesh);
   }
   // END LIGHTS
 
@@ -171,36 +171,39 @@ int main()
   r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader1));
   r.Root()->FindFirstChildByName("shader2")->AddChild(new ShaderSyncNode("ss2"));
 
-#if 0
-  MeshNode *s1 = new MeshNode("s1", Mesh::GenerateQuad(), true);
-  r.Root()->FindFirstChildByName("ss2")->AddChild(s1);
-  s1->SetLocalTransformation(Matrix4::Translation(Vector3(3.0f, 3.0f, 15.0f)));
+  // SKYBOX
+  {
+    ITexture *cubeMapTex = new CubeMapTexture();
+    cubeMapTex->LoadFromFiles({
+      TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
+      TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
+    });
 
-  MeshNode *s2 = new MeshNode("s2", Mesh::GenerateQuad(), true);
-  r.Root()->FindFirstChildByName("ss2")->AddChild(s2);
-  s2->SetLocalTransformation(Matrix4::Translation(Vector3(2.0f, 2.0f, 10.0f)));
-  s2->SetLocalRotation(Matrix4::Rotation(30.0f, Vector3(1, 0, 0)));
+    auto skyboxShader = r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "SkyboxVertex.glsl"), new FragmentShader(SHADERDIR "SkyboxFragment.glsl")})));
+    auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", { { cubeMapTex, "skyboxTex", 1 } }));
+    auto skyboxGLcontrol = skyboxTexture->AddChild(new GLFeatureEnableNode("skyboxGLcontrol", GL_DEPTH_TEST, GL_FALSE));
+    auto skyboxShaderSync = skyboxGLcontrol->AddChild(new ShaderSyncNode("skyboxShaderSync"));
+    auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
+  }
+  // END SKYBOX
 
-  MeshNode *s3 = new MeshNode("s3", Mesh::GenerateQuad(), true);
-  r.Root()->FindFirstChildByName("ss2")->AddChild(s3);
-  s3->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 5.0f)));
-  s3->SpecularPower() = 1000.0f;
-#endif
+  // HEIGHTMAP
+  {
+    PerlinNoise noise;
+    FractalBrownianMotion fbm(noise);
+    fbm.NumOctaves() = 3;
+    fbm.UniformAmplitude() = -5.0f;
+    fbm.Frequency() = 15.0f;
+    fbm.ZValue() = 0.8f;
 
-  // Heightmap generation
-  PerlinNoise noise;
-  FractalBrownianMotion fbm(noise);
-  fbm.NumOctaves() = 3;
-  fbm.UniformAmplitude() = -5.0f;
-  fbm.Frequency() = 15.0f;
-  fbm.ZValue() = 0.8f;
+    HeightMapMesh *hmm = new HeightMapMesh(1000.0f, 1000.0f, 1000, 1000);
+    // hmm->SetHeightmapFromFBM(&fbm);
 
-  HeightMapMesh *hmm = new HeightMapMesh(1000.0f, 1000.0f, 1000, 1000);
-  //hmm->SetHeightmapFromFBM(&fbm);
-
-  MeshNode *hm = new MeshNode("hm", hmm);
-  r.Root()->FindFirstChildByName("ss2")->AddChild(hm);
-  hm->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.0f, 0.0f)));
+    MeshNode *hm = new MeshNode("hm", hmm);
+    r.Root()->FindFirstChildByName("ss2")->AddChild(hm);
+    hm->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.0f, 0.0f)));
+  }
+  // END HEIGHTMAP
 
   std::cout << r << '\n';
   loadingNode->SetActive(false);
@@ -222,9 +225,7 @@ int main()
     r.RenderScene();
   }
 
-  delete tex1;
-  delete tex2;
-  delete shader1;
+  delete r.Root();
 
   return 0;
 }

@@ -54,5 +54,6 @@ protected:
   Vector4 *m_colours;
   Vector2 *m_textureCoords;
   Vector3 *m_normals;
+  Vector3 *m_tangents;
   unsigned int *m_indices;
 };

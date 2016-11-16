@@ -75,6 +75,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FractalBrownianMotion.cpp" />
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="GenericControlNode.cpp" />
     <ClCompile Include="GLFeatureEnableNode.cpp" />
     <ClCompile Include="HeightMapMesh.cpp" />
     <ClCompile Include="ISystemMonitor.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="FractalBrownianMotion.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="GenericControlNode.h" />
     <ClInclude Include="GLFeatureEnableNode.h" />
     <ClInclude Include="HeightMapMesh.h" />
     <ClInclude Include="ISystemMonitor.h" />
