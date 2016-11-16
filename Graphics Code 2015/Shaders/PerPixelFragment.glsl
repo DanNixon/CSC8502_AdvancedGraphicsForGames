@@ -12,6 +12,7 @@ uniform int numLights;
 uniform vec4 sun_colour;
 uniform vec3 sun_position;
 uniform float sun_radius;
+uniform float sun_ambientIntensity;
 
 in Vertex
 {
@@ -43,7 +44,7 @@ void main(void)
 	vec3 specColour = (sun_colour.rgb * sFactor) * specularIntensity;
 	
 	fragColor = vec4((diffuseColour + specColour) * atten * lambert, diffuse.a);
-	fragColor.rgb += diffuseColour * 0.1;
+	fragColor.rgb += diffuseColour * sun_ambientIntensity;
 	
 	//fragColor = vec4(0, 0, lambert, 1);
 }

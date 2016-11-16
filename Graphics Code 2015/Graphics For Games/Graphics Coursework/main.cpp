@@ -83,6 +83,7 @@ int main()
   r.Root()->AddChild(sun);
   r.AddPersistentDataNode(sun);
   sun->Radius() = 500.0f;
+  sun->AmbientIntensity() = 0.25f;
   sun->Colour() = Vector4(1.0f, 1.0f, 0.7f, 1.0f);
   sun->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, 0.0f)));
 
@@ -126,11 +127,13 @@ int main()
 
   r.Root()->FindFirstChildByName("texm1")->AddChild(new ShaderSyncNode("ss1"));
 
-  MeshNode *tri1 = new MeshNode("tri1", Mesh::GenerateSphere());
-  r.Root()->FindFirstChildByName("ss1")->AddChild(tri1);
-  tri1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -20.0f)));
+  MeshNode *s0 = new MeshNode("tri1", Mesh::GenerateSphere());
+  r.Root()->FindFirstChildByName("ss1")->AddChild(s0);
+  s0->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -20.0f)));
+  s0->SpecularIntensity() = 0.5f;
+  s0->SpecularPower() = 100.0f;
 
-  tri1->AddChild(new TextureNode("texm2", {{tex3, "diffuseTex", 1}}));
+  s0->AddChild(new TextureNode("texm2", {{tex3, "diffuseTex", 1}}));
   r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader1));
   r.Root()->FindFirstChildByName("shader2")->AddChild(new ShaderSyncNode("ss2"));
 

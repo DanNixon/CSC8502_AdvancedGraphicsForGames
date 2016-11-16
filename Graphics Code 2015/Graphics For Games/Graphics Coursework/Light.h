@@ -14,6 +14,7 @@ public:
     UNIFORM_POSITION,
     UNIFORM_RADIUS,
     UNIFORM_COLOUR,
+    UNIFORM_AMBIENT_INTENSITY,
 
     UNIFORM_COUNT
   };
@@ -32,6 +33,11 @@ public:
     return m_radius;
   }
 
+  inline float &AmbientIntensity()
+  {
+    return m_ambientIntensity;
+  }
+
   inline Vector4 &Colour()
   {
     return m_colour;
@@ -46,6 +52,7 @@ protected:
   std::string m_shaderUniformNames[UNIFORM_COUNT];
 
   float m_radius;
+  float m_ambientIntensity;
   Vector4 m_colour;
 };
 }

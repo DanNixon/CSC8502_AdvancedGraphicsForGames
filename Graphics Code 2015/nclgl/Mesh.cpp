@@ -72,6 +72,8 @@ Mesh *Mesh::GenerateSphere(size_t resolution)
   m->m_type = GL_TRIANGLE_STRIP;
 
   m->m_vertices = new Vector3[m->m_numVertices];
+  m->m_normals = new Vector3[m->m_numVertices];
+  m->m_textureCoords = new Vector2[m->m_numVertices];
   m->m_colours = new Vector4[m->m_numVertices];
 
   float deltaTheta = (float)(PI / resolution);
@@ -88,16 +90,23 @@ Mesh *Mesh::GenerateSphere(size_t resolution)
       const float phi = j * deltaPhi;
 
       m->m_vertices[n] = Vector3(cos(theta1) * sin(phi), sin(theta1) * sin(phi), cos(phi));
+      m->m_normals[n] = m->m_vertices[n];
+      m->m_textureCoords[n] = Vector2(theta1, phi);
       m->m_colours[n] = Vector4(theta1, phi, 0.0f, 1.0f);
       n++;
 
       m->m_vertices[n] = Vector3(cos(theta2) * sin(phi), sin(theta2) * sin(phi), cos(phi));
+      m->m_normals[n] = m->m_vertices[n];
+      m->m_textureCoords[n] = Vector2(theta1, phi);
       m->m_colours[n] = Vector4(theta2, phi, 0.0f, 1.0f);
       n++;
     }
   }
 
-  m->GenerateNormals();
+  // Normalise all normals
+  for (GLuint i = 0; i < m->m_numVertices; ++i)
+    m->m_normals[i].Normalise();
+
   m->BufferData();
 
   return m;
