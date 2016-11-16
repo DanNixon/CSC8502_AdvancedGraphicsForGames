@@ -74,8 +74,15 @@ int main()
 
   TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
   r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
-  sysMonNode->SetLocalTransformation(Matrix4::Translation(Vector3(0.f, 16.f, 0.0f)) *
-                                     Matrix4::Scale(16.0f));
+  sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
+
+  TextNode *loadingNode = new TextNode("loadingNode", sysMonFont, 10);
+  r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(loadingNode);
+  loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
+  loadingNode->SetText("Loading...");
+
+  r.Root()->Update(w.GetTimer()->GetTimedMS());
+  r.RenderScene();
 
   // END SYSTEM MONITOR STUFF
 
@@ -167,6 +174,9 @@ int main()
   MeshNode *hm = new MeshNode("hm", hmm);
   r.Root()->FindFirstChildByName("ss2")->AddChild(hm);
   hm->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.0f, 0.0f)));
+
+  std::cout << r << '\n';
+  loadingNode->SetActive(false);
 
   GameTimer sysMonTimer;
 

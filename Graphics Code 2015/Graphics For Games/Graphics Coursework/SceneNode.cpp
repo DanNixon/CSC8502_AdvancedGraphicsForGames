@@ -3,6 +3,7 @@
 #include "SceneNode.h"
 
 #include <algorithm>
+#include <string>
 
 namespace GraphicsCoursework
 {
@@ -121,5 +122,19 @@ void SceneNode::Render(RenderState &state)
 
   if (m_active)
     PostRender(state);
+}
+
+void SceneNode::PrettyPrint(std::ostream & s, size_t level) const
+{
+  s << " " << (*this) << "\n";
+
+  for (auto it = m_children.cbegin(); it != m_children.cend(); ++it)
+    (*it)->PrettyPrint(s, level + 1);
+}
+
+std::ostream & operator<<(std::ostream & s, const SceneNode & n)
+{
+  s << n.m_name;
+  return s;
 }
 }

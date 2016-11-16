@@ -26,6 +26,8 @@ public:
 
   virtual void RenderScene();
 
+  friend std::ostream & operator<<(std::ostream &s, const Renderer &r);
+
 protected:
   SceneNode *m_sceneGraphRoot;
   RenderState m_state;

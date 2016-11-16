@@ -61,4 +61,11 @@ void Renderer::RenderScene()
 
   SwapBuffers();
 }
+
+std::ostream & operator<<(std::ostream & s, const Renderer & r)
+{
+  s << "Renderer scene graph:\n";
+  r.m_sceneGraphRoot->PrettyPrint(s);
+  return s;
+}
 }
