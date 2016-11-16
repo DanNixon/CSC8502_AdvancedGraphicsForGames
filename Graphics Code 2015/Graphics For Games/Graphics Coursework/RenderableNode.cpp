@@ -25,12 +25,18 @@ void RenderableNode::RenderSingle(RenderState &state)
   m_parent->GetStack(stack);
 
   for (auto it = stack.rbegin(); it != stack.rend(); ++it)
-    (*it)->PreRender(state);
+  {
+    if ((*it)->IsActive())
+      (*it)->PreRender(state);
+  }
 
   Draw(state);
 
   for (auto it = stack.begin(); it != stack.end(); ++it)
-    (*it)->PostRender(state);
+  {
+    if ((*it)->IsActive())
+      (*it)->PostRender(state);
+  }
 }
 
 void RenderableNode::Draw(RenderState &state)

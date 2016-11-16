@@ -96,6 +96,14 @@ int main()
   sun->Colour() = Vector4(1.0f, 1.0f, 0.7f, 1.0f);
   sun->SetLocalTransformation(Matrix4::Translation(Vector3(50.0f, 50.0f, -50.0f)));
 
+  Light *moon = new Light("moon");
+  r.Root()->AddChild(moon);
+  r.AddPersistentDataNode(moon);
+  moon->Radius() = 80.0f;
+  moon->AmbientIntensity() = 0.1f;
+  moon->Colour() = Vector4(0.5f, 0.6f, 1.0f, 1.0f);
+  moon->SetLocalTransformation(Matrix4::Translation(Vector3(-50.0f, 50.0f, -50.0f)));
+
   ITexture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
 
@@ -167,12 +175,12 @@ int main()
   PerlinNoise noise;
   FractalBrownianMotion fbm(noise);
   fbm.NumOctaves() = 3;
-  fbm.UniformAmplitude() = 2.0f;
+  fbm.UniformAmplitude() = -5.0f;
   fbm.Frequency() = 15.0f;
   fbm.ZValue() = 0.8f;
 
-  HeightMapMesh *hmm = new HeightMapMesh(100.0f, 100.0f, 1000, 1000);
-  hmm->SetHeightmapFromFBM(&fbm);
+  HeightMapMesh *hmm = new HeightMapMesh(1000.0f, 1000.0f, 1000, 1000);
+  //hmm->SetHeightmapFromFBM(&fbm);
 
   MeshNode *hm = new MeshNode("hm", hmm);
   r.Root()->FindFirstChildByName("ss2")->AddChild(hm);
@@ -185,6 +193,9 @@ int main()
 
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
+    if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+      moon->SetActive(!moon->IsActive());
+
     if (sysMonTimer.GetTimedMS(false) > 1000.0f)
       sysMon.Update(sysMonTimer.GetTimedMS());
 

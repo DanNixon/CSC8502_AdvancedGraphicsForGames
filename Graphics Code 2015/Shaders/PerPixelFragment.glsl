@@ -14,6 +14,11 @@ uniform vec3 sun_position;
 uniform float sun_radius;
 uniform float sun_ambientIntensity;
 
+uniform vec4 moon_colour;
+uniform vec3 moon_position;
+uniform float moon_radius;
+uniform float moon_ambientIntensity;
+
 in Vertex
 {
   vec3 colour;
@@ -24,15 +29,13 @@ in Vertex
 
 out vec4 fragColor;
 
-void main(void)
+vec3 processLight(vec4 diffuse, vec4 lightCol, vec3 lightPos, float lightRadius, float lightAmbInt)
 {
-  vec4 diffuse = texture(diffuseTex, IN.texCoord);
-
-  vec3 incident = normalize(sun_position - IN.worldPos);
+	vec3 incident = normalize(lightPos - IN.worldPos);
   float lambert = max(0.0, dot(incident, IN.normal));
 
-  float dist = length(sun_position - IN.worldPos);
-  float atten = 1.0 - clamp(dist / sun_radius, 0.0, 1.0);
+  float dist = length(lightPos - IN.worldPos);
+  float atten = 1.0 - clamp(dist / lightRadius, 0.0, 1.0);
 
   vec3 viewDir = normalize(cameraPos - IN.worldPos);
   vec3 halfDir = normalize(incident + viewDir);
@@ -40,9 +43,20 @@ void main(void)
   float rFactor = max(0.0, dot(halfDir, IN.normal));
   float sFactor = pow(rFactor, specularPower);
 
-  vec3 diffuseColour = diffuse.rgb * sun_colour.rgb;
-  vec3 specColour = (sun_colour.rgb * sFactor) * specularIntensity;
+  vec3 diffuseColour = diffuse.rgb * lightCol.rgb;
+  vec3 specColour = (lightCol.rgb * sFactor) * specularIntensity;
 
-  fragColor = vec4((diffuseColour + specColour) * atten * lambert, diffuse.a);
-  fragColor.rgb += diffuseColour * sun_ambientIntensity;
+  vec3 finalColour = vec3((diffuseColour + specColour) * atten * lambert);
+  finalColour += diffuseColour * lightAmbInt;
+	
+	return finalColour;
+}
+
+void main(void)
+{
+  vec4 diffuse = texture(diffuseTex, IN.texCoord);
+
+  fragColor = vec4(0.0, 0.0, 0.0, diffuse.a);
+  fragColor.rgb += processLight(diffuse, sun_colour, sun_position, sun_radius, sun_ambientIntensity);
+	fragColor.rgb += processLight(diffuse, moon_colour, moon_position, moon_radius, moon_ambientIntensity);
 }

@@ -21,7 +21,10 @@ void ShaderSyncNode::PreRender(RenderState &state)
   glUseProgram(state.shader->Program());
 
   for (auto it = state.shaderDataNodeStack.begin(); it != state.shaderDataNodeStack.end(); ++it)
-    (*it)->ShaderBind(state.shader);
+  {
+    if ((*it)->IsActive())
+      (*it)->ShaderBind(state.shader);
+  }
 
   glUniform1i(glGetUniformLocation(state.shader->Program(), "numLights"), state.numLights);
 }
