@@ -46,5 +46,5 @@ void main(void)
 	fragColor = vec4((diffuseColour + specColour) * atten * lambert, diffuse.a);
 	fragColor.rgb += diffuseColour * sun_ambientIntensity;
 	
-	//fragColor = vec4(0, 0, lambert, 1);
+	fragColor = vec4((IN.normal / 2) + vec3(0.5, 0.5, 0.5), 1);
 }

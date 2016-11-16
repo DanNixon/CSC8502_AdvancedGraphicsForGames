@@ -180,9 +180,6 @@ bool Mesh::ReturnBuffer(Buffer b)
 
 void Mesh::GenerateNormals()
 {
-  if (m_type != GL_TRIANGLE_STRIP)
-    return;
-
   if (m_normals == nullptr)
     m_normals = new Vector3[m_numVertices];
 
@@ -191,17 +188,23 @@ void Mesh::GenerateNormals()
 
   if (m_indices != nullptr)
   {
-    for (GLuint i = 0; i < m_numIndices - 3; i += 3)
+    GLuint i = 0;
+    unsigned int a, b, c = 0;
+    a = m_indices[i++];
+    b = m_indices[i++];
+
+    for (; i < m_numIndices; i += 1)
     {
-      unsigned int a = m_indices[i];
-      unsigned int b = m_indices[i + 1];
-      unsigned int c = m_indices[i + 2];
+      c = m_indices[i];
       
       Vector3 normal = Vector3::Cross((m_vertices[b] - m_vertices[a]), (m_vertices[c] - m_vertices[a]));
       
       m_normals[a] += normal;
       m_normals[b] += normal;
       m_normals[c] += normal;
+
+      a = b;
+      b = c;
     }
   }
   else

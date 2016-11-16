@@ -11,8 +11,8 @@ HeightMapMesh::HeightMapMesh(float width, float depth, size_t widthSteps, size_t
     , m_widthSteps(widthSteps)
     , m_depthSteps(depthSteps)
 {
-  m_type = GL_TRIANGLE_STRIP;
-  // m_type = GL_LINE_STRIP;
+  //m_type = GL_TRIANGLE_STRIP;
+  m_type = GL_LINE_STRIP;
 
   m_numVertices = m_widthSteps * m_depthSteps;
   m_vertices = new Vector3[m_numVertices];
@@ -82,7 +82,7 @@ HeightMapMesh::HeightMapMesh(float width, float depth, size_t widthSteps, size_t
     }
   }
 
-  GenerateNormals();
+  //GenerateNormals();
   BufferData();
 }
 
