@@ -99,26 +99,9 @@ void HeightMapMesh::SetHeightmap(float *height)
 
 void HeightMapMesh::SetHeightmapFromFBM(FractalBrownianMotion *fbm)
 {
-  float w = 1.0f / (float)m_widthSteps;
-  float d = 1.0f / (float)m_depthSteps;
-
-  // Update y coordinates
-  for (size_t i = 0; i < m_numVertices; i++)
-    m_vertices[i].y = fbm->Fractal((float)(i % m_widthSteps) * d, (float)(i / m_widthSteps) * w);
-
-  // Rebuild normals
-  GenerateNormals();
-
-  glBindVertexArray(m_arrayObject);
-
-  // Rebuffer vertices
-  glDeleteBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
-  RegisterBuffer(VERTEX_BUFFER, 3, m_vertices);
-
-  // Rebuffer normals
-  glDeleteBuffers(1, &m_bufferObjects[NORMAL_BUFFER]);
-  RegisterBuffer(NORMAL_BUFFER, 3, m_normals);
-
-  glBindVertexArray(0);
+  float *data = new float[m_numVertices];
+  fbm->FractalArrayThreaded(data, m_widthSteps, m_depthSteps);
+  SetHeightmap(data);
+  delete[] data;
 }
 }

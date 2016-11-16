@@ -9,40 +9,58 @@ class PerlinNoise;
 class FractalBrownianMotion
 {
 public:
+  struct FractralArrayGenState
+  {
+    size_t x;
+    size_t y;
+    float w;
+    float d;
+  };
+
+public:
   FractalBrownianMotion(const PerlinNoise &perlin);
   virtual ~FractalBrownianMotion();
 
   float Fractal(float x, float y) const;
+  void FractalArrayThreaded(float * out, size_t x, size_t y, size_t numThreads = 0);
 
-  size_t &NumOctaves()
+  inline size_t &NumOctaves()
   {
     return m_numOctaves;
   }
 
-  float &ZValue()
+  inline float &ZValue()
   {
     return m_zValue;
   }
 
-  float &Frequency()
+  inline float &Frequency()
   {
     return m_frequency;
   }
 
-  float &Amplitude()
+  inline float &Amplitude()
   {
     return m_amplitude;
   }
 
-  float &Lacunarity()
+  inline float &Lacunarity()
   {
     return m_lacunarity;
   }
 
-  float &Persistence()
+  inline float &Persistence()
   {
     return m_persistence;
   }
+
+  inline float &UniformAmplitude()
+  {
+    return m_uniformAmplitude;
+  }
+
+protected:
+  void FractalArray(float *out, size_t start, size_t end, FractralArrayGenState &state) const;
 
 protected:
   const PerlinNoise &m_perlin;
@@ -53,5 +71,6 @@ protected:
   float m_amplitude;
   float m_lacunarity;
   float m_persistence;
+  float m_uniformAmplitude;
 };
 }

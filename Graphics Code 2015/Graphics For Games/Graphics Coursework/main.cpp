@@ -157,11 +157,11 @@ int main()
   PerlinNoise noise;
   FractalBrownianMotion fbm(noise);
   fbm.NumOctaves() = 3;
-  fbm.Amplitude() = 10.0f;
+  fbm.UniformAmplitude() = 2.0f;
   fbm.Frequency() = 15.0f;
   fbm.ZValue() = 0.8f;
 
-  HeightMapMesh *hmm = new HeightMapMesh(100.0f, 100.0f, 800, 800);
+  HeightMapMesh *hmm = new HeightMapMesh(100.0f, 100.0f, 1000, 1000);
   hmm->SetHeightmapFromFBM(&fbm);
 
   MeshNode *hm = new MeshNode("hm", hmm);
