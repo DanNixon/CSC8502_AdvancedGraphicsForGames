@@ -46,7 +46,7 @@ public:
 
   void GetStack(std::vector<SceneNode *> &stack);
 
-  virtual void AddChild(SceneNode *child);
+  virtual SceneNode * AddChild(SceneNode *child);
   virtual bool RemoveChild(SceneNode *child);
   bool RemoveChild(const std::string &name);
 

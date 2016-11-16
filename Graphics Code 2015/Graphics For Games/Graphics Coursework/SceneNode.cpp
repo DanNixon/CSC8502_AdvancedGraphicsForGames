@@ -36,11 +36,12 @@ void SceneNode::GetStack(std::vector<SceneNode *> &stack)
   }
 }
 
-void SceneNode::AddChild(SceneNode *child)
+SceneNode * SceneNode::AddChild(SceneNode *child)
 {
   child->m_renderer = m_renderer;
   child->m_parent = this;
   m_children.push_back(child);
+  return child;
 }
 
 bool SceneNode::RemoveChild(SceneNode *child)

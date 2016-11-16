@@ -88,22 +88,6 @@ int main()
 
   // END SYSTEM MONITOR STUFF
 
-  Light *sun = new Light("sun");
-  r.Root()->AddChild(sun);
-  r.AddPersistentDataNode(sun);
-  sun->Radius() = 100.0f;
-  sun->AmbientIntensity() = 0.1f;
-  sun->Colour() = Vector4(1.0f, 1.0f, 0.7f, 1.0f);
-  sun->SetLocalTransformation(Matrix4::Translation(Vector3(50.0f, 50.0f, -50.0f)));
-
-  Light *moon = new Light("moon");
-  r.Root()->AddChild(moon);
-  r.AddPersistentDataNode(moon);
-  moon->Radius() = 80.0f;
-  moon->AmbientIntensity() = 0.1f;
-  moon->Colour() = Vector4(0.5f, 0.6f, 1.0f, 1.0f);
-  moon->SetLocalTransformation(Matrix4::Translation(Vector3(-50.0f, 50.0f, -50.0f)));
-
   ITexture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
 
@@ -137,6 +121,38 @@ int main()
 
   r.Root()->FindFirstChildByName("cs1")->AddChild(
       new ProjectionNode("proj1", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
+
+  // LIGHTS
+  Light *sun;
+  Light *moon;
+
+  {
+    // TODO: don't use sysMonShader
+    SceneNode * lightRenderShader = r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode("lightRenderShader", sysMonShader));
+
+    sun = new Light("sun");
+    lightRenderShader->AddChild(sun);
+    r.AddPersistentDataNode(sun);
+    sun->Radius() = 100.0f;
+    sun->AmbientIntensity() = 0.2f;
+    sun->Colour() = Vector4(1.0f, 1.0f, 0.7f, 1.0f);
+    sun->SetLocalTransformation(Matrix4::Translation(Vector3(50.0f, 50.0f, -50.0f)));
+
+    MeshNode *sunMesh = new MeshNode("sunMesh", Mesh::GenerateSphere());
+    sun->AddChild(new TextureNode("sunTexture", {{ tex3, "diffuseTex", 1 }}))->AddChild(new ShaderSyncNode("sunShaderSync"))->AddChild(sunMesh);
+
+    moon = new Light("moon");
+    lightRenderShader->AddChild(moon);
+    r.AddPersistentDataNode(moon);
+    moon->Radius() = 80.0f;
+    moon->AmbientIntensity() = 0.05f;
+    moon->Colour() = Vector4(0.5f, 0.6f, 1.0f, 1.0f);
+    moon->SetLocalTransformation(Matrix4::Translation(Vector3(-50.0f, 50.0f, -50.0f)));
+
+    MeshNode *moonMesh = new MeshNode("moonMesh", Mesh::GenerateSphere());
+    moon->AddChild(new TextureNode("moonTexture", { { tex3, "diffuseTex", 1 } }))->AddChild(new ShaderSyncNode("moonShaderSync"))->AddChild(moonMesh);
+  }
+  // END LIGHTS
 
   r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode("shader1", shader1));
 
@@ -194,6 +210,9 @@ int main()
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
     if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
+      sun->SetActive(!sun->IsActive());
+
+    if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
       moon->SetActive(!moon->IsActive());
 
     if (sysMonTimer.GetTimedMS(false) > 1000.0f)
