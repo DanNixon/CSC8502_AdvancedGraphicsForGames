@@ -96,8 +96,8 @@ public:
   {
   }
 
-  void PrettyPrint(std::ostream & s, size_t level = 0) const;
-  friend std::ostream & operator<<(std::ostream & s, const SceneNode & n);
+  void PrettyPrint(std::ostream &s, size_t level = 0) const;
+  friend std::ostream &operator<<(std::ostream &s, const SceneNode &n);
 
 protected:
   const std::string m_name;

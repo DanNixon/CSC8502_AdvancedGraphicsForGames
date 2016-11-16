@@ -21,12 +21,12 @@ public:
     return m_sceneGraphRoot;
   }
 
-  virtual void AddPersistentDataNode(ShaderDataNode * node);
-  virtual bool RemovePersistentDataNode(ShaderDataNode * node);
+  virtual void AddPersistentDataNode(ShaderDataNode *node);
+  virtual bool RemovePersistentDataNode(ShaderDataNode *node);
 
   virtual void RenderScene();
 
-  friend std::ostream & operator<<(std::ostream &s, const Renderer &r);
+  friend std::ostream &operator<<(std::ostream &s, const Renderer &r);
 
 protected:
   SceneNode *m_sceneGraphRoot;

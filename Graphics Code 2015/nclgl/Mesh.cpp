@@ -196,9 +196,10 @@ void Mesh::GenerateNormals()
     for (; i < m_numIndices; i += 1)
     {
       c = m_indices[i];
-      
-      Vector3 normal = Vector3::Cross((m_vertices[b] - m_vertices[a]), (m_vertices[c] - m_vertices[a]));
-      
+
+      Vector3 normal =
+          Vector3::Cross((m_vertices[b] - m_vertices[a]), (m_vertices[c] - m_vertices[a]));
+
       m_normals[a] += normal;
       m_normals[b] += normal;
       m_normals[c] += normal;

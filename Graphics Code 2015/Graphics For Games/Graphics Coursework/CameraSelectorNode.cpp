@@ -37,21 +37,23 @@ void CameraSelectorNode::SetActive(bool active)
   m_active = active && m_camera != nullptr;
 }
 
-void CameraSelectorNode::PreRender(RenderState & state)
+void CameraSelectorNode::PreRender(RenderState &state)
 {
   ShaderDataNode::PreRender(state);
   state.camera = m_camera;
 }
 
-void CameraSelectorNode::PostRender(RenderState & state)
+void CameraSelectorNode::PostRender(RenderState &state)
 {
   ShaderDataNode::PostRender(state);
   state.camera = nullptr;
 }
 
-void CameraSelectorNode::ShaderBind(ShaderProgram * s)
+void CameraSelectorNode::ShaderBind(ShaderProgram *s)
 {
-  glUniformMatrix4fv(glGetUniformLocation(s->Program(), "viewMatrix"), 1, false, (float *)&m_camera->ViewMatrix());
-  glUniform3fv(glGetUniformLocation(s->Program(), "cameraPos"), 1, (float *)&m_camera->GetWorldTransformation().GetPositionVector());
+  glUniformMatrix4fv(glGetUniformLocation(s->Program(), "viewMatrix"), 1, false,
+                     (float *)&m_camera->ViewMatrix());
+  glUniform3fv(glGetUniformLocation(s->Program(), "cameraPos"), 1,
+               (float *)&m_camera->GetWorldTransformation().GetPositionVector());
 }
 }

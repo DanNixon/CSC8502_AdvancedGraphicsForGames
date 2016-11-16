@@ -46,7 +46,8 @@ void Light::ShaderBind(ShaderProgram *s)
   glUniform4fv(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_COLOUR].c_str()), 1,
                (float *)&m_colour);
 
-  glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_AMBIENT_INTENSITY].c_str()),
-    m_ambientIntensity);
+  glUniform1f(
+      glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_AMBIENT_INTENSITY].c_str()),
+      m_ambientIntensity);
 }
 }

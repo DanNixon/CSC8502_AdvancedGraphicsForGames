@@ -9,6 +9,7 @@
 #include "Font.h"
 #include "FractalBrownianMotion.h"
 #include "HeightMapMesh.h"
+#include "Light.h"
 #include "MeshNode.h"
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
@@ -22,7 +23,6 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
-#include "Light.h"
 
 using namespace GraphicsCoursework;
 
@@ -74,11 +74,13 @@ int main()
 
   TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
   r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
-  sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
+  sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) *
+                                     Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
 
   TextNode *loadingNode = new TextNode("loadingNode", sysMonFont, 10);
   r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(loadingNode);
-  loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
+  loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) *
+                                      Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
   loadingNode->SetText("Loading...");
 
   r.Root()->Update(w.GetTimer()->GetTimedMS());
@@ -109,8 +111,9 @@ int main()
       TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
   });
 
-  ShaderProgram *shader1 = new ShaderProgram(
-      {new VertexShader(SHADERDIR "PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "PerPixelFragment.glsl")});
+  ShaderProgram *shader1 =
+      new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
+                         new FragmentShader(SHADERDIR "PerPixelFragment.glsl")});
 
   ShaderProgram *shader2 = new ShaderProgram({new VertexShader(SHADERDIR "TexVertex.glsl"),
                                               new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});

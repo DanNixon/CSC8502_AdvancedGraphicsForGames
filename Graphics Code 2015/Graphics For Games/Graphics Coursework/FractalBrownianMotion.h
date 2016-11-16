@@ -22,7 +22,7 @@ public:
   virtual ~FractalBrownianMotion();
 
   float Fractal(float x, float y) const;
-  void FractalArrayThreaded(float * out, size_t x, size_t y, size_t numThreads = 0);
+  void FractalArrayThreaded(float *out, size_t x, size_t y, size_t numThreads = 0);
 
   inline size_t &NumOctaves()
   {

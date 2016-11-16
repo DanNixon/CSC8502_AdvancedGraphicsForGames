@@ -124,7 +124,7 @@ void SceneNode::Render(RenderState &state)
     PostRender(state);
 }
 
-void SceneNode::PrettyPrint(std::ostream & s, size_t level) const
+void SceneNode::PrettyPrint(std::ostream &s, size_t level) const
 {
   s << " " << (*this) << "\n";
 
@@ -132,7 +132,7 @@ void SceneNode::PrettyPrint(std::ostream & s, size_t level) const
     (*it)->PrettyPrint(s, level + 1);
 }
 
-std::ostream & operator<<(std::ostream & s, const SceneNode & n)
+std::ostream &operator<<(std::ostream &s, const SceneNode &n)
 {
   s << n.m_name;
   return s;

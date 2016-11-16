@@ -25,12 +25,12 @@ Renderer::~Renderer()
   delete m_sceneGraphRoot;
 }
 
-void Renderer::AddPersistentDataNode(ShaderDataNode * node)
+void Renderer::AddPersistentDataNode(ShaderDataNode *node)
 {
   m_state.shaderDataNodeStack.push_back(node);
 }
 
-bool Renderer::RemovePersistentDataNode(ShaderDataNode * node)
+bool Renderer::RemovePersistentDataNode(ShaderDataNode *node)
 {
   auto it = std::find(m_state.shaderDataNodeStack.begin(), m_state.shaderDataNodeStack.end(), node);
   bool found = (it != m_state.shaderDataNodeStack.end());
@@ -62,7 +62,7 @@ void Renderer::RenderScene()
   SwapBuffers();
 }
 
-std::ostream & operator<<(std::ostream & s, const Renderer & r)
+std::ostream &operator<<(std::ostream &s, const Renderer &r)
 {
   s << "Renderer scene graph:\n";
   r.m_sceneGraphRoot->PrettyPrint(s);
