@@ -67,7 +67,8 @@ int main()
   r.Root()->AddChild(cs1);
   cs1->SetCamera("cam1");
 
-  r.Root()->FindFirstChildByName("cs1")->AddChild(
+  auto globalTexMatrixIdentity = cs1->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
+  auto proj1 = globalTexMatrixIdentity->AddChild(
       new MatrixNode("proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
 
   ITexture *cubeMapTex = new CubeMapTexture();
@@ -82,7 +83,7 @@ int main()
     auto skyboxGLcontrol = new GenericControlNode("skyboxGLcontrol");
     skyboxGLcontrol->OnBind() = [](ShaderProgram *) { glDepthMask(GL_FALSE); };
     skyboxGLcontrol->OnUnBind() = [](ShaderProgram *) { glDepthMask(GL_TRUE); };
-    r.Root()->FindFirstChildByName("proj1")->AddChild(skyboxGLcontrol);
+    proj1->AddChild(skyboxGLcontrol);
 
     auto skyboxShader = skyboxGLcontrol->AddChild(new ShaderNode(
         "skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "SkyboxVertex.glsl"),
@@ -153,7 +154,7 @@ int main()
     Vector4 sunColour(1.0f, 1.0f, 0.85f, 1.0f);
     Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
 
-    auto lightRenderShader = r.Root()->FindFirstChildByName("proj1")->AddChild(
+    auto lightRenderShader = proj1->AddChild(
       new ShaderNode("lightRenderShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
     auto lightShaderSync = lightRenderShader->AddChild(new ShaderSyncNode("lightShaderSync"));
 
@@ -183,7 +184,7 @@ int main()
   }
   // END LIGHTS
 
-  r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode("shader1", shader1));
+  proj1->AddChild(new ShaderNode("shader1", shader1));
 
   r.Root()->FindFirstChildByName("shader1")->AddChild(
       new TextureNode("texm1", {{tex1, "diffuseTex", 1}}));
@@ -196,12 +197,12 @@ int main()
   s0->SpecularIntensity() = 0.5f;
   s0->SpecularPower() = 100.0f;
 
-  s0->AddChild(new TextureNode("texm2", {{tex2, "diffuseTex", 1}}));
-  r.Root()->FindFirstChildByName("texm2")->AddChild(new ShaderNode("shader2", shader1));
-  r.Root()->FindFirstChildByName("shader2")->AddChild(new ShaderSyncNode("ss2"));
-
   // HEIGHTMAP
   {
+    auto texm2 = proj1->AddChild(new TextureNode("texm2", { { tex2, "diffuseTex", 1 } }));
+    auto shader2 = texm2->AddChild(new ShaderNode("shader2", shader1));
+    auto ss2 = shader2->AddChild(new ShaderSyncNode("ss2"));
+
     PerlinNoise noise;
     FractalBrownianMotion fbm(noise);
     fbm.NumOctaves() = 3;
@@ -215,10 +216,10 @@ int main()
     hmm->SetHeightmapFromFBM(&fbm);
 
     MeshNode *hm = new MeshNode("hm", hmm);
-    r.Root()->FindFirstChildByName("ss2")->AddChild(hm);
+    ss2->AddChild(hm);
     hm->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)));
   }
-  // END 
+  // END HEIGHTMAP
 
   // WATER
   {
@@ -226,7 +227,7 @@ int main()
     waterTex->LoadFromFile(TEXTUREDIR "water_surface.jpg");
     waterTex->SetRepeating(true);
 
-    auto waterShader = r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode(
+    auto waterShader = proj1->AddChild(new ShaderNode(
         "waterShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
                                           new FragmentShader(SHADERDIR "ReflectFragment.glsl")})));
 

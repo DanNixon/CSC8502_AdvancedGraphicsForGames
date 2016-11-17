@@ -20,6 +20,7 @@ public:
   }
 
   virtual void ShaderBind(ShaderProgram *s);
+  virtual void ShaderUnBind(ShaderProgram *s);
 
 protected:
   const std::string m_uniformName;
