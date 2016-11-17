@@ -264,8 +264,8 @@ void Mesh::GenerateTangents()
       int b = m_indices[i + 1];
       int c = m_indices[i + 2];
 
-      Vector3 tangent = GenerateTangent(m_vertices[a], m_vertices[b], m_vertices[c], m_textureCoords[a],
-        m_textureCoords[b], m_textureCoords[c]);
+      Vector3 tangent = GenerateTangent(m_vertices[a], m_vertices[b], m_vertices[c],
+                                        m_textureCoords[a], m_textureCoords[b], m_textureCoords[c]);
 
       m_tangents[a] += tangent;
       m_tangents[b] += tangent;
@@ -278,7 +278,7 @@ void Mesh::GenerateTangents()
     {
       Vector3 tangent =
           GenerateTangent(m_vertices[i], m_vertices[i + 1], m_vertices[i + 2], m_textureCoords[i],
-            m_textureCoords[i + 1], m_textureCoords[i + 2]);
+                          m_textureCoords[i + 1], m_textureCoords[i + 2]);
 
       m_tangents[i] += tangent;
       m_tangents[i + 1] += tangent;
