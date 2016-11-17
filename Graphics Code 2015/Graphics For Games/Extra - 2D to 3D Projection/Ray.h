@@ -19,11 +19,11 @@ _-_-_-_-_-_-_-|   /\_/\   Who is Ray, anyway?
 -_-_-_-_-_-_-~|__( ^ .^) /
 _-_-_-_-_-_-_-""  ""   
 
-*//////////////////////////////////////////////////////////////////////////////
+*/ /////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "../../NCLGL/Vector3.h"
 #include "../../NCLGL/SceneNode.h"
+#include "../../NCLGL/Vector3.h"
 
 #include <vector>
 using namespace std;
@@ -31,43 +31,45 @@ using namespace std;
 /*
 SceneNodes that are hit by the ray are stored in this simple struct.
 */
-struct RayCollision	{
-	SceneNode* node;	//Node that was hit
-	Vector3 collidedAt; //WORLD SPACE position of the collision!
+struct RayCollision
+{
+  SceneNode *node;    // Node that was hit
+  Vector3 collidedAt; // WORLD SPACE position of the collision!
 
-	RayCollision::RayCollision(SceneNode*node, Vector3 collidedAt) {
-		this->node = node;
-		this->collidedAt = collidedAt;
-	}
+  RayCollision::RayCollision(SceneNode *node, Vector3 collidedAt)
+  {
+    this->node = node;
+    this->collidedAt = collidedAt;
+  }
 };
 
-class Ray	{
+class Ray
+{
 public:
-	Ray(Vector3 position, Vector3 direction);
-	~Ray(void);
+  Ray(Vector3 position, Vector3 direction);
+  ~Ray(void);
 
-	/*
-	Tests a SceneNode for a ray collision, using the node's bounding sphere,
-	as introduced in the scene management tutorial. 
-	This function will test the passed in node's children, and so on,
-	so we can test an entire scene graph from its root node!
-	*/
-	bool	IntersectsNodes(SceneNode &root);
+  /*
+  Tests a SceneNode for a ray collision, using the node's bounding sphere,
+  as introduced in the scene management tutorial.
+  This function will test the passed in node's children, and so on,
+  so we can test an entire scene graph from its root node!
+  */
+  bool IntersectsNodes(SceneNode &root);
 
-	//Should be encapsulated, really...
-	//This holds which nodes have been hit by a Ray, and where.
-	vector<RayCollision> collisions;
+  // Should be encapsulated, really...
+  // This holds which nodes have been hit by a Ray, and where.
+  vector<RayCollision> collisions;
 
 protected:
-	/*
-	Function for the actual ray / sphere intersection test. Returns true
-	if there's been an intersection
-	*/
-	bool	IntersectsNode(SceneNode &node, Vector3 &intersectPos);
+  /*
+  Function for the actual ray / sphere intersection test. Returns true
+  if there's been an intersection
+  */
+  bool IntersectsNode(SceneNode &node, Vector3 &intersectPos);
 
-	bool collided;		//Has this node collided with anything?
+  bool collided; // Has this node collided with anything?
 
-	Vector3 position;	//World space position
-	Vector3 direction;	//Normalised world space direction
+  Vector3 position;  // World space position
+  Vector3 direction; // Normalised world space direction
 };
-

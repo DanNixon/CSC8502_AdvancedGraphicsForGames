@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../nclgl/SceneNode.h"
 #include "../nclgl/OBJMesh.h"
+#include "../nclgl/SceneNode.h"
 
 class CubeRobot : public SceneNode
 {

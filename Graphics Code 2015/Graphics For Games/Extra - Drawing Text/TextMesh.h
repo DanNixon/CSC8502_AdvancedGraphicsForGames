@@ -14,7 +14,7 @@ _-_-_-_-_-_-_-|   /\_/\   This is nyantext!!
 -_-_-_-_-_-_-~|__( ^ .^) /
 _-_-_-_-_-_-_-""  ""   
 
-*//////////////////////////////////////////////////////////////////////////////
+*/ /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "../../NCLGL/mesh.h"
 #include <vector>
@@ -22,34 +22,37 @@ _-_-_-_-_-_-_-""  ""
 /*
 A TextMesh uses a 'Font', simply a struct which holds a texture, and some info
 about that texture. bitmap fonts have a grid like array of cells, usually
-arranged so that they are in ascending byte order. So by storing the 
+arranged so that they are in ascending byte order. So by storing the
 number of cells across and down the font texture has, we can work out which
 bit of the texture is which text character (assuming they are in byte order).
 
 The Font class cleans up after itself, so we don't have to keep track of its
 font texture anywhere else!
 */
-struct Font {
-	GLuint	texture;
-	int		xCount;
-	int		yCount;
+struct Font
+{
+  GLuint texture;
+  int xCount;
+  int yCount;
 
-	Font(GLuint tex, unsigned int xCount, unsigned int yCount) {
-		this->texture = tex;
-		this->xCount  = xCount;
-		this->yCount  = yCount;
-	}
-	~Font() {
-		glDeleteTextures(1,&texture);
-	}
+  Font(GLuint tex, unsigned int xCount, unsigned int yCount)
+  {
+    this->texture = tex;
+    this->xCount = xCount;
+    this->yCount = yCount;
+  }
+  ~Font()
+  {
+    glDeleteTextures(1, &texture);
+  }
 };
 
-class TextMesh : public Mesh	{
+class TextMesh : public Mesh
+{
 public:
-	TextMesh(const std::string &text, const Font &font);
-	~TextMesh(void);
+  TextMesh(const std::string &text, const Font &font);
+  ~TextMesh(void);
+
 protected:
-
-	const Font& font;
+  const Font &font;
 };
-

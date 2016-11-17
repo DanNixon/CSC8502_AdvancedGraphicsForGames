@@ -13,7 +13,7 @@ Renderer::Renderer(Window &parent)
   init = true;
   SwitchToOrthographic();
 
-  //glEnable(GL_DEPTH_TEST);
+  // glEnable(GL_DEPTH_TEST);
 }
 
 Renderer::~Renderer(void)
@@ -56,7 +56,7 @@ void Renderer::RenderScene()
 
 void Renderer::UpdateScene(float msec)
 {
-  //camera->UpdateCamera(msec);
+  // camera->UpdateCamera(msec);
   viewMatrix = camera->BuildViewMatrix();
 }
 

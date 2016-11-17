@@ -7,8 +7,7 @@ Renderer::Renderer(Window &parent)
   heightMap = new HeightMap("../ Textures / terrain .raw ");
   quad = Mesh::GenerateQuad();
 
-  camera ->
-      SetPosition(Vector3(RAW_WIDTH * HEIGHTMAP_X / 2.0 f, 500.0 f, RAW_WIDTH * HEIGHTMAP_X));
+  camera->SetPosition(Vector3(RAW_WIDTH * HEIGHTMAP_X / 2.0 f, 500.0 f, RAW_WIDTH * HEIGHTMAP_X));
 
   light = new Light(
       Vector3((RAW_HEIGHT * HEIGHTMAP_X / 2.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f)),
@@ -124,12 +123,12 @@ Renderer::Renderer(Window &parent)
     {
       SetCurrentShader(reflectShader);
       SetShaderLight(*light);
-      glUniform3fv(glGetUniformLocation(currentShader -> GetProgram(), "cameraPos"), 1,
+      glUniform3fv(glGetUniformLocation(currentShader->GetProgram(), "cameraPos"), 1,
                    (float *)&camera - > GetPosition());
 
-      glUniform1i(glGetUniformLocation(currentShader -> GetProgram(), "diffuseTex"), 0);
+      glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
 
-      glUniform1i(glGetUniformLocation(currentShader -> GetProgram(), "cubeTex"), 2);
+      glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "cubeTex"), 2);
 
       glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap);
@@ -148,7 +147,7 @@ Renderer::Renderer(Window &parent)
                       Matrix4::Rotation(waterRotate, Vector3(0.0f, 0.0f, 1.0f));
       UpdateShaderMatrices();
 
-      quad -> Draw();
+      quad->Draw();
 
       glUseProgram(0);
     }

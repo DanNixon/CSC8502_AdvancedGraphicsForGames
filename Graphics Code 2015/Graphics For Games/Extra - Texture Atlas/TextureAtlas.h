@@ -1,23 +1,26 @@
 #pragma once
-#include <map>
 #include "./NCLGL/OGLRenderer.h"
+#include <map>
 
 /*
 We can actually get away with simple integer math for the majority of
 the texture atlas, so we cheat and have a Vector2 facsimile with integers.
 */
-struct iVector2 {
-	int x;
-	int y;
+struct iVector2
+{
+  int x;
+  int y;
 
-	iVector2() {
-		x = y = 0;
-	}
+  iVector2()
+  {
+    x = y = 0;
+  }
 
-	iVector2(int x, int y) {
-		this->x = x;
-		this->y = y;
-	}
+  iVector2(int x, int y)
+  {
+    this->x = x;
+    this->y = y;
+  }
 };
 
 /******************************************************************************
@@ -46,52 +49,56 @@ _-_-_-_-_-_-_-|   /\_/\   Who is Atlas?
 -_-_-_-_-_-_-~|__( ^ .^) /
 _-_-_-_-_-_-_-""  ""   
 
-*//////////////////////////////////////////////////////////////////////////////
+*/ /////////////////////////////////////////////////////////////////////////////
 
-class AtlasTreeNode 	{
-	friend class TextureAtlas;
+class AtlasTreeNode
+{
+  friend class TextureAtlas;
+
 public:
-	AtlasTreeNode(iVector2 position,iVector2 size);
+  AtlasTreeNode(iVector2 position, iVector2 size);
 
-	/*
-	Add a region of size <size> to the kd tree. Returns the node the region is
-	part of if successful, otherwise returns NULL
-	*/
-	AtlasTreeNode* Add(const iVector2 &size);
+  /*
+  Add a region of size <size> to the kd tree. Returns the node the region is
+  part of if successful, otherwise returns NULL
+  */
+  AtlasTreeNode *Add(const iVector2 &size);
 
-	/*
-	Returns whether this node has children (is a leaf) or not
-	*/
-	bool	IsLeaf() const;
+  /*
+  Returns whether this node has children (is a leaf) or not
+  */
+  bool IsLeaf() const;
 
-	/*
-	Transforms 'virtual' coordinates to 'physical' coordinates
-	*/
-	Vector2	VertexCoordsToAtlasCoords(Vector2 coords) const;
+  /*
+  Transforms 'virtual' coordinates to 'physical' coordinates
+  */
+  Vector2 VertexCoordsToAtlasCoords(Vector2 coords) const;
 
-	/*
-	Packs the position and size of this node into a single Vector4,
-	suitable for sending to a vertex shader.
-	*/
-	Vector4 PackValuesForShader() const;
+  /*
+  Packs the position and size of this node into a single Vector4,
+  suitable for sending to a vertex shader.
+  */
+  Vector4 PackValuesForShader() const;
 
-	/*
-	Returns the atlas this node is a region of
-	*/
-	TextureAtlas* GetAtlas() {return atlas;}
+  /*
+  Returns the atlas this node is a region of
+  */
+  TextureAtlas *GetAtlas()
+  {
+    return atlas;
+  }
 
 protected:
-	~AtlasTreeNode(void);
+  ~AtlasTreeNode(void);
 
-	AtlasTreeNode* childA;		//First child  (may be left or top)
-	AtlasTreeNode* childB;		//Second child (may be right or bottom)
+  AtlasTreeNode *childA; // First child  (may be left or top)
+  AtlasTreeNode *childB; // Second child (may be right or bottom)
 
-	bool			used;		//Is this node in use?
-	iVector2		position;	//Position of left corner of node region
-	iVector2		size;		//How big this node region is
-	TextureAtlas*	atlas;		//Pointer to the 'parent'
+  bool used;           // Is this node in use?
+  iVector2 position;   // Position of left corner of node region
+  iVector2 size;       // How big this node region is
+  TextureAtlas *atlas; // Pointer to the 'parent'
 };
-
 
 /******************************************************************************
 Class:TextureAtlas
@@ -129,54 +136,59 @@ _-_-_-_-_-_-_-|   /\_/\   Would you kindly?
 -_-_-_-_-_-_-~|__( ^ .^) /
 _-_-_-_-_-_-_-""  ""   
 
-*//////////////////////////////////////////////////////////////////////////////
+*/ /////////////////////////////////////////////////////////////////////////////
 
-class TextureAtlas	{
-	friend class AtlasTreeNode;
+class TextureAtlas
+{
+  friend class AtlasTreeNode;
+
 public:
-	TextureAtlas(GLuint width, GLuint height, GLuint border = 2);
-	~TextureAtlas(void);
+  TextureAtlas(GLuint width, GLuint height, GLuint border = 2);
+  ~TextureAtlas(void);
 
-	//Returns the OpenGL texture for this atlas
-	GLuint GetAtlasTexture() const {return textureName;}
+  // Returns the OpenGL texture for this atlas
+  GLuint GetAtlasTexture() const
+  {
+    return textureName;
+  }
 
-	//returns TRUE if texture with <name> is already in the atlas
-	bool	TextureInAtlas(const string &name) const;
+  // returns TRUE if texture with <name> is already in the atlas
+  bool TextureInAtlas(const string &name) const;
 
-	/*
-	Returns the node representing the region for texture <name>, or NULL
-	if the texture <name> does not exist in this atlas
-	*/
-	AtlasTreeNode*	GetTexture(const string &name) const;
+  /*
+  Returns the node representing the region for texture <name>, or NULL
+  if the texture <name> does not exist in this atlas
+  */
+  AtlasTreeNode *GetTexture(const string &name) const;
 
-	/*
-	Adds a texture with the filepath/name of <name> to the atlas. Returns
-	the node representing this texture if everything is successful, or NULL
-	if the process fails.
-	*/
-	AtlasTreeNode*	AddTexture(const string &name);
+  /*
+  Adds a texture with the filepath/name of <name> to the atlas. Returns
+  the node representing this texture if everything is successful, or NULL
+  if the process fails.
+  */
+  AtlasTreeNode *AddTexture(const string &name);
 
-	/*
-	If we're using mipmaps, we need to rebuild them to reflect new data added
-	to the primary texture mipmap level. We could do this automatically, but
-	it'll be more efficient to just call this once for every 'batch' of
-	textures we add to the texture atlas. 
-	*/
-	void	BuildMipMaps() const;
+  /*
+  If we're using mipmaps, we need to rebuild them to reflect new data added
+  to the primary texture mipmap level. We could do this automatically, but
+  it'll be more efficient to just call this once for every 'batch' of
+  textures we add to the texture atlas.
+  */
+  void BuildMipMaps() const;
 
-	/*
-	Packs the size and border of this texture atlas into a single Vector3,
-	suitable for sending to a shader.
-	*/
-	Vector3 PackValuesForShader() const;
+  /*
+  Packs the size and border of this texture atlas into a single Vector3,
+  suitable for sending to a shader.
+  */
+  Vector3 PackValuesForShader() const;
 
 protected:
-	GLuint		textureName;	//OpenGL texture name for the texture of this atlas
+  GLuint textureName; // OpenGL texture name for the texture of this atlas
 
-	iVector2	size;			//dimensions of the texture for this atlas
-	GLuint		border;			//How many pixels of gutter we have for each texture
+  iVector2 size; // dimensions of the texture for this atlas
+  GLuint border; // How many pixels of gutter we have for each texture
 
-	AtlasTreeNode* rootNode;	//Our root node - deleting this will delete the entire tree
+  AtlasTreeNode *rootNode; // Our root node - deleting this will delete the entire tree
 
-	map<string,AtlasTreeNode*> addedTextures; //Map of textures for quick look-up
+  map<string, AtlasTreeNode *> addedTextures; // Map of textures for quick look-up
 };

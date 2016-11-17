@@ -19,5 +19,5 @@ class HeightMap : public Mesh
 {
 public:
   HeightMap(std::string name);
-  ~HeightMap() {};
+  ~HeightMap(){};
 };
