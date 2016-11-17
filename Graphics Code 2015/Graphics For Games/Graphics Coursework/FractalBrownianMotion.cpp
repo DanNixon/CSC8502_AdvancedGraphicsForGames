@@ -21,6 +21,7 @@ FractalBrownianMotion::FractalBrownianMotion(const PerlinNoise &perlin)
     , m_lacunarity(2.0f)
     , m_persistence(0.5f)
     , m_uniformAmplitude(1.0f)
+    , m_offset(0.0f)
 {
 }
 
@@ -48,6 +49,7 @@ float FractalBrownianMotion::Fractal(float x, float y) const
 
   retVal /= denom;
   retVal *= m_uniformAmplitude;
+  retVal += m_offset;
 
   return retVal;
 }

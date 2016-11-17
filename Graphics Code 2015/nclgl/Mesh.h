@@ -24,6 +24,8 @@ public:
   virtual void *GetBuffer(Buffer b, GLenum mode);
   virtual bool ReturnBuffer(Buffer b);
 
+  void SetUniformColour(const Vector4 &colour);
+
   inline GLuint GetTexture()
   {
     return m_texture;

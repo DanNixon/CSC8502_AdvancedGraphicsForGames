@@ -1,6 +1,6 @@
 #version 150 core
 
-uniform sampler2D diffuseTex;
+uniform sampler2D waterTexture;
 uniform samplerCube cubeTex;
 
 uniform vec3 cameraPos;
@@ -34,7 +34,7 @@ vec3 processLight(vec4 diffuse, vec4 lightColour, vec3 lightPos, float lightRadi
 
 void main()
 {
-  vec4 diffuse = texture(diffuseTex, IN.texCoord) * IN.colour;
+  vec4 diffuse = texture(waterTexture, IN.texCoord) * IN.colour;
   vec3 incident = normalize(IN.worldPos - cameraPos);
 
   vec3 lighting = vec3(0, 0, 0);
@@ -43,5 +43,5 @@ void main()
 
   vec4 reflection = texture(cubeTex, reflect(incident, normalize(IN.normal)));
 
-  fragColour = vec4(lighting, 1.0) * (diffuse + reflection);
+  fragColour = vec4(lighting, 1.0) * (diffuse * reflection);
 }

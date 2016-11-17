@@ -14,6 +14,11 @@ public:
   MeshNode(const std::string &name, Mesh *mesh, bool transparent = false);
   virtual ~MeshNode();
 
+  inline Mesh * GetMesh()
+  {
+    return m_mesh;
+  }
+
   virtual void Draw(RenderState &state);
 
 protected:

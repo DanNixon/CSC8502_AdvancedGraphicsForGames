@@ -182,6 +182,21 @@ bool Mesh::ReturnBuffer(Buffer b)
   return glUnmapBuffer(m_bufferObjects[b]) == GL_TRUE;
 }
 
+void Mesh::SetUniformColour(const Vector4 & colour)
+{
+  if (m_colours == nullptr)
+    return;
+
+  for (size_t i = 0; i < m_numVertices; i++)
+    m_colours[i] = colour;
+
+  // Rebuffer colours
+  glBindVertexArray(m_arrayObject);
+  glDeleteBuffers(1, &m_bufferObjects[COLOUR_BUFFER]);
+  RegisterBuffer(COLOUR_BUFFER, 4, m_colours);
+  glBindVertexArray(0);
+}
+
 void Mesh::GenerateNormals()
 {
   if (m_normals == nullptr)

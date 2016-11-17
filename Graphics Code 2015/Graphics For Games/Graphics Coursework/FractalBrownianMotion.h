@@ -59,6 +59,11 @@ public:
     return m_uniformAmplitude;
   }
 
+  inline float &Offset()
+  {
+    return m_offset;
+  }
+
 protected:
   void FractalArray(float *out, size_t start, size_t end, FractralArrayGenState &state) const;
 
@@ -72,5 +77,6 @@ protected:
   float m_lacunarity;
   float m_persistence;
   float m_uniformAmplitude;
+  float m_offset;
 };
 }
