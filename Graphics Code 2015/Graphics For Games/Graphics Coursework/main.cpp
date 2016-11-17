@@ -67,14 +67,15 @@ int main()
   r.Root()->AddChild(cs1);
   cs1->SetCamera("cam1");
 
-  auto globalTexMatrixIdentity = cs1->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
-  auto proj1 = globalTexMatrixIdentity->AddChild(
-      new MatrixNode("proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
+  auto globalTexMatrixIdentity =
+      cs1->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
+  auto proj1 = globalTexMatrixIdentity->AddChild(new MatrixNode(
+      "proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles({
-    TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
-    TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
+      TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
+      TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
   });
   cubeMapTex->SetRepeating(true);
 
@@ -154,8 +155,11 @@ int main()
     Vector4 sunColour(1.0f, 1.0f, 0.85f, 1.0f);
     Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
 
-    auto lightRenderShader = proj1->AddChild(
-      new ShaderNode("lightRenderShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
+    auto lightRenderShader = proj1->AddChild(new ShaderNode(
+        "lightRenderShader",
+        new ShaderProgram(
+            {new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
+             new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
     auto lightShaderSync = lightRenderShader->AddChild(new ShaderSyncNode("lightShaderSync"));
 
     sun = new Light("sun");
@@ -166,7 +170,7 @@ int main()
     sun->Colour() = sunColour;
     sun->SetLocalTransformation(Matrix4::Translation(Vector3(50.0f, 50.0f, -50.0f)));
 
-    MeshNode * sunMesh = new MeshNode("sunMesh", Mesh::GenerateSphere());
+    MeshNode *sunMesh = new MeshNode("sunMesh", Mesh::GenerateSphere());
     sun->AddChild(sunMesh);
     sunMesh->GetMesh()->SetUniformColour(sunColour);
 
@@ -178,7 +182,7 @@ int main()
     moon->Colour() = moonColour;
     moon->SetLocalTransformation(Matrix4::Translation(Vector3(-50.0f, 50.0f, -50.0f)));
 
-    MeshNode * moonMesh = new MeshNode("moonMesh", Mesh::GenerateSphere());
+    MeshNode *moonMesh = new MeshNode("moonMesh", Mesh::GenerateSphere());
     moon->AddChild(moonMesh);
     moonMesh->GetMesh()->SetUniformColour(moonColour);
   }
@@ -199,7 +203,7 @@ int main()
 
   // HEIGHTMAP
   {
-    auto texm2 = proj1->AddChild(new TextureNode("texm2", { { tex2, "diffuseTex", 1 } }));
+    auto texm2 = proj1->AddChild(new TextureNode("texm2", {{tex2, "diffuseTex", 1}}));
     auto shader2 = texm2->AddChild(new ShaderNode("shader2", shader1));
     auto ss2 = shader2->AddChild(new ShaderSyncNode("ss2"));
 
@@ -231,14 +235,19 @@ int main()
         "waterShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
                                           new FragmentShader(SHADERDIR "ReflectFragment.glsl")})));
 
-    auto waterTexture =
-      waterShader->AddChild(new TextureNode("waterTexture", { {waterTex, "waterTexture", 1}, { cubeMapTex , "cubeTex", 2} }));
-    auto waterTexMatrix = waterTexture->AddChild(new MatrixNode("waterTexMatrix", "textureMatrix", Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) * Matrix4::Rotation(90.0f, Vector3(0.0f, 0.0f, 1.0f))));
+    auto waterTexture = waterShader->AddChild(new TextureNode(
+        "waterTexture", {{waterTex, "waterTexture", 1}, {cubeMapTex, "cubeTex", 2}}));
+    auto waterTexMatrix = waterTexture->AddChild(
+        new MatrixNode("waterTexMatrix", "textureMatrix",
+                       Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) *
+                           Matrix4::Rotation(90.0f, Vector3(0.0f, 0.0f, 1.0f))));
 
     auto waterShaderSync = waterTexMatrix->AddChild(new ShaderSyncNode("waterShaderSync"));
 
-    RenderableNode * waterQuad = (RenderableNode *) waterShaderSync->AddChild(new MeshNode("waterQuad", Mesh::GenerateQuad()));
-    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)) * Matrix4::Scale(1000.0f));
+    RenderableNode *waterQuad = (RenderableNode *)waterShaderSync->AddChild(
+        new MeshNode("waterQuad", Mesh::GenerateQuad()));
+    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)) *
+                                      Matrix4::Scale(1000.0f));
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     waterQuad->SpecularPower() = 2.0f;
   }

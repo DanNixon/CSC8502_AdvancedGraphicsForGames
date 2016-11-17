@@ -4,8 +4,8 @@
 
 #include "ShaderDataNode.h"
 
-#include <functional>
 #include <../nclgl/Matrix4.h>
+#include <functional>
 
 namespace GraphicsCoursework
 {

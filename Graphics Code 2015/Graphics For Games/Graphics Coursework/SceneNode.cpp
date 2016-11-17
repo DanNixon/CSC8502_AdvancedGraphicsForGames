@@ -47,7 +47,7 @@ void SceneNode::GetStack(std::vector<SceneNode *> &stack)
   }
 }
 
-SceneNode * SceneNode::AddChild(SceneNode *child)
+SceneNode *SceneNode::AddChild(SceneNode *child)
 {
   child->m_renderer = m_renderer;
   child->m_parent = this;

@@ -11,7 +11,8 @@ namespace GraphicsCoursework
 class MatrixNode : public ShaderDataNode
 {
 public:
-  MatrixNode(const std::string &name, const std::string &uniformName, const Matrix4 &proj = Matrix4());
+  MatrixNode(const std::string &name, const std::string &uniformName,
+             const Matrix4 &proj = Matrix4());
   virtual ~MatrixNode();
 
   inline Matrix4 &Matrix()

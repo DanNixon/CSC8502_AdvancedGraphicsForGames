@@ -25,12 +25,12 @@ void MatrixNode::ShaderBind(ShaderProgram *s)
                      (float *)&m_matrix);
 }
 
-void MatrixNode::ShaderUnBind(ShaderProgram * s)
+void MatrixNode::ShaderUnBind(ShaderProgram *s)
 {
   Matrix4 mat;
   mat.ToIdentity();
 
   glUniformMatrix4fv(glGetUniformLocation(s->Program(), m_uniformName.c_str()), 1, false,
-    (float *)&mat);
+                     (float *)&mat);
 }
 }
