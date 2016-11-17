@@ -70,16 +70,15 @@ int main()
   r.Root()->FindFirstChildByName("cs1")->AddChild(
       new MatrixNode("proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
 
+  ITexture *cubeMapTex = new CubeMapTexture();
+  cubeMapTex->LoadFromFiles({
+    TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
+    TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
+  });
+  cubeMapTex->SetRepeating(true);
+
   // SKYBOX
   {
-    ITexture *cubeMapTex = new CubeMapTexture();
-    cubeMapTex->LoadFromFiles({
-        TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
-        TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
-    });
-
-    r.SetTextureRepeating(cubeMapTex->GetTextureID(), true);
-
     auto skyboxGLcontrol = new GenericControlNode("skyboxGLcontrol");
     skyboxGLcontrol->OnBind() = [](ShaderProgram *) { glDepthMask(GL_FALSE); };
     skyboxGLcontrol->OnUnBind() = [](ShaderProgram *) { glDepthMask(GL_TRUE); };
@@ -225,16 +224,18 @@ int main()
   {
     ITexture *waterTex = new Texture();
     waterTex->LoadFromFile(TEXTUREDIR "water_surface.jpg");
-
-    r.SetTextureRepeating(waterTex->GetTextureID(), true);
+    waterTex->SetRepeating(true);
 
     auto waterShader = r.Root()->FindFirstChildByName("proj1")->AddChild(new ShaderNode(
         "waterShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
                                           new FragmentShader(SHADERDIR "ReflectFragment.glsl")})));
+
     auto waterTexture =
-        waterShader->AddChild(new TextureNode("waterTexture", {{waterTex, "waterTexture", 1}}));
+      waterShader->AddChild(new TextureNode("waterTexture", { {waterTex, "waterTexture", 1}, { cubeMapTex , "cubeTex", 2} }));
     auto waterTexMatrix = waterTexture->AddChild(new MatrixNode("waterTexMatrix", "textureMatrix", Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) * Matrix4::Rotation(90.0f, Vector3(0.0f, 0.0f, 1.0f))));
+
     auto waterShaderSync = waterTexMatrix->AddChild(new ShaderSyncNode("waterShaderSync"));
+
     RenderableNode * waterQuad = (RenderableNode *) waterShaderSync->AddChild(new MeshNode("waterQuad", Mesh::GenerateQuad()));
     waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)) * Matrix4::Scale(1000.0f));
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
@@ -242,11 +243,11 @@ int main()
   }
   // END WATER
 
-  std::cout << r << '\n';
+  // Output scene tree and mark loading as completed
+  std::cout << r;
   loadingNode->SetActive(false);
 
   GameTimer sysMonTimer;
-
   while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE))
   {
     if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))

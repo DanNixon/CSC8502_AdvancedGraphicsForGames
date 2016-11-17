@@ -27,6 +27,8 @@ public:
     return m_textureID;
   }
 
+  virtual void SetRepeating(bool repeat);
+
   void BindTo(GLuint idx);
   void UnBind(GLuint idx);
 

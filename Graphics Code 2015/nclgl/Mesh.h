@@ -39,6 +39,10 @@ public:
 protected:
   void GenerateNormals();
 
+  void GenerateTangents();
+  Vector3 GenerateTangent(const Vector3 &a, const Vector3 &b, const Vector3 &c, const Vector2 &ta,
+                          const Vector2 &tb, const Vector2 &tc);
+
   void BufferData();
   void RegisterBuffer(Buffer b, GLuint width, void *data);
 

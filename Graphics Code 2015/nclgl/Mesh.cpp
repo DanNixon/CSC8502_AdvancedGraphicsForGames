@@ -17,11 +17,11 @@ Mesh *Mesh::GenerateTriangle()
   m->m_normals[0] = Vector3(0.0f, 0.0f, 1.0f);
   m->m_normals[1] = Vector3(0.0f, 0.0f, 1.0f);
   m->m_normals[2] = Vector3(0.0f, 0.0f, 1.0f);
-  
+
   m->m_colours[0] = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
   m->m_colours[1] = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
   m->m_colours[2] = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-  
+
   m->m_textureCoords[0] = Vector2(0.5f, 0.0f);
   m->m_textureCoords[1] = Vector2(1.0f, 1.0f);
   m->m_textureCoords[2] = Vector2(0.0f, 1.0f);
@@ -182,7 +182,7 @@ bool Mesh::ReturnBuffer(Buffer b)
   return glUnmapBuffer(m_bufferObjects[b]) == GL_TRUE;
 }
 
-void Mesh::SetUniformColour(const Vector4 & colour)
+void Mesh::SetUniformColour(const Vector4 &colour)
 {
   if (m_colours == nullptr)
     return;
@@ -246,6 +246,63 @@ void Mesh::GenerateNormals()
   // Normalise all normals
   for (GLuint i = 0; i < m_numVertices; ++i)
     m_normals[i].Normalise();
+}
+
+void Mesh::GenerateTangents()
+{
+  if (m_tangents == nullptr)
+    m_tangents = new Vector3[m_numVertices];
+
+  for (GLuint i = 0; i < m_numVertices; ++i)
+    m_tangents[i] = Vector3();
+
+  if (m_indices != nullptr)
+  {
+    for (GLuint i = 0; i < m_numIndices; i += 3)
+    {
+      int a = m_indices[i];
+      int b = m_indices[i + 1];
+      int c = m_indices[i + 2];
+
+      Vector3 tangent = GenerateTangent(m_vertices[a], m_vertices[b], m_vertices[c], m_textureCoords[a],
+        m_textureCoords[b], m_textureCoords[c]);
+
+      m_tangents[a] += tangent;
+      m_tangents[b] += tangent;
+      m_tangents[c] += tangent;
+    }
+  }
+  else
+  {
+    for (GLuint i = 0; i < m_numVertices; i += 3)
+    {
+      Vector3 tangent =
+          GenerateTangent(m_vertices[i], m_vertices[i + 1], m_vertices[i + 2], m_textureCoords[i],
+            m_textureCoords[i + 1], m_textureCoords[i + 2]);
+
+      m_tangents[i] += tangent;
+      m_tangents[i + 1] += tangent;
+      m_tangents[i + 2] += tangent;
+    }
+  }
+
+  for (GLuint i = 0; i < m_numVertices; ++i)
+    m_tangents[i].Normalise();
+}
+
+Vector3 Mesh::GenerateTangent(const Vector3 &a, const Vector3 &b, const Vector3 &c,
+                              const Vector2 &ta, const Vector2 &tb, const Vector2 &tc)
+{
+  Vector2 coord1 = tb - ta;
+  Vector2 coord2 = tc - ta;
+
+  Vector3 vertex1 = b - a;
+  Vector3 vertex2 = c - a;
+
+  Vector3 axis = Vector3(vertex1 * coord2.y - vertex2 * coord1.y);
+  float factor = 1.0f / (coord1.x * coord2.y - coord2.x * coord1.y);
+
+  return axis * factor;
 }
 
 void Mesh::BufferData()
