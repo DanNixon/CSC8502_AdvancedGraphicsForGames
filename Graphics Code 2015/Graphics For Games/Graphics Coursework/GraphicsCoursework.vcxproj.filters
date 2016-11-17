@@ -14,9 +14,6 @@
     <ClCompile Include="CameraSelectorNode.cpp">
       <Filter>Camera &amp; View</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectionNode.cpp">
-      <Filter>Camera &amp; View</Filter>
-    </ClCompile>
     <ClCompile Include="PositionableCamera.cpp">
       <Filter>Camera &amp; View</Filter>
     </ClCompile>
@@ -92,6 +89,9 @@
     <ClCompile Include="GenericControlNode.cpp">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="MatrixNode.cpp">
+      <Filter>Camera &amp; View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -107,9 +107,6 @@
       <Filter>Camera &amp; View</Filter>
     </ClInclude>
     <ClInclude Include="CameraSelectorNode.h">
-      <Filter>Camera &amp; View</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectionNode.h">
       <Filter>Camera &amp; View</Filter>
     </ClInclude>
     <ClInclude Include="PositionableCamera.h">
@@ -189,6 +186,9 @@
     </ClInclude>
     <ClInclude Include="GenericControlNode.h">
       <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixNode.h">
+      <Filter>Camera &amp; View</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -82,11 +82,11 @@
     <ClCompile Include="ITexture.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MatrixNode.cpp" />
     <ClCompile Include="MeshNode.cpp" />
     <ClCompile Include="PerformanceMonitorNode.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="PositionableCamera.cpp" />
-    <ClCompile Include="ProjectionNode.cpp" />
     <ClCompile Include="RenderableNode.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneNode.cpp" />
@@ -114,11 +114,11 @@
     <ClInclude Include="ISystemMonitor.h" />
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MatrixNode.h" />
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="PerformanceMonitorNode.h" />
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="PositionableCamera.h" />
-    <ClInclude Include="ProjectionNode.h" />
     <ClInclude Include="RenderableNode.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderState.h" />

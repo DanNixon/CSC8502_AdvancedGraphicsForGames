@@ -48,7 +48,7 @@ vec3 processLight(vec4 diffuse, vec4 lightCol, vec3 lightPos, float lightRadius,
 
   vec3 finalColour = vec3((diffuseColour + specColour) * atten * lambert);
   finalColour += diffuseColour * lightAmbInt;
-	
+
 	return finalColour;
 }
 

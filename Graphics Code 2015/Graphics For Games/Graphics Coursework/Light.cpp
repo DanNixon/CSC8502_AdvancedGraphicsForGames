@@ -53,6 +53,9 @@ void Light::ShaderBind(ShaderProgram *s)
 
 void Light::ShaderUnBind(ShaderProgram *s)
 {
+  glUniform3fv(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_POSITION].c_str()),
+    1, (float *)&Vector3());
+
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_RADIUS].c_str()),
     0.0f);
 
