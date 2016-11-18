@@ -25,7 +25,7 @@ void RenderableNode::RenderSingle(RenderState &state)
   std::vector<SceneNode *> stack;
   m_parent->GetStack(stack);
 
-  for (auto it = stack.rbegin(); it != stack.rend(); ++it)
+  for (auto it = stack.begin(); it != stack.end(); ++it)
   {
     if ((*it)->IsActive())
       (*it)->PreRender(state);
@@ -34,7 +34,7 @@ void RenderableNode::RenderSingle(RenderState &state)
   for (size_t i = 0; i < m_repeatedDraw; i++)
     Draw(state);
 
-  for (auto it = stack.begin(); it != stack.end(); ++it)
+  for (auto it = stack.rbegin(); it != stack.rend(); ++it)
   {
     if ((*it)->IsActive())
       (*it)->PostRender(state);

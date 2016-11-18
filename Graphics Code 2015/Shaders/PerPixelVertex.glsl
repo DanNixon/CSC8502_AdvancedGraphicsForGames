@@ -21,8 +21,7 @@ out Vertex
 void main()
 {
 	OUT.colour = colour ;
-	//OUT.texCoord = (textureMatrix * vec4(texCoord, 0.0, 1.0)).xy;
-	OUT.texCoord = texCoord;
+	OUT.texCoord = (textureMatrix * vec4(texCoord, 0.0, 1.0)).xy;
 	
 	mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
 	OUT.normal = normalize(normalMatrix * normalize(normal));

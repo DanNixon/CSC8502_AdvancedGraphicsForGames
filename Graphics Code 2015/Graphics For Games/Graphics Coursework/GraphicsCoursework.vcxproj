@@ -75,6 +75,7 @@
     <ClCompile Include="CubeMapTexture.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FractalBrownianMotion.cpp" />
+    <ClCompile Include="FramebufferNode.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GenericControlNode.cpp" />
     <ClCompile Include="GLFeatureEnableNode.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="CubeMapTexture.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FractalBrownianMotion.h" />
+    <ClInclude Include="FramebufferNode.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GenericControlNode.h" />
     <ClInclude Include="GLFeatureEnableNode.h" />

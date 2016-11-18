@@ -95,6 +95,9 @@
     <ClCompile Include="BufferedTexture.cpp">
       <Filter>Texture Managment</Filter>
     </ClCompile>
+    <ClCompile Include="FramebufferNode.cpp">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -201,6 +204,9 @@
     </ClInclude>
     <ClInclude Include="StencilBufferedTexture.h">
       <Filter>Texture Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="FramebufferNode.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

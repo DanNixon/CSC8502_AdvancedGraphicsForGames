@@ -26,6 +26,7 @@
 #include "WindowsSystemMonitor.h"
 #include "RGBABufferedTexture.h"
 #include "StencilBufferedTexture.h"
+#include "FramebufferNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -44,7 +45,55 @@ int main()
 
   Vector2 winDims = w.GetScreenSize();
 
+  FramebufferNode * screenBuffer = new FramebufferNode("screenBuffer", false);
+  r.Root()->AddChild(screenBuffer);
+
   WindowsSystemMonitor sysMon;
+
+  // SYSTEM MONITOR STUFF
+  ShaderProgram *sysMonShader;
+  TextNode *loadingNode;
+
+  {
+    Font *sysMonFont = new Font(16, 16);
+    sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
+
+    sysMonShader = new ShaderProgram({ new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
+      new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl") });
+
+    r.Root()->AddChild(new CameraNode("sysMonCamera"));
+
+    CameraSelectorNode *sysMonCameraSelect = new CameraSelectorNode("sysMonCameraSelect");
+    screenBuffer->AddChild(sysMonCameraSelect);
+    sysMonCameraSelect->SetCamera("sysMonCamera");
+
+    auto dims = r.ParentWindow().GetScreenSize();
+    r.Root()
+      ->FindFirstChildByName("sysMonCameraSelect")
+      ->AddChild(
+        new MatrixNode("sysMonProj", "projMatrix", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
+
+    r.Root()->FindFirstChildByName("sysMonProj")->AddChild(new ShaderNode("sysMonShader", sysMonShader));
+
+    r.Root()
+      ->FindFirstChildByName("sysMonShader")
+      ->AddChild(new TextureNode("sysMonFontTex", { { sysMonFont, "diffuseTex", 1 } }));
+
+    r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
+
+    TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
+    r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
+    sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
+
+    loadingNode = new TextNode("loadingNode", sysMonFont, 10);
+    r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(loadingNode);
+    loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
+    loadingNode->SetText("Loading...");
+
+    r.Root()->Update(w.GetTimer()->GetTimedMS());
+    r.RenderScene();
+  }
+  // END SYSTEM MONITOR STUFF
 
   ITexture *tex1 = new Texture();
   tex1->LoadFromFile(TEXTUREDIR "brick.tga");
@@ -74,6 +123,9 @@ int main()
   auto proj1 = globalTexMatrixIdentity->AddChild(
       new MatrixNode("proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, winDims.x / winDims.y, 45.0f)));
 
+  FramebufferNode * sceneBuffer = new FramebufferNode("sceneBuffer");
+  proj1->AddChild(sceneBuffer);
+
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles({
       TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
@@ -84,9 +136,9 @@ int main()
   // SKYBOX
   {
     auto skyboxGLcontrol = new GenericControlNode("skyboxGLcontrol");
+    sceneBuffer->AddChild(skyboxGLcontrol);
     skyboxGLcontrol->OnBind() = [](ShaderProgram *) { glDepthMask(GL_FALSE); };
     skyboxGLcontrol->OnUnBind() = [](ShaderProgram *) { glDepthMask(GL_TRUE); };
-    proj1->AddChild(skyboxGLcontrol);
 
     auto skyboxShader = skyboxGLcontrol->AddChild(
         new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "SkyboxVertex.glsl"),
@@ -97,50 +149,6 @@ int main()
   }
   // END SKYBOX
 
-  // SYSTEM MONITOR STUFF
-  ShaderProgram *sysMonShader;
-  TextNode *loadingNode;
-  {
-    Font *sysMonFont = new Font(16, 16);
-    sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
-
-    sysMonShader = new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
-                                      new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")});
-
-    r.Root()->AddChild(new CameraNode("sysMonCamera"));
-
-    CameraSelectorNode *sysMonCameraSelect = new CameraSelectorNode("sysMonCameraSelect");
-    r.Root()->AddChild(sysMonCameraSelect);
-    sysMonCameraSelect->SetCamera("sysMonCamera");
-
-    auto dims = r.ParentWindow().GetScreenSize();
-    r.Root()
-        ->FindFirstChildByName("sysMonCameraSelect")
-        ->AddChild(
-            new MatrixNode("sysMonProj", "projMatrix", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
-
-    r.Root()->FindFirstChildByName("sysMonProj")->AddChild(new ShaderNode("sysMonShader", sysMonShader));
-
-    r.Root()
-        ->FindFirstChildByName("sysMonShader")
-        ->AddChild(new TextureNode("sysMonFontTex", {{sysMonFont, "diffuseTex", 1}}));
-
-    r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
-
-    TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
-    r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
-    sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
-
-    loadingNode = new TextNode("loadingNode", sysMonFont, 10);
-    r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(loadingNode);
-    loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
-    loadingNode->SetText("Loading...");
-
-    r.Root()->Update(w.GetTimer()->GetTimedMS());
-    r.RenderScene();
-  }
-  // END SYSTEM MONITOR STUFF
-
   // LIGHTS
   Light *sun;
   Light *moon;
@@ -148,7 +156,7 @@ int main()
     Vector4 sunColour(1.0f, 1.0f, 0.85f, 1.0f);
     Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
 
-    auto lightRenderShader = proj1->AddChild(
+    auto lightRenderShader = sceneBuffer->AddChild(
         new ShaderNode("lightRenderShader",
                        new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
                                           new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
@@ -180,7 +188,7 @@ int main()
   }
   // END LIGHTS
 
-  proj1->AddChild(new ShaderNode("shader1", shader1));
+  sceneBuffer->AddChild(new ShaderNode("shader1", shader1));
 
   r.Root()->FindFirstChildByName("shader1")->AddChild(new TextureNode("texm1", {{tex1, "diffuseTex", 1}}));
 
@@ -194,7 +202,7 @@ int main()
 
   // HEIGHTMAP
   {
-    auto texm2 = proj1->AddChild(new TextureNode("texm2", {{tex2, "diffuseTex", 1}}));
+    auto texm2 = sceneBuffer->AddChild(new TextureNode("texm2", {{tex2, "diffuseTex", 1}}));
     auto shader2 = texm2->AddChild(new ShaderNode("shader2", shader1));
     auto ss2 = shader2->AddChild(new ShaderSyncNode("ss2"));
 
@@ -222,7 +230,7 @@ int main()
     waterTex->LoadFromFile(TEXTUREDIR "water_surface.jpg");
     waterTex->SetRepeating(true);
 
-    auto waterShader = proj1->AddChild(
+    auto waterShader = sceneBuffer->AddChild(
         new ShaderNode("waterShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
                                                          new FragmentShader(SHADERDIR "ReflectFragment.glsl")})));
 
@@ -248,7 +256,7 @@ int main()
   ITexture * bufferColourTex2 = new RGBABufferedTexture(winDims.x, winDims.y);
 
   {
-    glBindFramebuffer(GL_FRAMEBUFFER, r.BufferFBO());
+    glBindFramebuffer(GL_FRAMEBUFFER, sceneBuffer->Buffer());
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, bufferDepthTex->GetTextureID(), 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, bufferDepthTex->GetTextureID(), 0);
@@ -262,7 +270,19 @@ int main()
 
   // POST PROCESSING
   {
-    auto shader = r.PostProcessingRoot()->AddChild(new ShaderNode("shader",
+    FramebufferNode * processBuffer = new FramebufferNode("processBuffer");
+    r.Root()->AddChild(processBuffer);
+
+    GenericControlNode * depthDisable = new GenericControlNode("depthDisable");
+    processBuffer->AddChild(depthDisable);
+    depthDisable->OnBind() = [](ShaderProgram *) {
+      glDisable(GL_DEPTH_TEST);
+    };
+    depthDisable->OnUnBind() = [](ShaderProgram *) {
+      glEnable(GL_DEPTH_TEST);
+    };
+
+    auto shader = depthDisable->AddChild(new ShaderNode("shader",
       new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
@@ -284,7 +304,7 @@ int main()
 
   // POST PROCESSING PRESENTATION
   {
-    auto shader = r.PostProcessingPresentationRoot()->AddChild(new ShaderNode("shader",
+    auto shader = screenBuffer->AddChild(new ShaderNode("shader",
       new ShaderProgram({ new VertexShader(SHADERDIR "TexturedVertex.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl") })));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));

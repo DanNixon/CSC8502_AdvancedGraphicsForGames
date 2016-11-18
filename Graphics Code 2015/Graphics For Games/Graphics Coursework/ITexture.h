@@ -22,6 +22,11 @@ public:
     return m_textureID != 0;
   }
 
+  inline GLuint Type() const
+  {
+    return m_type;
+  }
+
   inline GLuint GetTextureID()
   {
     return m_textureID;

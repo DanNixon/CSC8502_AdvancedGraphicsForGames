@@ -8,10 +8,10 @@
 
 namespace GraphicsCoursework
 {
-MatrixNode::MatrixNode(const std::string &name, const std::string &uniformName, const Matrix4 &proj)
+MatrixNode::MatrixNode(const std::string &name, const std::string &uniformName, const Matrix4 &matrix)
     : ShaderDataNode(name)
     , m_uniformName(uniformName)
-    , m_matrix(proj)
+    , m_matrix(matrix)
 {
 }
 
