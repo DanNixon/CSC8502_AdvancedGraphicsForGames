@@ -21,6 +21,11 @@ public:
     return m_sceneGraphRoot;
   }
 
+  inline SceneNode *PostProcessingRoot()
+  {
+    return m_postProcessingGraphRoot;
+  }
+
   virtual void AddPersistentDataNode(ShaderDataNode *node);
   virtual bool RemovePersistentDataNode(ShaderDataNode *node);
 
@@ -29,7 +34,19 @@ public:
   friend std::ostream &operator<<(std::ostream &s, const Renderer &r);
 
 protected:
-  SceneNode *m_sceneGraphRoot;
+  virtual void DrawScene();
+  virtual void DrawPostProcess();
+  virtual void PresentScene();
+
+protected:
   RenderState m_state;
+
+  SceneNode *m_sceneGraphRoot;
+  SceneNode *m_postProcessingGraphRoot;
+
+  GLuint m_bufferFBO;
+  GLuint m_processFBO;
+  GLuint m_bufferColourTex[2];
+  GLuint m_bufferDepthTex;
 };
 }
