@@ -10,10 +10,8 @@ class DepthStencilBufferedTexture : public BufferedTexture
 {
 public:
   DepthStencilBufferedTexture(float width, float height)
-      : BufferedTexture()
+      : BufferedTexture((GLsizei)width, (GLsizei)height, GL_DEPTH_STENCIL, GL_DEPTH24_STENCIL8, GL_UNSIGNED_INT_24_8)
   {
-    glTexImage2D(m_type, 0, GL_DEPTH24_STENCIL8, (GLsizei)width, (GLsizei)height, 0, GL_DEPTH_STENCIL,
-                 GL_UNSIGNED_INT_24_8, NULL);
   }
 
   virtual ~DepthStencilBufferedTexture()

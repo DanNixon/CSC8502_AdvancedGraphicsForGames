@@ -12,6 +12,7 @@
 #include "FramebufferNode.h"
 #include "GenericControlNode.h"
 #include "HeightMapMesh.h"
+#include "HeightmapBufferedTexture.h"
 #include "Light.h"
 #include "MatrixNode.h"
 #include "MeshNode.h"
@@ -124,14 +125,9 @@ int main()
   ITexture *bufferColourTex1 = new RGBABufferedTexture(winDims.x, winDims.y);
   ITexture *bufferColourTex2 = new RGBABufferedTexture(winDims.x, winDims.y);
 
-  {
-    sceneBuffer->BindTexture(GL_DEPTH_ATTACHMENT, bufferDepthTex);
-    sceneBuffer->BindTexture(GL_STENCIL_ATTACHMENT, bufferDepthTex);
-    sceneBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTex1);
-
-    if (!sceneBuffer->Valid())
-      return 2;
-  }
+  sceneBuffer->BindTexture(GL_DEPTH_ATTACHMENT, bufferDepthTex);
+  sceneBuffer->BindTexture(GL_STENCIL_ATTACHMENT, bufferDepthTex);
+  sceneBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTex1);
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles({
@@ -207,25 +203,28 @@ int main()
 
   // HEIGHTMAP
   {
-    auto terrainTexture = sceneBuffer->AddChild(new TextureNode("terrainTexture", {{tex2, "diffuseTex", 1}}));
-    auto terrainShader = terrainTexture->AddChild(new ShaderNode("terrainShader", shader1));
-    auto terrainShaderSync = terrainShader->AddChild(new ShaderSyncNode("terrainShaderSync"));
-
     PerlinNoise noise;
     FractalBrownianMotion fbm(noise);
     fbm.NumOctaves() = 3;
-    fbm.UniformAmplitude() = 5.0f;
-    fbm.Offset() = -2.5f;
     fbm.Frequency() = 15.0f;
     fbm.ZValue() = 0.8f;
 
-    // HeightMapMesh *hmm = new HeightMapMesh(1000.0f, 1000.0f, 1000, 1000);
-    HeightMapMesh *hmm = new HeightMapMesh(1000.0f, 1000.0f, 100, 100);
-    hmm->SetHeightmapFromFBM(&fbm);
+    HeightmapBufferedTexture *heightmapTexture = new HeightmapBufferedTexture(100, 100);
+    heightmapTexture->SetFromFBM(&fbm);
 
-    MeshNode *terrainMesh = new MeshNode("terrainMesh", hmm);
+    auto terrainTexture = sceneBuffer->AddChild(
+        new TextureNode("terrainTexture", {{tex2, "diffuseTex", 1}, {heightmapTexture, "heightmap", 2}}));
+
+    auto terrainShader = terrainTexture->AddChild(
+        new ShaderNode("terrainShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
+                                                           new FragmentShader(SHADERDIR "PerPixelFragment.glsl")})));
+
+    auto terrainShaderSync = terrainShader->AddChild(new ShaderSyncNode("terrainShaderSync"));
+
+    MeshNode *terrainMesh = new MeshNode("terrainMesh", Mesh::GenerateQuad());
     terrainShaderSync->AddChild(terrainMesh);
-    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)));
+    terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
+    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)) * Matrix4::Scale(10000.0f));
   }
   // END HEIGHTMAP
 

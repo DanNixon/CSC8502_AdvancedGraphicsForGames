@@ -12,7 +12,7 @@ namespace GraphicsCoursework
 class BufferedTexture : public ITexture
 {
 public:
-  BufferedTexture();
+  BufferedTexture(GLsizei width, GLsizei height, GLenum format, GLint internalFormat, GLenum type);
   virtual ~BufferedTexture();
 };
 }

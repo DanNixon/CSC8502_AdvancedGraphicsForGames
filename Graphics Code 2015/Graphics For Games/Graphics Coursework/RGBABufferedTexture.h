@@ -10,9 +10,8 @@ class RGBABufferedTexture : public BufferedTexture
 {
 public:
   RGBABufferedTexture(float width, float height)
-      : BufferedTexture()
+      : BufferedTexture((GLsizei)width, (GLsizei)height, GL_RGBA, GL_RGBA8, GL_UNSIGNED_BYTE)
   {
-    glTexImage2D(m_type, 0, GL_RGBA8, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
   }
 
   virtual ~RGBABufferedTexture()

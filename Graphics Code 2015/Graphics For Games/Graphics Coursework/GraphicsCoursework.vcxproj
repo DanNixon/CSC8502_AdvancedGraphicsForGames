@@ -79,6 +79,7 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GenericControlNode.cpp" />
     <ClCompile Include="GLFeatureEnableNode.cpp" />
+    <ClCompile Include="HeightmapBufferedTexture.cpp" />
     <ClCompile Include="HeightMapMesh.cpp" />
     <ClCompile Include="ISystemMonitor.cpp" />
     <ClCompile Include="ITexture.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GenericControlNode.h" />
     <ClInclude Include="GLFeatureEnableNode.h" />
+    <ClInclude Include="HeightmapBufferedTexture.h" />
     <ClInclude Include="HeightMapMesh.h" />
     <ClInclude Include="ISystemMonitor.h" />
     <ClInclude Include="ITexture.h" />
