@@ -47,7 +47,7 @@ void Renderer::RenderScene()
 
   // Sort transparent nodes
   std::sort(m_state.transparentNodes.begin(), m_state.transparentNodes.end(),
-    [](RenderableNode *a, RenderableNode *b) { return a->CameraDistance() > b->CameraDistance(); });
+            [](RenderableNode *a, RenderableNode *b) { return a->CameraDistance() > b->CameraDistance(); });
 
   // Render transparent nodes
   for (auto it = m_state.transparentNodes.begin(); it != m_state.transparentNodes.end(); ++it)

@@ -8,6 +8,7 @@
 #include "CubeMapTexture.h"
 #include "Font.h"
 #include "FractalBrownianMotion.h"
+#include "FramebufferNode.h"
 #include "GenericControlNode.h"
 #include "HeightMapMesh.h"
 #include "Light.h"
@@ -16,23 +17,22 @@
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
 #include "PositionableCamera.h"
+#include "RGBABufferedTexture.h"
 #include "Renderer.h"
 #include "ShaderNode.h"
 #include "ShaderProgram.h"
 #include "ShaderSyncNode.h"
 #include "Shaders.h"
+#include "StencilBufferedTexture.h"
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
-#include "RGBABufferedTexture.h"
-#include "StencilBufferedTexture.h"
-#include "FramebufferNode.h"
 
 using namespace GraphicsCoursework;
 
 int main()
 {
-  Window w("Planet", 800, 600, false);
+  Window w("Planet", 1440, 720, false);
   if (!w.HasInitialised())
     return 1;
 
@@ -45,7 +45,7 @@ int main()
 
   Vector2 winDims = w.GetScreenSize();
 
-  FramebufferNode * screenBuffer = new FramebufferNode("screenBuffer", false);
+  FramebufferNode *screenBuffer = new FramebufferNode("screenBuffer", false);
   r.Root()->AddChild(screenBuffer);
 
   WindowsSystemMonitor sysMon;
@@ -58,8 +58,8 @@ int main()
     Font *sysMonFont = new Font(16, 16);
     sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
 
-    sysMonShader = new ShaderProgram({ new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
-      new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl") });
+    sysMonShader = new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
+                                      new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")});
 
     r.Root()->AddChild(new CameraNode("sysMonCamera"));
 
@@ -69,15 +69,15 @@ int main()
 
     auto dims = r.ParentWindow().GetScreenSize();
     r.Root()
-      ->FindFirstChildByName("sysMonCameraSelect")
-      ->AddChild(
-        new MatrixNode("sysMonProj", "projMatrix", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
+        ->FindFirstChildByName("sysMonCameraSelect")
+        ->AddChild(
+            new MatrixNode("sysMonProj", "projMatrix", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
 
     r.Root()->FindFirstChildByName("sysMonProj")->AddChild(new ShaderNode("sysMonShader", sysMonShader));
 
     r.Root()
-      ->FindFirstChildByName("sysMonShader")
-      ->AddChild(new TextureNode("sysMonFontTex", { { sysMonFont, "diffuseTex", 1 } }));
+        ->FindFirstChildByName("sysMonShader")
+        ->AddChild(new TextureNode("sysMonFontTex", {{sysMonFont, "diffuseTex", 1}}));
 
     r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
 
@@ -123,7 +123,7 @@ int main()
   auto proj1 = globalTexMatrixIdentity->AddChild(
       new MatrixNode("proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, winDims.x / winDims.y, 45.0f)));
 
-  FramebufferNode * sceneBuffer = new FramebufferNode("sceneBuffer");
+  FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
   proj1->AddChild(sceneBuffer);
 
   ITexture *cubeMapTex = new CubeMapTexture();
@@ -251,9 +251,9 @@ int main()
   // END WATER
 
   // FBO TEXTURES
-  ITexture * bufferDepthTex = new StencilBufferedTexture(winDims.x, winDims.y);
-  ITexture * bufferColourTex1 = new RGBABufferedTexture(winDims.x, winDims.y);
-  ITexture * bufferColourTex2 = new RGBABufferedTexture(winDims.x, winDims.y);
+  ITexture *bufferDepthTex = new StencilBufferedTexture(winDims.x, winDims.y);
+  ITexture *bufferColourTex1 = new RGBABufferedTexture(winDims.x, winDims.y);
+  ITexture *bufferColourTex2 = new RGBABufferedTexture(winDims.x, winDims.y);
 
   {
     glBindFramebuffer(GL_FRAMEBUFFER, sceneBuffer->Buffer());
@@ -270,33 +270,30 @@ int main()
 
   // POST PROCESSING
   {
-    FramebufferNode * processBuffer = new FramebufferNode("processBuffer");
+    FramebufferNode *processBuffer = new FramebufferNode("processBuffer");
     r.Root()->AddChild(processBuffer);
 
-    GenericControlNode * depthDisable = new GenericControlNode("depthDisable");
+    GenericControlNode *depthDisable = new GenericControlNode("depthDisable");
     processBuffer->AddChild(depthDisable);
-    depthDisable->OnBind() = [](ShaderProgram *) {
-      glDisable(GL_DEPTH_TEST);
-    };
-    depthDisable->OnUnBind() = [](ShaderProgram *) {
-      glEnable(GL_DEPTH_TEST);
-    };
+    depthDisable->OnBind() = [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); };
+    depthDisable->OnUnBind() = [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); };
 
-    auto shader = depthDisable->AddChild(new ShaderNode("shader",
-      new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
+    auto shader = depthDisable->AddChild(
+        new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"),
+                                                    new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
 
-    auto proj = globalTexMatrixIdentity->AddChild(new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+    auto proj = globalTexMatrixIdentity->AddChild(
+        new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    GenericControlNode * control1 = new GenericControlNode("control1");
+    GenericControlNode *control1 = new GenericControlNode("control1");
     view->AddChild(control1);
-    control1->OnBind() = [bufferColourTex2](ShaderProgram *s)
-    {
+    control1->OnBind() = [bufferColourTex2](ShaderProgram *s) {
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bufferColourTex2->GetTextureID(), 0);
     };
-    auto texture1 = control1->AddChild(new TextureNode("texture1", { {bufferColourTex1, "diffuseTex", 1} }));
+    auto texture1 = control1->AddChild(new TextureNode("texture1", {{bufferColourTex1, "diffuseTex", 1}}));
     auto sync1 = texture1->AddChild(new ShaderSyncNode("sync1"));
     RenderableNode *quad1 = new MeshNode("quad1", Mesh::GenerateQuad());
     sync1->AddChild(quad1);
@@ -304,15 +301,17 @@ int main()
 
   // POST PROCESSING PRESENTATION
   {
-    auto shader = screenBuffer->AddChild(new ShaderNode("shader",
-      new ShaderProgram({ new VertexShader(SHADERDIR "TexturedVertex.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl") })));
+    auto shader = screenBuffer->AddChild(
+        new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"),
+                                                    new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
 
-    auto proj = globalTexMatrixIdentity->AddChild(new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+    auto proj = globalTexMatrixIdentity->AddChild(
+        new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    auto texture = view->AddChild(new TextureNode("texture", { { bufferColourTex1, "diffuseTex", 1 } }));
+    auto texture = view->AddChild(new TextureNode("texture", {{bufferColourTex1, "diffuseTex", 1}}));
     auto sync = texture->AddChild(new ShaderSyncNode("sync"));
     auto quad = sync->AddChild(new MeshNode("quad", Mesh::GenerateQuad()));
   }
