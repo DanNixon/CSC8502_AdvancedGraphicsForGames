@@ -120,8 +120,8 @@ Quaternion Quaternion::AxisAngleToQuaterion(const Vector3 &vector, float degrees
   float theta = (float)DegToRad(degrees);
   float result = (float)sin(theta / 2.0f);
 
-  return Quaternion((float)(vector.x * result), (float)(vector.y * result),
-                    (float)(vector.z * result), (float)cos(theta / 2.0f));
+  return Quaternion((float)(vector.x * result), (float)(vector.y * result), (float)(vector.z * result),
+                    (float)cos(theta / 2.0f));
 }
 
 void Quaternion::GenerateW()

@@ -269,16 +269,14 @@ AtlasTreeNode *AtlasTreeNode::Add(const iVector2 &texSize)
     // split --
     if (subwidth <= subheight)
     {
-      childA = new AtlasTreeNode(iVector2(position.x, position.y), iVector2(size.x, y)); //
-      childB =
-          new AtlasTreeNode(iVector2(position.x, position.y + y), iVector2(size.x, size.y - y)); //
+      childA = new AtlasTreeNode(iVector2(position.x, position.y), iVector2(size.x, y));              //
+      childB = new AtlasTreeNode(iVector2(position.x, position.y + y), iVector2(size.x, size.y - y)); //
     }
     // split |
     else
     {
-      childA = new AtlasTreeNode(iVector2(position.x, position.y), iVector2(x, size.y)); //
-      childB =
-          new AtlasTreeNode(iVector2(position.x + x, position.y), iVector2(size.x - x, size.y)); //
+      childA = new AtlasTreeNode(iVector2(position.x, position.y), iVector2(x, size.y));              //
+      childB = new AtlasTreeNode(iVector2(position.x + x, position.y), iVector2(size.x - x, size.y)); //
     }
 
     childA->atlas = atlas;

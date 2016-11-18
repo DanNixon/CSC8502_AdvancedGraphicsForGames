@@ -21,8 +21,7 @@ MatrixNode::~MatrixNode()
 
 void MatrixNode::ShaderBind(ShaderProgram *s)
 {
-  glUniformMatrix4fv(glGetUniformLocation(s->Program(), m_uniformName.c_str()), 1, false,
-                     (float *)&m_matrix);
+  glUniformMatrix4fv(glGetUniformLocation(s->Program(), m_uniformName.c_str()), 1, false, (float *)&m_matrix);
 }
 
 void MatrixNode::ShaderUnBind(ShaderProgram *s)
@@ -30,7 +29,6 @@ void MatrixNode::ShaderUnBind(ShaderProgram *s)
   Matrix4 mat;
   mat.ToIdentity();
 
-  glUniformMatrix4fv(glGetUniformLocation(s->Program(), m_uniformName.c_str()), 1, false,
-                     (float *)&mat);
+  glUniformMatrix4fv(glGetUniformLocation(s->Program(), m_uniformName.c_str()), 1, false, (float *)&mat);
 }
 }

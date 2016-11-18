@@ -5,15 +5,13 @@
 
 int main()
 {
-  Window w("3D to 2D Projection!", 800, 600,
-           false); // This is all boring win32 window creation stuff!
+  Window w("3D to 2D Projection!", 800, 600, false); // This is all boring win32 window creation stuff!
   if (!w.HasInitialised())
   {
     return -1;
   }
 
-  Renderer renderer(
-      w); // This handles all the boring OGL 3.2 initialisation stuff, and sets up our tutorial!
+  Renderer renderer(w); // This handles all the boring OGL 3.2 initialisation stuff, and sets up our tutorial!
   if (!renderer.HasInitialised())
   {
     return -1;

@@ -74,8 +74,7 @@ Matrix4 Matrix4::Perspective(float znear, float zfar, float aspect, float fov)
 }
 
 // http://www.opengl.org/sdk/docs/man/xhtml/glOrtho.xml
-Matrix4 Matrix4::Orthographic(float znear, float zfar, float right, float left, float top,
-                              float bottom)
+Matrix4 Matrix4::Orthographic(float znear, float zfar, float right, float left, float top, float bottom)
 {
   Matrix4 m;
 
@@ -91,8 +90,7 @@ Matrix4 Matrix4::Orthographic(float znear, float zfar, float right, float left, 
   return m;
 }
 
-Matrix4 Matrix4::BuildViewMatrix(const Vector3 &from, const Vector3 &lookingAt,
-                                 const Vector3 up /*= Vector3(1,0,0)*/)
+Matrix4 Matrix4::BuildViewMatrix(const Vector3 &from, const Vector3 &lookingAt, const Vector3 up /*= Vector3(1,0,0)*/)
 {
   Matrix4 r;
   r.SetPositionVector(Vector3(-from.x, -from.y, -from.z));

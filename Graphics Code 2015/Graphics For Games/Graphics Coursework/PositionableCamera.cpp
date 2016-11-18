@@ -45,20 +45,16 @@ void PositionableCamera::Update(float msec)
   float linearDelta = msec * m_linearSpeed;
 
   if (Window::GetKeyboard()->KeyDown(KEY_MOVE_LEFT))
-    m_localTransform =
-        m_localTransform * Matrix4::Translation(m_localRotation.GetRightVector() * -linearDelta);
+    m_localTransform = m_localTransform * Matrix4::Translation(m_localRotation.GetRightVector() * -linearDelta);
 
   if (Window::GetKeyboard()->KeyDown(KEY_MOVE_RIGHT))
-    m_localTransform =
-        m_localTransform * Matrix4::Translation(m_localRotation.GetRightVector() * linearDelta);
+    m_localTransform = m_localTransform * Matrix4::Translation(m_localRotation.GetRightVector() * linearDelta);
 
   if (Window::GetKeyboard()->KeyDown(KEY_MOVE_FORWARDS))
-    m_localTransform =
-        m_localTransform * Matrix4::Translation(m_localRotation.GetBackVector() * -linearDelta);
+    m_localTransform = m_localTransform * Matrix4::Translation(m_localRotation.GetBackVector() * -linearDelta);
 
   if (Window::GetKeyboard()->KeyDown(KEY_MOVE_BACKWARS))
-    m_localTransform =
-        m_localTransform * Matrix4::Translation(m_localRotation.GetBackVector() * linearDelta);
+    m_localTransform = m_localTransform * Matrix4::Translation(m_localRotation.GetBackVector() * linearDelta);
 
   if (Window::GetKeyboard()->KeyDown(KEY_MOVE_UP))
     m_localTransform = m_localTransform * Matrix4::Translation(Vector3(0.0f, linearDelta, 0.0f));

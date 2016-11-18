@@ -8,8 +8,7 @@ Renderer::Renderer(Window &parent)
 {
   mesh = Mesh::GenerateTriangle();
 
-  mesh->SetTexture(
-      SOIL_load_OGL_texture(TEXTUREDIR "brick.tga ", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+  mesh->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "brick.tga ", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
   if (!mesh->GetTexture())
     return;

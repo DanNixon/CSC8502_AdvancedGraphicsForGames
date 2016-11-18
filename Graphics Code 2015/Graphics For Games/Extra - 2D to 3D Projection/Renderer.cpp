@@ -35,8 +35,8 @@ Renderer::Renderer(Window &parent)
   cube = new OBJMesh(MESHDIR "centeredCube.obj"); // A cube surrounding the origin!
   triangle = Mesh::GenerateTriangle();            // And a triangle to use as the mouse pointer...
 
-  cube->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-                                         SOIL_FLAG_MIPMAPS));
+  cube->SetTexture(
+      SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 
   if (!cube->GetTexture())
   {
@@ -103,14 +103,12 @@ void Renderer::RenderScene()
   projMatrix = Matrix4::Perspective(1.0f, 15000.0f, (float)width / (float)height, 45.0f);
   UpdateShaderMatrices();
 
-  glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"),
-              0); // New! and to move...
+  glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0); // New! and to move...
   DrawNode(root);
 
   // We also set their colours to white - in the following code we set boxes under our mouse
   // to blue, so they'll be drawn blue in the 'next' frame, and then reset by this code.
-  for (vector<SceneNode *>::const_iterator i = root->GetChildIteratorStart();
-       i != root->GetChildIteratorEnd(); ++i)
+  for (vector<SceneNode *>::const_iterator i = root->GetChildIteratorStart(); i != root->GetChildIteratorEnd(); ++i)
   {
     (*i)->SetColour(Vector4(1, 1, 1, 1));
   }
@@ -141,8 +139,7 @@ void Renderer::RenderScene()
     Vector2 mpos = Window::GetMouse()->GetAbsolutePosition();
     viewMatrix.ToIdentity();
     projMatrix = Matrix4::Orthographic(-1.0f, 1.0f, (float)width, 0.0f, (float)height, 0.0f);
-    modelMatrix = Matrix4::Translation(Vector3(mpos.x, height - mpos.y, 0)) *
-                  Matrix4::Scale(Vector3(25, 25, 25));
+    modelMatrix = Matrix4::Translation(Vector3(mpos.x, height - mpos.y, 0)) * Matrix4::Scale(Vector3(25, 25, 25));
 
     UpdateShaderMatrices();
 
@@ -182,17 +179,15 @@ Vector3 Renderer::UnProject(Vector3 position, float aspect, float fov, Camera &c
   // We can do that by dividing the mouse values by the width and height of the
   // screen (giving us a range of 0.0 to 1.0), multiplying by 2 (0.0 to 2.0)
   // and then subtracting 1 (-1.0 to 1.0).
-  Vector4 clipSpace =
-      Vector4((position.x / (float)width) * 2.0f - 1.0f, (position.y / (float)height) * 2.0f - 1.0f,
-              (position.z) - 1.0f, 1.0f);
+  Vector4 clipSpace = Vector4((position.x / (float)width) * 2.0f - 1.0f, (position.y / (float)height) * 2.0f - 1.0f,
+                              (position.z) - 1.0f, 1.0f);
 
   // Then, we multiply our clipspace coordinate by our inverted matrix
   Vector4 transformed = invVP * clipSpace;
 
   // our transformed w coordinate is now the 'inverse' perspective divide, so
   // we can reconstruct the final world space by dividing x,y,and z by w.
-  return Vector3(transformed.x / transformed.w, transformed.y / transformed.w,
-                 transformed.z / transformed.w);
+  return Vector3(transformed.x / transformed.w, transformed.y / transformed.w, transformed.z / transformed.w);
 }
 
 /*
@@ -289,17 +284,14 @@ void Renderer::DrawNode(SceneNode *n)
   {
     glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false,
                        (float *)&(n->GetWorldTransform() * Matrix4::Scale(n->GetModelScale())));
-    glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1,
-                 (float *)&n->GetColour());
+    glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1, (float *)&n->GetColour());
 
-    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"),
-                (int)n->GetMesh()->GetTexture());
+    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"), (int)n->GetMesh()->GetTexture());
 
     n->GetMesh()->Draw();
   }
 
-  for (vector<SceneNode *>::const_iterator i = n->GetChildIteratorStart();
-       i != n->GetChildIteratorEnd(); ++i)
+  for (vector<SceneNode *>::const_iterator i = n->GetChildIteratorStart(); i != n->GetChildIteratorEnd(); ++i)
   {
     DrawNode((*i));
   }

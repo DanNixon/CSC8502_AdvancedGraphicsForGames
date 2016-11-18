@@ -26,8 +26,7 @@ bool Ray::IntersectsNodes(SceneNode &root)
   // encapsulate all of its children, so if it didn't collide, we could early out...
   // In our easy scene graph though, each node has its own bounding sphere!
 
-  for (vector<SceneNode *>::const_iterator i = root.GetChildIteratorStart();
-       i != root.GetChildIteratorEnd(); ++i)
+  for (vector<SceneNode *>::const_iterator i = root.GetChildIteratorStart(); i != root.GetChildIteratorEnd(); ++i)
   {
     IntersectsNodes(*(*i));
   }
@@ -61,8 +60,7 @@ bool Ray::IntersectsNode(SceneNode &node, Vector3 &intersectPos)
     return false;
   }
   // How far along the ray did we map?
-  float d = (node.GetBoundingRadius() * node.GetBoundingRadius()) -
-            ((relativeDist * relativeDist) - (dot * dot));
+  float d = (node.GetBoundingRadius() * node.GetBoundingRadius()) - ((relativeDist * relativeDist) - (dot * dot));
 
   bool thisCollision = false;
 

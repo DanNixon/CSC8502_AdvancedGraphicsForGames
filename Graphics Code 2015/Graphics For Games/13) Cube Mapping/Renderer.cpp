@@ -9,39 +9,33 @@ Renderer::Renderer(Window &parent)
 
   camera->SetPosition(Vector3(RAW_WIDTH * HEIGHTMAP_X / 2.0 f, 500.0 f, RAW_WIDTH * HEIGHTMAP_X));
 
-  light = new Light(
-      Vector3((RAW_HEIGHT * HEIGHTMAP_X / 2.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f)),
-      Vector4(0.9 f, 0.9 f, 1.0 f, 1), (RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
+  light = new Light(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 2.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f)),
+                    Vector4(0.9 f, 0.9 f, 1.0 f, 1), (RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 
   reflectShader = new Shader("../ Shaders / PerPixelVertex . glsl ", " reflectFragment . glsl ");
   skyboxShader = new Shader(" skyboxVertex . glsl ", " skyboxFragment . glsl ");
-  lightShader =
-      new Shader("../ Shaders / PerPixelVertex . glsl ", "../ Shaders / PerPixelFragment . glsl ");
+  lightShader = new Shader("../ Shaders / PerPixelVertex . glsl ", "../ Shaders / PerPixelFragment . glsl ");
 
-  if (!reflectShader - > LinkProgram() || !lightShader - > LinkProgram() ||
-      !skyboxShader - > LinkProgram())
+  if (!reflectShader - > LinkProgram() || !lightShader - > LinkProgram() || !skyboxShader - > LinkProgram())
   {
     return;
   }
 
-  quad - > SetTexture(SOIL_load_OGL_texture("../ Textures / water .TGA ", SOIL_LOAD_AUTO,
-                                            SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+  quad - > SetTexture(SOIL_load_OGL_texture("../ Textures / water .TGA ", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+                                            SOIL_FLAG_MIPMAPS));
 
-  heightMap - > SetTexture(SOIL_load_OGL_texture("../ Textures / Barren Reds .JPG ", SOIL_LOAD_AUTO,
+  heightMap - > SetTexture(SOIL_load_OGL_texture("../ Textures / Barren Reds .JPG ", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+                                                 SOIL_FLAG_MIPMAPS));
+
+  heightMap - > SetBumpMap(SOIL_load_OGL_texture("../ Textures / Barren RedsDOT3 .tga ", SOIL_LOAD_AUTO,
                                                  SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 
-  heightMap - >
-      SetBumpMap(SOIL_load_OGL_texture("../ Textures / Barren RedsDOT3 .tga ", SOIL_LOAD_AUTO,
-                                       SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+  cubeMap = SOIL_load_OGL_cubemap("../ Textures / rusted_west .bmp ", "../ Textures / rusted_east .bmp ",
+                                  "../ Textures / rusted_up .bmp ", "../ Textures / rusted_down .bmp ",
+                                  "../ Textures / rusted_south .bmp ", "../ Textures / rusted_north .bmp ",
+                                  SOIL_LOAD_RGB, SOIL_CREATE_NEW_ID, 0);
 
-  cubeMap = SOIL_load_OGL_cubemap(
-      "../ Textures / rusted_west .bmp ", "../ Textures / rusted_east .bmp ",
-      "../ Textures / rusted_up .bmp ", "../ Textures / rusted_down .bmp ",
-      "../ Textures / rusted_south .bmp ", "../ Textures / rusted_north .bmp ", SOIL_LOAD_RGB,
-      SOIL_CREATE_NEW_ID, 0);
-
-  if (!cubeMap || !quad - > GetTexture() || !heightMap - > GetTexture() ||
-      !heightMap - > GetBumpMap())
+  if (!cubeMap || !quad - > GetTexture() || !heightMap - > GetTexture() || !heightMap - > GetBumpMap())
   {
     return;
   }
@@ -140,11 +134,10 @@ Renderer::Renderer(Window &parent)
       float heightZ = (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f);
 
       modelMatrix = Matrix4::Translation(Vector3(heightX, heightY, heightZ)) *
-                    Matrix4::Scale(Vector3(heightX, 1, heightZ)) *
-                    Matrix4::Rotation(90, Vector3(1.0f, 0.0f, 0.0f));
+                    Matrix4::Scale(Vector3(heightX, 1, heightZ)) * Matrix4::Rotation(90, Vector3(1.0f, 0.0f, 0.0f));
 
-      textureMatrix = Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) *
-                      Matrix4::Rotation(waterRotate, Vector3(0.0f, 0.0f, 1.0f));
+      textureMatrix =
+          Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) * Matrix4::Rotation(waterRotate, Vector3(0.0f, 0.0f, 1.0f));
       UpdateShaderMatrices();
 
       quad->Draw();

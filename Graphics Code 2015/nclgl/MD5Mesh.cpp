@@ -189,8 +189,7 @@ void MD5Mesh::RebufferData()
   if (indices)
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject[INDEX_BUFFER]);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, numVertices * sizeof(unsigned int),
-                    (void *)indices);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, numVertices * sizeof(unsigned int), (void *)indices);
   }
 }
 #endif

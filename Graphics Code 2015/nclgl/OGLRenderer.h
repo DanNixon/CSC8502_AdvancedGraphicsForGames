@@ -49,8 +49,7 @@ using std::vector;
 
 //#define OPENGL_DEBUGGING
 
-static const float biasValues[16] = {0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0,
-                                     0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0};
+static const float biasValues[16] = {0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0};
 static const Matrix4 biasMatrix(const_cast<float *>(biasValues));
 
 enum DebugDrawMode
@@ -82,8 +81,7 @@ struct DebugDrawData
     colours.clear();
   }
 
-  inline void AddLine(const Vector3 &from, const Vector3 &to, const Vector3 &fromColour,
-                      const Vector3 &toColour)
+  inline void AddLine(const Vector3 &from, const Vector3 &to, const Vector3 &fromColour, const Vector3 &toColour)
   {
     lines.push_back(from);
     lines.push_back(to);
@@ -114,8 +112,7 @@ public:
   bool HasInitialised() const;
 
   static void DrawDebugLine(DebugDrawMode mode, const Vector3 &from, const Vector3 &to,
-                            const Vector3 &fromColour = Vector3(1, 1, 1),
-                            const Vector3 &toColour = Vector3(1, 1, 1));
+                            const Vector3 &fromColour = Vector3(1, 1, 1), const Vector3 &toColour = Vector3(1, 1, 1));
   static void DrawDebugBox(DebugDrawMode mode, const Vector3 &at, const Vector3 &scale,
                            const Vector3 &colour = Vector3(1, 1, 1));
   static void DrawDebugCross(DebugDrawMode mode, const Vector3 &at, const Vector3 &scale,
@@ -169,8 +166,8 @@ protected:
   static Shader *debugDrawShader;
 
 #ifdef _DEBUG
-  static void CALLBACK DebugCallback(GLuint source, GLuint type, GLuint id, GLuint severity,
-                                     int length, const char *message, void *userParam);
+  static void CALLBACK DebugCallback(GLuint source, GLuint type, GLuint id, GLuint severity, int length,
+                                     const char *message, void *userParam);
 #endif
 
   static bool drawnDebugOrtho;

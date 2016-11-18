@@ -77,8 +77,7 @@ void FractalBrownianMotion::FractalArrayThreaded(float *out, size_t x, size_t y,
   size_t end = pointsPerThread;
   for (size_t i = 0; i < numThreads; i++)
   {
-    threads.push_back(
-        std::thread(&FractalBrownianMotion::FractalArray, this, out, start, end, std::ref(state)));
+    threads.push_back(std::thread(&FractalBrownianMotion::FractalArray, this, out, start, end, std::ref(state)));
 
     start = end;
     end += pointsPerThread;
@@ -94,8 +93,7 @@ void FractalBrownianMotion::FractalArrayThreaded(float *out, size_t x, size_t y,
   }
 }
 
-void FractalBrownianMotion::FractalArray(float *out, size_t start, size_t end,
-                                         FractralArrayGenState &state) const
+void FractalBrownianMotion::FractalArray(float *out, size_t start, size_t end, FractralArrayGenState &state) const
 {
   for (size_t i = start; i < end; i++)
     out[i] = Fractal((float)(i % state.x) * state.d, (float)(i / state.x) * state.w);

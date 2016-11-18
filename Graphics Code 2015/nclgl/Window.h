@@ -27,8 +27,7 @@ class OGLRenderer;
 class Window
 {
 public:
-  Window(std::string title = "OpenGL Framework", int sizeX = 800, int sizeY = 600,
-         bool fullScreen = false);
+  Window(std::string title = "OpenGL Framework", int sizeX = 800, int sizeY = 600, bool fullScreen = false);
   ~Window(void);
 
   bool UpdateWindow();

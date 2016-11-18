@@ -44,9 +44,9 @@ Renderer::Renderer(Window &parent)
   and how many characters across each axis the font contains. (look at the
   font texture in paint.net if you don't quite 'get' this)
   */
-  basicFont = new Font(SOIL_load_OGL_texture(TEXTUREDIR "tahoma.tga", SOIL_LOAD_AUTO,
-                                             SOIL_CREATE_NEW_ID, SOIL_FLAG_COMPRESS_TO_DXT),
-                       16, 16);
+  basicFont = new Font(
+      SOIL_load_OGL_texture(TEXTUREDIR "tahoma.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_COMPRESS_TO_DXT), 16,
+      16);
 
   // The font is not alpha blended! It has a black background.
   // but that doesn't matter, we can fiddle blend func to do
@@ -96,8 +96,7 @@ Draw a line of text on screen. If we were to have a 'static' line of text, we'd
 probably want to keep the TextMesh around to save processing it every frame,
 but for a simple demonstration, this is fine...
 */
-void Renderer::DrawText(const std::string &text, const Vector3 &position, const float size,
-                        const bool perspective)
+void Renderer::DrawText(const std::string &text, const Vector3 &position, const float size, const bool perspective)
 {
   // Create a new temporary TextMesh, using our line of text and our font
   TextMesh *mesh = new TextMesh(text, *basicFont);

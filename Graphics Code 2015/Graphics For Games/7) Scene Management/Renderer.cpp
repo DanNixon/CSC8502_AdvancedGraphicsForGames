@@ -17,8 +17,7 @@ Renderer::Renderer(Window &parent)
   currentShader = new Shader(SHADERDIR "SceneVertex.glsl", SHADERDIR "SceneFragment.glsl");
 
   quad = Mesh::GenerateQuad();
-  quad->SetTexture(
-      SOIL_load_OGL_texture(TEXTUREDIR "stainedglass.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+  quad->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "stainedglass.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
   if (!currentShader->LinkProgram() || !quad->GetTexture())
     return;
@@ -75,8 +74,7 @@ void Renderer::BuildNodeLists(SceneNode *from)
       nodeList.push_back(from);
   }
 
-  for (vector<SceneNode *>::const_iterator i = from->GetChildIteratorStart();
-       i != from->GetChildIteratorEnd(); ++i)
+  for (vector<SceneNode *>::const_iterator i = from->GetChildIteratorStart(); i != from->GetChildIteratorEnd(); ++i)
   {
     BuildNodeLists((*i));
   }
@@ -84,8 +82,7 @@ void Renderer::BuildNodeLists(SceneNode *from)
 
 void Renderer::SortNodeLists()
 {
-  std::sort(transparentNodeList.begin(), transparentNodeList.end(),
-            SceneNode::CompareByCameraDistance);
+  std::sort(transparentNodeList.begin(), transparentNodeList.end(), SceneNode::CompareByCameraDistance);
   std::sort(nodeList.begin(), nodeList.end(), SceneNode::CompareByCameraDistance);
 }
 
@@ -94,8 +91,8 @@ void Renderer::DrawNodes()
   for (vector<SceneNode *>::const_iterator i = nodeList.begin(); i != nodeList.end(); ++i)
     DrawNode((*i));
 
-  for (vector<SceneNode *>::const_reverse_iterator i = transparentNodeList.rbegin();
-       i != transparentNodeList.rend(); ++i)
+  for (vector<SceneNode *>::const_reverse_iterator i = transparentNodeList.rbegin(); i != transparentNodeList.rend();
+       ++i)
     DrawNode((*i));
 }
 
@@ -106,11 +103,9 @@ void Renderer::DrawNode(SceneNode *n)
     glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false,
                        (float *)&(n->GetWorldTransform() * Matrix4::Scale(n->GetModelScale())));
 
-    glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1,
-                 (float *)&n->GetColour());
+    glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1, (float *)&n->GetColour());
 
-    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"),
-                (int)n->GetMesh()->GetTexture());
+    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"), (int)n->GetMesh()->GetTexture());
 
     n->Draw(*this);
   }

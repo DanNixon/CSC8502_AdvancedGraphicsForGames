@@ -27,11 +27,9 @@ void Renderer::RenderScene()
 
   glUseProgram(currentShader->GetProgram());
 
-  glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false,
-                     (float *)&projMatrix);
+  glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float *)&projMatrix);
 
-  glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix"), 1, false,
-                     (float *)&viewMatrix);
+  glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix"), 1, false, (float *)&viewMatrix);
 
   for (int i = 0; i < 3; ++i)
   {
@@ -67,6 +65,5 @@ void Renderer::SwitchToPerspective(float fov)
 
 void Renderer::SwitchToOrthographic()
 {
-  projMatrix = Matrix4::Orthographic(-1.0f, 10000.0f, width / 2.0f, -width / 2.0f, height / 2.0f,
-                                     -height / 2.0f);
+  projMatrix = Matrix4::Orthographic(-1.0f, 10000.0f, width / 2.0f, -width / 2.0f, height / 2.0f, -height / 2.0f);
 }

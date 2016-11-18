@@ -31,10 +31,10 @@ Renderer::Renderer(Window &parent)
   quad = Mesh::GenerateQuad();                   // and quads...
 
   // We set a couple of textures, here. Only one of them is new!
-  quad->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "reticle.tga", SOIL_LOAD_AUTO,
-                                         SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
-  triangle->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO,
-                                             SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+  quad->SetTexture(
+      SOIL_load_OGL_texture(TEXTUREDIR "reticle.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+  triangle->SetTexture(
+      SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 
   // We don't do anything fancy with shaders this time around, so we just
   // need to use the tutorial 3 shader :)
@@ -82,8 +82,7 @@ void Renderer::RenderScene()
 
   UpdateShaderMatrices();
 
-  glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"),
-              0); // New! and to move...
+  glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0); // New! and to move...
 
   triangle->Draw();
 
@@ -131,8 +130,8 @@ Vector3 Renderer::WorldPosToScreenPos(Vector3 worldPos)
 {
   Vector3 screenPos = projMatrix * viewMatrix * Vector3(worldPos);
 
-  Vector3 outpos = Vector3((screenPos.x * 0.5f + 0.5f) * width,
-                           (screenPos.y * 0.5f + 0.5f) * height, (1.0f + screenPos.z) * 0.5f);
+  Vector3 outpos =
+      Vector3((screenPos.x * 0.5f + 0.5f) * width, (screenPos.y * 0.5f + 0.5f) * height, (1.0f + screenPos.z) * 0.5f);
 
   return outpos;
 }

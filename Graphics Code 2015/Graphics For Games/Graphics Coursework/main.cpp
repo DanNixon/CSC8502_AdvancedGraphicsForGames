@@ -51,12 +51,11 @@ int main()
   ITexture *tex3 = new Texture();
   tex3->LoadFromFile(TEXTUREDIR "stainedglass.tga");
 
-  ShaderProgram *shader1 =
-      new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
-                         new FragmentShader(SHADERDIR "PerPixelFragment.glsl")});
+  ShaderProgram *shader1 = new ShaderProgram(
+      {new VertexShader(SHADERDIR "PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "PerPixelFragment.glsl")});
 
-  ShaderProgram *shader2 = new ShaderProgram({new VertexShader(SHADERDIR "TexVertex.glsl"),
-                                              new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});
+  ShaderProgram *shader2 = new ShaderProgram(
+      {new VertexShader(SHADERDIR "TexVertex.glsl"), new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});
 
   PositionableCamera *cam1 = new PositionableCamera("cam1");
   r.Root()->AddChild(cam1);
@@ -67,10 +66,9 @@ int main()
   r.Root()->AddChild(cs1);
   cs1->SetCamera("cam1");
 
-  auto globalTexMatrixIdentity =
-      cs1->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
-  auto proj1 = globalTexMatrixIdentity->AddChild(new MatrixNode(
-      "proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
+  auto globalTexMatrixIdentity = cs1->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
+  auto proj1 = globalTexMatrixIdentity->AddChild(
+      new MatrixNode("proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, 800.0f / 600.0f, 45.0f)));
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles({
@@ -86,14 +84,12 @@ int main()
     skyboxGLcontrol->OnUnBind() = [](ShaderProgram *) { glDepthMask(GL_TRUE); };
     proj1->AddChild(skyboxGLcontrol);
 
-    auto skyboxShader = skyboxGLcontrol->AddChild(new ShaderNode(
-        "skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "SkyboxVertex.glsl"),
-                                           new FragmentShader(SHADERDIR "SkyboxFragment.glsl")})));
-    auto skyboxTexture = skyboxShader->AddChild(
-        new TextureNode("skyboxTexture", {{cubeMapTex, "skyboxTexture", 1}}));
+    auto skyboxShader = skyboxGLcontrol->AddChild(
+        new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "SkyboxVertex.glsl"),
+                                                          new FragmentShader(SHADERDIR "SkyboxFragment.glsl")})));
+    auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", {{cubeMapTex, "skyboxTexture", 1}}));
     auto skyboxShaderSync = skyboxTexture->AddChild(new ShaderSyncNode("skyboxShaderSync"));
-    auto skyboxQuadMesh =
-        skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
+    auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
   }
   // END SKYBOX
 
@@ -104,9 +100,8 @@ int main()
     Font *sysMonFont = new Font(16, 16);
     sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
 
-    sysMonShader =
-        new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
-                           new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")});
+    sysMonShader = new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
+                                      new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")});
 
     r.Root()->AddChild(new CameraNode("sysMonCamera"));
 
@@ -117,30 +112,24 @@ int main()
     auto dims = r.ParentWindow().GetScreenSize();
     r.Root()
         ->FindFirstChildByName("sysMonCameraSelect")
-        ->AddChild(new MatrixNode("sysMonProj", "projMatrix",
-                                  Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
+        ->AddChild(
+            new MatrixNode("sysMonProj", "projMatrix", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
 
-    r.Root()
-        ->FindFirstChildByName("sysMonProj")
-        ->AddChild(new ShaderNode("sysMonShader", sysMonShader));
+    r.Root()->FindFirstChildByName("sysMonProj")->AddChild(new ShaderNode("sysMonShader", sysMonShader));
 
     r.Root()
         ->FindFirstChildByName("sysMonShader")
         ->AddChild(new TextureNode("sysMonFontTex", {{sysMonFont, "diffuseTex", 1}}));
 
-    r.Root()
-        ->FindFirstChildByName("sysMonFontTex")
-        ->AddChild(new ShaderSyncNode("sysMonShaderSync"));
+    r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
 
     TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
     r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
-    sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) *
-                                       Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
+    sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
 
     loadingNode = new TextNode("loadingNode", sysMonFont, 10);
     r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(loadingNode);
-    loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) *
-                                        Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
+    loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
     loadingNode->SetText("Loading...");
 
     r.Root()->Update(w.GetTimer()->GetTimedMS());
@@ -155,11 +144,10 @@ int main()
     Vector4 sunColour(1.0f, 1.0f, 0.85f, 1.0f);
     Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
 
-    auto lightRenderShader = proj1->AddChild(new ShaderNode(
-        "lightRenderShader",
-        new ShaderProgram(
-            {new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
-             new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
+    auto lightRenderShader = proj1->AddChild(
+        new ShaderNode("lightRenderShader",
+                       new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
+                                          new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
     auto lightShaderSync = lightRenderShader->AddChild(new ShaderSyncNode("lightShaderSync"));
 
     sun = new Light("sun");
@@ -190,8 +178,7 @@ int main()
 
   proj1->AddChild(new ShaderNode("shader1", shader1));
 
-  r.Root()->FindFirstChildByName("shader1")->AddChild(
-      new TextureNode("texm1", {{tex1, "diffuseTex", 1}}));
+  r.Root()->FindFirstChildByName("shader1")->AddChild(new TextureNode("texm1", {{tex1, "diffuseTex", 1}}));
 
   r.Root()->FindFirstChildByName("texm1")->AddChild(new ShaderSyncNode("ss1"));
 
@@ -231,23 +218,21 @@ int main()
     waterTex->LoadFromFile(TEXTUREDIR "water_surface.jpg");
     waterTex->SetRepeating(true);
 
-    auto waterShader = proj1->AddChild(new ShaderNode(
-        "waterShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
-                                          new FragmentShader(SHADERDIR "ReflectFragment.glsl")})));
+    auto waterShader = proj1->AddChild(
+        new ShaderNode("waterShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
+                                                         new FragmentShader(SHADERDIR "ReflectFragment.glsl")})));
 
-    auto waterTexture = waterShader->AddChild(new TextureNode(
-        "waterTexture", {{waterTex, "waterTexture", 1}, {cubeMapTex, "cubeTex", 2}}));
+    auto waterTexture = waterShader->AddChild(
+        new TextureNode("waterTexture", {{waterTex, "waterTexture", 1}, {cubeMapTex, "cubeTex", 2}}));
     auto waterTexMatrix = waterTexture->AddChild(
-        new MatrixNode("waterTexMatrix", "textureMatrix",
-                       Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) *
-                           Matrix4::Rotation(90.0f, Vector3(0.0f, 0.0f, 1.0f))));
+        new MatrixNode("waterTexMatrix", "textureMatrix", Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) *
+                                                              Matrix4::Rotation(90.0f, Vector3(0.0f, 0.0f, 1.0f))));
 
     auto waterShaderSync = waterTexMatrix->AddChild(new ShaderSyncNode("waterShaderSync"));
 
-    RenderableNode *waterQuad = (RenderableNode *)waterShaderSync->AddChild(
-        new MeshNode("waterQuad", Mesh::GenerateQuad()));
-    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)) *
-                                      Matrix4::Scale(1000.0f));
+    RenderableNode *waterQuad =
+        (RenderableNode *)waterShaderSync->AddChild(new MeshNode("waterQuad", Mesh::GenerateQuad()));
+    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)) * Matrix4::Scale(1000.0f));
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     waterQuad->SpecularPower() = 2.0f;
   }

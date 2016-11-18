@@ -19,9 +19,7 @@ const Matrix4 MD5FileData::conversionMatrix = Matrix4(matrixElements);
 
 MD5FileData::MD5FileData(const std::string &filename)
 {
-  std::ifstream f(
-      filename,
-      std::ios::in); // MD5 files are text based, so don't make it an ios::binary ifstream...
+  std::ifstream f(filename, std::ios::in); // MD5 files are text based, so don't make it an ios::binary ifstream...
 
   if (!f)
   {
@@ -103,15 +101,13 @@ MD5FileData::MD5FileData(const std::string &filename)
   //
   if (numLoadedJoints != numExpectedJoints)
   {
-    std::cout << "Expected " << numExpectedJoints << " joints, but loaded " << numLoadedJoints
-              << std::endl;
+    std::cout << "Expected " << numExpectedJoints << " joints, but loaded " << numLoadedJoints << std::endl;
     return;
   }
 
   if (numLoadedMeshes != numExpectedMeshes)
   {
-    std::cout << "Expected " << numExpectedMeshes << " meshes, but loaded " << numLoadedMeshes
-              << std::endl;
+    std::cout << "Expected " << numExpectedMeshes << " meshes, but loaded " << numLoadedMeshes << std::endl;
     return;
   }
 
@@ -127,8 +123,7 @@ MD5FileData::MD5FileData(const std::string &filename)
 MD5FileData::~MD5FileData(void)
 {
   // Delete any MD5 animations we have loaded for this mesh
-  for (std::map<std::string, MD5Anim *>::iterator i = animations.begin(); i != animations.end();
-       ++i)
+  for (std::map<std::string, MD5Anim *>::iterator i = animations.begin(); i != animations.end(); ++i)
   {
     delete i->second;
   }
@@ -208,9 +203,9 @@ void MD5FileData::CreateTBOs()
   {
     for (int j = 0; j < subMeshes[i].numweights; ++j)
     {
-      weightings[(currentWeight * 2) + 0] = Vector3((float)subMeshes[i].weights[j].weightIndex,
-                                                    (float)subMeshes[i].weights[j].jointIndex,
-                                                    (float)subMeshes[i].weights[j].weightValue);
+      weightings[(currentWeight * 2) + 0] =
+          Vector3((float)subMeshes[i].weights[j].weightIndex, (float)subMeshes[i].weights[j].jointIndex,
+                  (float)subMeshes[i].weights[j].weightValue);
 
       weightings[(currentWeight * 2) + 1] = subMeshes[i].weights[j].position;
 
@@ -222,15 +217,13 @@ void MD5FileData::CreateTBOs()
   // data, all we need to do is bind the appropriate buffer, then call glBufferData...
 
   glBindBuffer(GL_TEXTURE_BUFFER, weightBuffer);
-  glBufferData(GL_TEXTURE_BUFFER, weightCount * sizeof(Vector3) * 2, &weightings[0],
-               GL_STATIC_DRAW);
+  glBufferData(GL_TEXTURE_BUFFER, weightCount * sizeof(Vector3) * 2, &weightings[0], GL_STATIC_DRAW);
   glBindBuffer(GL_TEXTURE_BUFFER, 0);
 
   // Although we're going to allocate the memory for our skeleton, we aren't going to send any
   // skeleton data to it just yet - this will be done on a per-node basis as necessary.
   glBindBuffer(GL_TEXTURE_BUFFER, transformBuffer);
-  glBufferData(GL_TEXTURE_BUFFER, transformCount * sizeof(Matrix4), &transforms[0],
-               GL_DYNAMIC_DRAW);
+  glBufferData(GL_TEXTURE_BUFFER, transformCount * sizeof(Matrix4), &transforms[0], GL_DYNAMIC_DRAW);
   glBindBuffer(GL_TEXTURE_BUFFER, 0);
 
   // By the end of this function, we don't really need subMeshes anymore!
@@ -301,8 +294,7 @@ void MD5FileData::LoadShaderProxy(std::string filename, MD5SubMesh &m)
                                      );
 
 #ifdef MD5_USE_TANGENTS_BUMPMAPS
-  m.bumpIndex = SOIL_load_OGL_texture(bumpMap.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-                                      SOIL_FLAG_MIPMAPS | 0);
+  m.bumpIndex = SOIL_load_OGL_texture(bumpMap.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | 0);
 #endif
 }
 
@@ -643,8 +635,7 @@ void MD5FileData::UpdateTransformTBO(const MD5Skeleton &skel) const
   }
 
   glBindBuffer(GL_TEXTURE_BUFFER, transformBuffer);
-  glBufferSubData(GL_TEXTURE_BUFFER, 0, bindPose.numJoints * 2 * sizeof(Matrix4),
-                  (void *)&transforms[0]);
+  glBufferSubData(GL_TEXTURE_BUFFER, 0, bindPose.numJoints * 2 * sizeof(Matrix4), (void *)&transforms[0]);
   glBindBuffer(GL_TEXTURE_BUFFER, 0);
 
   GL_BREAKPOINT;

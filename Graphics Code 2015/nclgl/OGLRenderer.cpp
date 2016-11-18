@@ -91,8 +91,8 @@ OGLRenderer::OGLRenderer(Window &window)
 
   // Now we have a temporary context, we can find out if we support OGL 3.x
   char *ver = (char *)glGetString(GL_VERSION); // ver must equal "3.2.0" (or greater!)
-  int major = ver[0] - '0'; // casts the 'correct' major version integer from our version string
-  int minor = ver[2] - '0'; // casts the 'correct' minor version integer from our version string
+  int major = ver[0] - '0';                    // casts the 'correct' major version integer from our version string
+  int minor = ver[2] - '0';                    // casts the 'correct' minor version integer from our version string
 
   if (major < 3)
   { // Graphics hardware does not support OGL 3! Erk...
@@ -112,10 +112,9 @@ OGLRenderer::OGLRenderer(Window &window)
   int attribs[] = {
       WGL_CONTEXT_MAJOR_VERSION_ARB,
       major, // TODO: Maybe lock this to 3? We might actually get an OpenGL 4.x context...
-      WGL_CONTEXT_MINOR_VERSION_ARB, minor, WGL_CONTEXT_FLAGS_ARB,
-      WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
+      WGL_CONTEXT_MINOR_VERSION_ARB, minor, WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
 #ifdef OPENGL_DEBUGGING
-          | WGL_CONTEXT_DEBUG_BIT_ARB
+                                                                       | WGL_CONTEXT_DEBUG_BIT_ARB
 #endif // No deprecated stuff!! DIE DIE DIE glBegin!!!!
       ,
       WGL_CONTEXT_PROFILE_MASK_ARB,
@@ -133,8 +132,7 @@ OGLRenderer::OGLRenderer(Window &window)
   // Check for the context, and try to make it the current rendering context
   if (!renderContext || !wglMakeCurrent(deviceContext, renderContext))
   {
-    std::cout << "OGLRenderer::OGLRenderer(): Cannot set OpenGL 3 context!"
-              << std::endl; // It's all gone wrong!
+    std::cout << "OGLRenderer::OGLRenderer(): Cannot set OpenGL 3 context!" << std::endl; // It's all gone wrong!
     wglDeleteContext(renderContext);
     wglDeleteContext(tempContext);
     return;
@@ -147,9 +145,8 @@ OGLRenderer::OGLRenderer(Window &window)
   // for determining whether a OGL context supports a particular function or not
 
   if (glewInit() != GLEW_OK)
-  { // Try to initialise GLEW
-    std::cout << "OGLRenderer::OGLRenderer(): Cannot initialise GLEW!"
-              << std::endl; // It's all gone wrong!
+  {                                                                                  // Try to initialise GLEW
+    std::cout << "OGLRenderer::OGLRenderer(): Cannot initialise GLEW!" << std::endl; // It's all gone wrong!
     return;
   }
 // If we get this far, everything's going well!
@@ -267,10 +264,8 @@ void OGLRenderer::UpdateShaderMatrices()
   {
     glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false,
                        (float *)&modelMatrix);
-    glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix"), 1, false,
-                       (float *)&viewMatrix);
-    glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false,
-                       (float *)&projMatrix);
+    glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix"), 1, false, (float *)&viewMatrix);
+    glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float *)&projMatrix);
     glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "textureMatrix"), 1, false,
                        (float *)&textureMatrix);
   }
@@ -301,8 +296,8 @@ void OGLRenderer::SetTextureRepeating(GLuint target, bool repeating)
 //}
 
 #ifdef OPENGL_DEBUGGING
-void OGLRenderer::DebugCallback(GLuint source, GLuint type, GLuint id, GLuint severity, int length,
-                                const char *message, void *userParam)
+void OGLRenderer::DebugCallback(GLuint source, GLuint type, GLuint id, GLuint severity, int length, const char *message,
+                                void *userParam)
 {
 
   string sourceName;
@@ -366,9 +361,7 @@ void OGLRenderer::DebugCallback(GLuint source, GLuint type, GLuint id, GLuint se
     break;
   }
 
-  cout << "OpenGL Debug Output: " + sourceName + ", " + typeName + ", " + severityName + ", " +
-              string(message)
-       << endl;
+  cout << "OpenGL Debug Output: " + sourceName + ", " + typeName + ", " + severityName + ", " + string(message) << endl;
 }
 #endif
 
@@ -378,14 +371,13 @@ void OGLRenderer::DrawDebugPerspective(Matrix4 *matrix)
 
   if (matrix)
   {
-    glUniformMatrix4fv(glGetUniformLocation(debugDrawShader->GetProgram(), "viewProjMatrix"), 1,
-                       false, (float *)matrix);
+    glUniformMatrix4fv(glGetUniformLocation(debugDrawShader->GetProgram(), "viewProjMatrix"), 1, false,
+                       (float *)matrix);
   }
   else
   {
     Matrix4 temp = projMatrix * viewMatrix;
-    glUniformMatrix4fv(glGetUniformLocation(debugDrawShader->GetProgram(), "viewProjMatrix"), 1,
-                       false, (float *)&temp);
+    glUniformMatrix4fv(glGetUniformLocation(debugDrawShader->GetProgram(), "viewProjMatrix"), 1, false, (float *)&temp);
   }
 
   perspectiveDebugData->Draw();
@@ -401,14 +393,14 @@ void OGLRenderer::DrawDebugOrtho(Matrix4 *matrix)
 
   if (matrix)
   {
-    glUniformMatrix4fv(glGetUniformLocation(debugDrawShader->GetProgram(), "viewProjMatrix"), 1,
-                       false, (float *)matrix);
+    glUniformMatrix4fv(glGetUniformLocation(debugDrawShader->GetProgram(), "viewProjMatrix"), 1, false,
+                       (float *)matrix);
   }
   else
   {
     static Matrix4 ortho = Matrix4::Orthographic(-1, 1, 720, 0, 0, 480);
-    glUniformMatrix4fv(glGetUniformLocation(debugDrawShader->GetProgram(), "viewProjMatrix"), 1,
-                       false, (float *)&ortho);
+    glUniformMatrix4fv(glGetUniformLocation(debugDrawShader->GetProgram(), "viewProjMatrix"), 1, false,
+                       (float *)&ortho);
   }
 
   orthoDebugData->Draw();
@@ -418,52 +410,45 @@ void OGLRenderer::DrawDebugOrtho(Matrix4 *matrix)
   SetCurrentShader(currentShader);
 }
 
-void OGLRenderer::DrawDebugLine(DebugDrawMode mode, const Vector3 &from, const Vector3 &to,
-                                const Vector3 &fromColour, const Vector3 &toColour)
+void OGLRenderer::DrawDebugLine(DebugDrawMode mode, const Vector3 &from, const Vector3 &to, const Vector3 &fromColour,
+                                const Vector3 &toColour)
 {
-  DebugDrawData *target =
-      (mode == DEBUGDRAW_ORTHO ? target = orthoDebugData : target = perspectiveDebugData);
+  DebugDrawData *target = (mode == DEBUGDRAW_ORTHO ? target = orthoDebugData : target = perspectiveDebugData);
 
   target->AddLine(from, to, fromColour, toColour);
 }
 
-void OGLRenderer::DrawDebugBox(DebugDrawMode mode, const Vector3 &at, const Vector3 &scale,
-                               const Vector3 &colour)
+void OGLRenderer::DrawDebugBox(DebugDrawMode mode, const Vector3 &at, const Vector3 &scale, const Vector3 &colour)
 {
-  DebugDrawData *target =
-      (mode == DEBUGDRAW_ORTHO ? target = orthoDebugData : target = perspectiveDebugData);
+  DebugDrawData *target = (mode == DEBUGDRAW_ORTHO ? target = orthoDebugData : target = perspectiveDebugData);
 
-  target->AddLine(at + Vector3(-scale.x * 0.5f, scale.y * 0.5f, 0),
-                  at + Vector3(-scale.x * 0.5f, -scale.y * 0.5f, 0), colour, colour);
+  target->AddLine(at + Vector3(-scale.x * 0.5f, scale.y * 0.5f, 0), at + Vector3(-scale.x * 0.5f, -scale.y * 0.5f, 0),
+                  colour, colour);
 
-  target->AddLine(at + Vector3(-scale.x * 0.5f, -scale.y * 0.5f, 0),
-                  at + Vector3(scale.x * 0.5f, -scale.y * 0.5f, 0), colour, colour);
+  target->AddLine(at + Vector3(-scale.x * 0.5f, -scale.y * 0.5f, 0), at + Vector3(scale.x * 0.5f, -scale.y * 0.5f, 0),
+                  colour, colour);
 
-  target->AddLine(at + Vector3(scale.x * 0.5f, -scale.y * 0.5f, 0),
-                  at + Vector3(scale.x * 0.5f, scale.y * 0.5f, 0), colour, colour);
+  target->AddLine(at + Vector3(scale.x * 0.5f, -scale.y * 0.5f, 0), at + Vector3(scale.x * 0.5f, scale.y * 0.5f, 0),
+                  colour, colour);
 
-  target->AddLine(at + Vector3(scale.x * 0.5f, scale.y * 0.5f, 0),
-                  at + Vector3(-scale.x * 0.5f, scale.y * 0.5f, 0), colour, colour);
+  target->AddLine(at + Vector3(scale.x * 0.5f, scale.y * 0.5f, 0), at + Vector3(-scale.x * 0.5f, scale.y * 0.5f, 0),
+                  colour, colour);
 }
 
-void OGLRenderer::DrawDebugCross(DebugDrawMode mode, const Vector3 &at, const Vector3 &scale,
-                                 const Vector3 &colour)
+void OGLRenderer::DrawDebugCross(DebugDrawMode mode, const Vector3 &at, const Vector3 &scale, const Vector3 &colour)
 {
-  DebugDrawData *target =
-      (mode == DEBUGDRAW_ORTHO ? target = orthoDebugData : target = perspectiveDebugData);
+  DebugDrawData *target = (mode == DEBUGDRAW_ORTHO ? target = orthoDebugData : target = perspectiveDebugData);
 
-  target->AddLine(at + Vector3(-scale.x * 0.5f, -scale.y * 0.5f, 0),
-                  at + Vector3(scale.x * 0.5f, scale.y * 0.5f, 0), colour, colour);
+  target->AddLine(at + Vector3(-scale.x * 0.5f, -scale.y * 0.5f, 0), at + Vector3(scale.x * 0.5f, scale.y * 0.5f, 0),
+                  colour, colour);
 
-  target->AddLine(at + Vector3(scale.x * 0.5f, -scale.y * 0.5f, 0),
-                  at + Vector3(-scale.x * 0.5f, scale.y * 0.5f, 0), colour, colour);
+  target->AddLine(at + Vector3(scale.x * 0.5f, -scale.y * 0.5f, 0), at + Vector3(-scale.x * 0.5f, scale.y * 0.5f, 0),
+                  colour, colour);
 }
 
-void OGLRenderer::DrawDebugCircle(DebugDrawMode mode, const Vector3 &at, const float radius,
-                                  const Vector3 &colour)
+void OGLRenderer::DrawDebugCircle(DebugDrawMode mode, const Vector3 &at, const float radius, const Vector3 &colour)
 {
-  DebugDrawData *target =
-      (mode == DEBUGDRAW_ORTHO ? target = orthoDebugData : target = perspectiveDebugData);
+  DebugDrawData *target = (mode == DEBUGDRAW_ORTHO ? target = orthoDebugData : target = perspectiveDebugData);
 
   const int stepCount = 18;
   const float divisor = 360.0f / stepCount;

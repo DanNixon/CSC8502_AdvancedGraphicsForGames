@@ -60,12 +60,11 @@ void Mouse::Update(RAWINPUT *raw)
     /*
     Oh, Microsoft...
     */
-    static int buttondowns[5] = {RI_MOUSE_BUTTON_1_DOWN, RI_MOUSE_BUTTON_2_DOWN,
-                                 RI_MOUSE_BUTTON_3_DOWN, RI_MOUSE_BUTTON_4_DOWN,
-                                 RI_MOUSE_BUTTON_5_DOWN};
+    static int buttondowns[5] = {RI_MOUSE_BUTTON_1_DOWN, RI_MOUSE_BUTTON_2_DOWN, RI_MOUSE_BUTTON_3_DOWN,
+                                 RI_MOUSE_BUTTON_4_DOWN, RI_MOUSE_BUTTON_5_DOWN};
 
-    static int buttonps[5] = {RI_MOUSE_BUTTON_1_UP, RI_MOUSE_BUTTON_2_UP, RI_MOUSE_BUTTON_3_UP,
-                              RI_MOUSE_BUTTON_4_UP, RI_MOUSE_BUTTON_5_UP};
+    static int buttonps[5] = {RI_MOUSE_BUTTON_1_UP, RI_MOUSE_BUTTON_2_UP, RI_MOUSE_BUTTON_3_UP, RI_MOUSE_BUTTON_4_UP,
+                              RI_MOUSE_BUTTON_5_UP};
 
     for (int i = 0; i < 5; ++i)
     {

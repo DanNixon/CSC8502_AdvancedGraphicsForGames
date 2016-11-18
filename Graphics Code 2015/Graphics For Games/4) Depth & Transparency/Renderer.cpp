@@ -10,11 +10,9 @@ Renderer::Renderer(Window &parent)
   meshes[0] = Mesh::GenerateQuad();
   meshes[1] = Mesh::GenerateTriangle();
 
-  meshes[0]->SetTexture(
-      SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+  meshes[0]->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
-  meshes[1]->SetTexture(
-      SOIL_load_OGL_texture(TEXTUREDIR "stainedglass.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+  meshes[1]->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "stainedglass.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
   if (!textures[0] || !textures[1])
     return;
@@ -46,10 +44,8 @@ void Renderer::RenderScene()
 
   glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "textureMatrix"), 1, false,
                      (float *)&textureMatrix);
-  glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix"), 1, false,
-                     (float *)&viewMatrix);
-  glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false,
-                     (float *)&projMatrix);
+  glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix"), 1, false, (float *)&viewMatrix);
+  glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix"), 1, false, (float *)&projMatrix);
 
   glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
   glActiveTexture(GL_TEXTURE0);

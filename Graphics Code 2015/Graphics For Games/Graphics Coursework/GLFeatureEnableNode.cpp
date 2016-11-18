@@ -8,8 +8,7 @@
 
 namespace GraphicsCoursework
 {
-GLFeatureEnableNode::GLFeatureEnableNode(const std::string &name, GLenum feature,
-                                         GLboolean setState)
+GLFeatureEnableNode::GLFeatureEnableNode(const std::string &name, GLenum feature, GLboolean setState)
     : ShaderDataNode(name)
     , m_featureEnum(feature)
 {

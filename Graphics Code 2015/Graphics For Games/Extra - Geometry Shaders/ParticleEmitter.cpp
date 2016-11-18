@@ -28,8 +28,8 @@ ParticleEmitter::ParticleEmitter(void)
   // texture = SOIL_load_OGL_texture("../Textures/particle.tga",
   // SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID,SOIL_FLAG_COMPRESS_TO_DXT);
 
-  m_texture = SOIL_load_OGL_texture(TEXTUREDIR "nyan.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-                                    SOIL_FLAG_COMPRESS_TO_DXT);
+  m_texture =
+      SOIL_load_OGL_texture(TEXTUREDIR "nyan.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_COMPRESS_TO_DXT);
 }
 
 /*
@@ -207,9 +207,8 @@ void ParticleEmitter::Draw()
   // Bind our vertex data, and update its data with that of the vertices array
   glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
   glBufferSubData(GL_ARRAY_BUFFER, 0, particles.size() * sizeof(Vector3), (void *)m_vertices);
-  glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3),
-                        0);                 // Tell the VAO we have positions...
-  glEnableVertexAttribArray(VERTEX_BUFFER); // Binds this buffer to the VAO
+  glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3), 0); // Tell the VAO we have positions...
+  glEnableVertexAttribArray(VERTEX_BUFFER);                                        // Binds this buffer to the VAO
 
   // And now do the same for colours...
   glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[COLOUR_BUFFER]);

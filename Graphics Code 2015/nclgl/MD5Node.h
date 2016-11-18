@@ -85,8 +85,7 @@ public:
     into.numJoints = currentSkeleton.numJoints;
     into.joints = new MD5Joint[currentSkeleton.numJoints];
 
-    memcpy((void *)into.joints, (void *)currentSkeleton.joints,
-           sizeof(MD5Joint) * currentSkeleton.numJoints);
+    memcpy((void *)into.joints, (void *)currentSkeleton.joints, sizeof(MD5Joint) * currentSkeleton.numJoints);
   }
 
   void ResetSkeletonForcing()

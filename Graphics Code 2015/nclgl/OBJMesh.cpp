@@ -383,9 +383,9 @@ void OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType)
 
       if (!currentMTL.diffuse.empty())
       {
-        currentMTL.diffuseNum = SOIL_load_OGL_texture(
-            string(TEXTUREDIR + currentMTL.diffuse).c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-            SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
+        currentMTL.diffuseNum =
+            SOIL_load_OGL_texture(string(TEXTUREDIR + currentMTL.diffuse).c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+                                  SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
       }
     }
     else if (currentLine == MTLBUMPMAP || currentLine == MTLBUMPMAPALT)
@@ -405,9 +405,8 @@ void OBJMesh::SetTexturesFromMTL(string &mtlFile, string &mtlType)
 
       if (!currentMTL.bump.empty())
       {
-        currentMTL.bumpNum = SOIL_load_OGL_texture(string(TEXTUREDIR + currentMTL.bump).c_str(),
-                                                   SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-                                                   SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
+        currentMTL.bumpNum = SOIL_load_OGL_texture(string(TEXTUREDIR + currentMTL.bump).c_str(), SOIL_LOAD_AUTO,
+                                                   SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
       }
     }
   }
@@ -442,9 +441,8 @@ void OBJMesh::FixTextures(MTLInfo &info)
 
     info.bump = temp;
 
-    info.bumpNum =
-        SOIL_load_OGL_texture(string(TEXTUREDIR + info.bump).c_str(), SOIL_LOAD_AUTO,
-                              SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
+    info.bumpNum = SOIL_load_OGL_texture(string(TEXTUREDIR + info.bump).c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+                                         SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS);
   }
 }
 #endif

@@ -21,8 +21,8 @@ of the code, by hiding the transform
 To show off the texture atlas, we're going to add 4 textures to one texture
 atlas. These 4!
 */
-string textures[4] = {TEXTUREDIR "brick.tga", TEXTUREDIR "Barren reds.jpg",
-                      TEXTUREDIR "hellknight.tga", TEXTUREDIR "hellknight_local.tga"};
+string textures[4] = {TEXTUREDIR "brick.tga", TEXTUREDIR "Barren reds.jpg", TEXTUREDIR "hellknight.tga",
+                      TEXTUREDIR "hellknight_local.tga"};
 
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
@@ -161,8 +161,7 @@ void Renderer::RenderScene()
     quad->SetTexture(node->GetAtlas()->GetAtlasTexture());
 
     // Just translates the quad we are drawing our textures to along the x axis, and makes it bigger
-    modelMatrix = Matrix4::Translation(Vector3((float)120 + (i * 120), 0, 0)) *
-                  Matrix4::Scale(Vector3(50, 50, 50));
+    modelMatrix = Matrix4::Translation(Vector3((float)120 + (i * 120), 0, 0)) * Matrix4::Scale(Vector3(50, 50, 50));
     UpdateShaderMatrices(); // Update the shader's matrices!
     quad->Draw();           // Draw the quad.
   }

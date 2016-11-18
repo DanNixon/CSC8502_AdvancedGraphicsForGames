@@ -72,20 +72,16 @@ void Renderer::DrawNode(SceneNode *n)
   if (n->GetMesh())
   {
     Matrix4 transform = n->GetWorldTransform() * Matrix4::Scale(n->GetModelScale());
-    glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false,
-                       (float *)&transform);
+    glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float *)&transform);
 
-    glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1,
-                 (float *)&n->GetColour());
+    glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1, (float *)&n->GetColour());
 
-    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"),
-                (int)n->GetMesh()->GetTexture());
+    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"), (int)n->GetMesh()->GetTexture());
 
     n->Draw(*this);
   }
 
-  for (vector<SceneNode *>::const_iterator i = n->GetChildIteratorStart();
-       i != n->GetChildIteratorEnd(); ++i)
+  for (vector<SceneNode *>::const_iterator i = n->GetChildIteratorStart(); i != n->GetChildIteratorEnd(); ++i)
   {
     DrawNode(*i);
   }

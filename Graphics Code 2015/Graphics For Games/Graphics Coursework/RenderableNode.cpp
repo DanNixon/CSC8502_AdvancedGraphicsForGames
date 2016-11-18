@@ -44,8 +44,7 @@ void RenderableNode::Draw(RenderState &state)
   GLuint program = state.shader->Program();
 
   // Set model matrix
-  glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, false,
-                     (float *)&m_worldTransform);
+  glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, false, (float *)&m_worldTransform);
 
   // Set lighting parameters
   glUniform1f(glGetUniformLocation(program, "specularPower"), m_specularPower);

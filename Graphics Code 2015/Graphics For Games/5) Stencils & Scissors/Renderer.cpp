@@ -11,10 +11,8 @@ Renderer::Renderer(Window &parent)
   if (!currentShader->LinkProgram())
     return;
 
-  triangle->SetTexture(
-      SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
-  quad->SetTexture(
-      SOIL_load_OGL_texture(TEXTUREDIR "chessboard.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+  triangle->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+  quad->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "chessboard.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
   if (!triangle->GetTexture() || !quad->GetTexture())
     return;

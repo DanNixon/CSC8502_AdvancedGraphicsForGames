@@ -51,8 +51,7 @@ void CameraSelectorNode::PostRender(RenderState &state)
 
 void CameraSelectorNode::ShaderBind(ShaderProgram *s)
 {
-  glUniformMatrix4fv(glGetUniformLocation(s->Program(), "viewMatrix"), 1, false,
-                     (float *)&m_camera->ViewMatrix());
+  glUniformMatrix4fv(glGetUniformLocation(s->Program(), "viewMatrix"), 1, false, (float *)&m_camera->ViewMatrix());
   glUniform3fv(glGetUniformLocation(s->Program(), "cameraPos"), 1,
                (float *)&m_camera->GetWorldTransformation().GetPositionVector());
 }

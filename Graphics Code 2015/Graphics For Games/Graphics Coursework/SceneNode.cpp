@@ -77,8 +77,7 @@ bool SceneNode::RemoveChild(const std::string &name)
 {
   bool retVal = false;
 
-  auto it = std::find_if(m_children.begin(), m_children.end(),
-                         [name](SceneNode *n) { return n->Name() == name; });
+  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode *n) { return n->Name() == name; });
 
   if (it != m_children.end())
     retVal = RemoveChild(*it);
@@ -88,8 +87,7 @@ bool SceneNode::RemoveChild(const std::string &name)
 
 SceneNode *SceneNode::Child(const std::string &name)
 {
-  auto it = std::find_if(m_children.begin(), m_children.end(),
-                         [name](SceneNode *n) { return n->Name() == name; });
+  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode *n) { return n->Name() == name; });
   return (it == m_children.end() ? nullptr : *it);
 }
 

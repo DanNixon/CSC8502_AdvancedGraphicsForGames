@@ -80,14 +80,12 @@ public:
 
   // Creates an orthographic matrix with 'znear' and 'zfar' as the near and
   // far planes, and so on. Descriptive variable names are a good thing!
-  static Matrix4 Orthographic(float znear, float zfar, float right, float left, float top,
-                              float bottom);
+  static Matrix4 Orthographic(float znear, float zfar, float right, float left, float top, float bottom);
 
   // Builds a view matrix suitable for sending straight to the vertex shader.
   // Puts the camera at 'from', with 'lookingAt' centered on the screen, with
   //'up' as the...up axis (pointing towards the top of the screen)
-  static Matrix4 BuildViewMatrix(const Vector3 &from, const Vector3 &lookingAt,
-                                 const Vector3 up = Vector3(0, 1, 0));
+  static Matrix4 BuildViewMatrix(const Vector3 &from, const Vector3 &lookingAt, const Vector3 up = Vector3(0, 1, 0));
 
   Matrix4 GetTransposedRotation() const;
 
@@ -142,14 +140,11 @@ public:
   inline friend std::ostream &operator<<(std::ostream &o, const Matrix4 &m)
   {
     o << "Mat4(";
-    o << "\t" << m.values[0] << "," << m.values[1] << "," << m.values[2] << "," << m.values[3]
+    o << "\t" << m.values[0] << "," << m.values[1] << "," << m.values[2] << "," << m.values[3] << std::endl;
+    o << "\t\t" << m.values[4] << "," << m.values[5] << "," << m.values[6] << "," << m.values[7] << std::endl;
+    o << "\t\t" << m.values[8] << "," << m.values[9] << "," << m.values[10] << "," << m.values[11] << std::endl;
+    o << "\t\t" << m.values[12] << "," << m.values[13] << "," << m.values[14] << "," << m.values[15] << " )"
       << std::endl;
-    o << "\t\t" << m.values[4] << "," << m.values[5] << "," << m.values[6] << "," << m.values[7]
-      << std::endl;
-    o << "\t\t" << m.values[8] << "," << m.values[9] << "," << m.values[10] << "," << m.values[11]
-      << std::endl;
-    o << "\t\t" << m.values[12] << "," << m.values[13] << "," << m.values[14] << "," << m.values[15]
-      << " )" << std::endl;
     return o;
   }
 };
