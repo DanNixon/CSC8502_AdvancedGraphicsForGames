@@ -26,6 +26,7 @@
 #include "WindowsSystemMonitor.h"
 #include "RGBABufferedTexture.h"
 #include "StencilBufferedTexture.h"
+#include "RepeatNode.h"
 
 using namespace GraphicsCoursework;
 
@@ -259,20 +260,30 @@ int main()
 
   // POST PROCESSING
   {
-    auto shader = r.PostProcessingPresentationRoot()->AddChild(new ShaderNode("shader",
-      new ShaderProgram({new VertexShader(SHADERDIR "TexturedFragment.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
+    auto shader = r.PostProcessingRoot()->AddChild(new ShaderNode("shader",
+      new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
 
     auto proj = shader->AddChild(new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, -1, 1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    auto pixelSize = view->AddChild(nullptr); // TODO
-    auto repeat = pixelSize->AddChild(nullptr); // TODO
+    GenericControlNode * pixelSizeControl = new GenericControlNode("pixelSize");
+    auto pixelSize = view->AddChild(pixelSizeControl);
+    pixelSizeControl->OnBind() = [](ShaderProgram *s)
+    {
+      glUniform2f(glGetUniformLocation(s->Program(), "pixelSize"), 1.0f / 640, 1.0f / 480);
+    };
+    pixelSizeControl->OnUnBind() = [](ShaderProgram *s)
+    {
+      glUniform2f(glGetUniformLocation(s->Program(), "pixelSize"), 0.0f, 0.0f);
+    };
 
-    auto texture1 = repeat->AddChild(new TextureNode("texture1", { {bufferColourTex1, "tex", 1} }));
+    auto repeat = pixelSize->AddChild(new RepeatNode("repeat", 10));
+
+    auto texture1 = repeat->AddChild(new TextureNode("texture1", { {bufferColourTex1, "diffuseTex", 1} }));
     auto sync1 = texture1->AddChild(new ShaderSyncNode("sync1"));
     auto quad1 = sync1->AddChild(new MeshNode("quad1", Mesh::GenerateQuad()));
 
-    auto texture2 = repeat->AddChild(new TextureNode("texture2", { { bufferColourTex2, "tex", 1 } }));
+    auto texture2 = repeat->AddChild(new TextureNode("texture2", { { bufferColourTex2, "diffuseTex", 1 } }));
     auto sync2 = texture2->AddChild(new ShaderSyncNode("sync2"));
     auto quad2 = sync2->AddChild(new MeshNode("quad2", Mesh::GenerateQuad()));
   }
@@ -280,12 +291,12 @@ int main()
   // POST PROCESSING PRESENTATION
   {
     auto shader = r.PostProcessingPresentationRoot()->AddChild(new ShaderNode("shader",
-      new ShaderProgram({ new VertexShader(SHADERDIR "TexturedFragment.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl") })));
+      new ShaderProgram({ new VertexShader(SHADERDIR "TexturedVertex.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl") })));
 
     auto proj = shader->AddChild(new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, -1, 1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    auto texture = view->AddChild(new TextureNode("texture", { { bufferColourTex1, "tex", 1 } }));
+    auto texture = view->AddChild(new TextureNode("texture", { { bufferColourTex1, "diffuseTex", 1 } }));
     auto sync = texture->AddChild(new ShaderSyncNode("sync"));
     auto quad = sync->AddChild(new MeshNode("quad", Mesh::GenerateQuad()));
   }

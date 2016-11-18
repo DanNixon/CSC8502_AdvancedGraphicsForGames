@@ -90,6 +90,7 @@
     <ClCompile Include="PositionableCamera.cpp" />
     <ClCompile Include="RenderableNode.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RepeatNode.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderDataNode.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="RenderableNode.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderState.h" />
+    <ClInclude Include="RepeatNode.h" />
     <ClInclude Include="RGBABufferedTexture.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />

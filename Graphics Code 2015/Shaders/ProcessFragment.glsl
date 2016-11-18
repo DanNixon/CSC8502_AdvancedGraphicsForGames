@@ -6,8 +6,8 @@ uniform int isVertical;
 
 in Vertex
 {
-  vec2 texCoord ;
-  vec4 colour ;
+	vec4 colour;
+  vec2 texCoord;
 } IN;
 
 out vec4 fragColour;
@@ -28,7 +28,7 @@ void main()
 
   for (int i = 0; i < 5; i++)
   {
-    vec4 tmp = texture2D(diffuseTex, IN.texCoord.xy + values[i]);
+    vec4 tmp = texture(diffuseTex, IN.texCoord.xy + values[i]);
     fragColour += tmp * weights[i];
   }
 }

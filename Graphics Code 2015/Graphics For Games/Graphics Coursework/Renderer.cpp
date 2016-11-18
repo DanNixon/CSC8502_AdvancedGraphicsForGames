@@ -11,6 +11,8 @@ namespace GraphicsCoursework
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
     , m_sceneGraphRoot(new SceneNode("root", this))
+    , m_postProcessingGraphRoot(new SceneNode("postProcessRoot", this))
+    , m_postProcessingPresentationGraphRoot(new SceneNode("postProcessPresentRoot", this))
 {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -89,25 +91,6 @@ void Renderer::DrawPostProcess()
 
   glEnable(GL_DEPTH_TEST);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-#if 0
-  glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
-
-  for (int i = 0; i < 2; ++i)
-  {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_bufferColourTex[1], 0);
-    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "isVertical"), 0);
-
-    quad->SetTexture(m_bufferColourTex[0]);
-    quad->Draw();
-
-    glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "isVertical"), 1);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_bufferColourTex[0], 0);
-
-    quad->SetTexture(m_bufferColourTex[1]);
-    quad->Draw();
-  }
-#endif
 }
 
 void Renderer::PresentScene()
