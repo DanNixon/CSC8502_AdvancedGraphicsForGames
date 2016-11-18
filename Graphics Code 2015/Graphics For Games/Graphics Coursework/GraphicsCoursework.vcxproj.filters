@@ -92,13 +92,13 @@
     <ClCompile Include="MatrixNode.cpp">
       <Filter>Camera &amp; View</Filter>
     </ClCompile>
-    <ClCompile Include="BufferedTexture.cpp">
-      <Filter>Texture Managment</Filter>
-    </ClCompile>
     <ClCompile Include="FramebufferNode.cpp">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="HeightmapBufferedTexture.cpp">
+    <ClCompile Include="GeneratedTexture.cpp">
+      <Filter>Texture Managment</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightmapTexture.cpp">
       <Filter>Texture Managment</Filter>
     </ClCompile>
   </ItemGroup>
@@ -199,19 +199,19 @@
     <ClInclude Include="MatrixNode.h">
       <Filter>Camera &amp; View</Filter>
     </ClInclude>
-    <ClInclude Include="BufferedTexture.h">
-      <Filter>Texture Managment</Filter>
-    </ClInclude>
-    <ClInclude Include="RGBABufferedTexture.h">
-      <Filter>Texture Managment</Filter>
-    </ClInclude>
     <ClInclude Include="FramebufferNode.h">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="DepthStencilBufferedTexture.h">
+    <ClInclude Include="GeneratedTexture.h">
       <Filter>Texture Managment</Filter>
     </ClInclude>
-    <ClInclude Include="HeightmapBufferedTexture.h">
+    <ClInclude Include="HeightmapTexture.h">
+      <Filter>Texture Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilTexture.h">
+      <Filter>Texture Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="RGBATexture.h">
       <Filter>Texture Managment</Filter>
     </ClInclude>
   </ItemGroup>

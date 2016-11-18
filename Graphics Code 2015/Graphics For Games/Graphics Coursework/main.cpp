@@ -6,20 +6,20 @@
 
 #include "CameraSelectorNode.h"
 #include "CubeMapTexture.h"
-#include "DepthStencilBufferedTexture.h"
+#include "DepthStencilTexture.h"
 #include "Font.h"
 #include "FractalBrownianMotion.h"
 #include "FramebufferNode.h"
 #include "GenericControlNode.h"
 #include "HeightMapMesh.h"
-#include "HeightmapBufferedTexture.h"
+#include "HeightmapTexture.h"
 #include "Light.h"
 #include "MatrixNode.h"
 #include "MeshNode.h"
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
 #include "PositionableCamera.h"
-#include "RGBABufferedTexture.h"
+#include "RGBATexture.h"
 #include "Renderer.h"
 #include "ShaderNode.h"
 #include "ShaderProgram.h"
@@ -121,9 +121,9 @@ int main()
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
   proj1->AddChild(sceneBuffer);
 
-  ITexture *bufferDepthTex = new DepthStencilBufferedTexture(winDims.x, winDims.y);
-  ITexture *bufferColourTex1 = new RGBABufferedTexture(winDims.x, winDims.y);
-  ITexture *bufferColourTex2 = new RGBABufferedTexture(winDims.x, winDims.y);
+  ITexture *bufferDepthTex = new DepthStencilTexture(winDims.x, winDims.y);
+  ITexture *bufferColourTex1 = new RGBATexture(winDims.x, winDims.y);
+  ITexture *bufferColourTex2 = new RGBATexture(winDims.x, winDims.y);
 
   sceneBuffer->BindTexture(GL_DEPTH_ATTACHMENT, bufferDepthTex);
   sceneBuffer->BindTexture(GL_STENCIL_ATTACHMENT, bufferDepthTex);
@@ -168,8 +168,8 @@ int main()
     sun = new Light("sun");
     lightShaderSync->AddChild(sun);
     r.AddPersistentDataNode(sun);
-    sun->Radius() = 100.0f;
-    sun->AmbientIntensity() = 0.2f;
+    sun->Radius() = 1000.0f;
+    sun->AmbientIntensity() = 0.3f;
     sun->Colour() = sunColour;
     sun->SetLocalTransformation(Matrix4::Translation(Vector3(50.0f, 50.0f, -50.0f)));
 
@@ -209,22 +209,25 @@ int main()
     fbm.Frequency() = 15.0f;
     fbm.ZValue() = 0.8f;
 
-    HeightmapBufferedTexture *heightmapTexture = new HeightmapBufferedTexture(100, 100);
+    HeightmapTexture *heightmapTexture = new HeightmapTexture(1000, 1000);
     heightmapTexture->SetFromFBM(&fbm);
 
     auto terrainTexture = sceneBuffer->AddChild(
-        new TextureNode("terrainTexture", {{tex2, "diffuseTex", 1}, {heightmapTexture, "heightmap", 2}}));
+        new TextureNode("terrainTexture", {{tex2, "diffuseTex", 1}, {heightmapTexture, "heightmapTex", 2}}));
 
     auto terrainShader = terrainTexture->AddChild(
-        new ShaderNode("terrainShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
-                                                           new FragmentShader(SHADERDIR "PerPixelFragment.glsl")})));
+        new ShaderNode("terrainShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/HeightmapVertex.glsl"),
+                                                           new FragmentShader(SHADERDIR "PerPixelFragment.glsl"),
+                                                           new TesselationControlShader(SHADERDIR "coursework/HeightmapTCS.glsl"),
+                                                           new TesselationEvaluationShader(SHADERDIR "coursework/HeightmapTES.glsl")})));
 
     auto terrainShaderSync = terrainShader->AddChild(new ShaderSyncNode("terrainShaderSync"));
 
     MeshNode *terrainMesh = new MeshNode("terrainMesh", Mesh::GenerateQuad());
+    terrainMesh->GetMesh()->SetGLPatches();
     terrainShaderSync->AddChild(terrainMesh);
     terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
-    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)) * Matrix4::Scale(10000.0f));
+    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -8.0f)) * Matrix4::Scale(100.0f));
   }
   // END HEIGHTMAP
 

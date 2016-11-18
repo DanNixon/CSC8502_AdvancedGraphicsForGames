@@ -182,6 +182,11 @@ bool Mesh::ReturnBuffer(Buffer b)
   return glUnmapBuffer(m_bufferObjects[b]) == GL_TRUE;
 }
 
+void Mesh::SetGLPatches()
+{
+  m_type = GL_PATCHES;
+}
+
 void Mesh::SetUniformColour(const Vector4 &colour)
 {
   if (m_colours == nullptr)

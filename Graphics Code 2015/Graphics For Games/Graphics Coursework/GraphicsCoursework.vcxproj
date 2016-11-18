@@ -69,7 +69,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BufferedTexture.cpp" />
+    <ClCompile Include="GeneratedTexture.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="CameraSelectorNode.cpp" />
     <ClCompile Include="CubeMapTexture.cpp" />
@@ -79,7 +79,7 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GenericControlNode.cpp" />
     <ClCompile Include="GLFeatureEnableNode.cpp" />
-    <ClCompile Include="HeightmapBufferedTexture.cpp" />
+    <ClCompile Include="HeightmapTexture.cpp" />
     <ClCompile Include="HeightMapMesh.cpp" />
     <ClCompile Include="ISystemMonitor.cpp" />
     <ClCompile Include="ITexture.cpp" />
@@ -105,7 +105,7 @@
     <ClCompile Include="WindowsSystemMonitor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BufferedTexture.h" />
+    <ClInclude Include="GeneratedTexture.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraSelectorNode.h" />
     <ClInclude Include="CubeMapTexture.h" />
@@ -115,7 +115,7 @@
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GenericControlNode.h" />
     <ClInclude Include="GLFeatureEnableNode.h" />
-    <ClInclude Include="HeightmapBufferedTexture.h" />
+    <ClInclude Include="HeightmapTexture.h" />
     <ClInclude Include="HeightMapMesh.h" />
     <ClInclude Include="ISystemMonitor.h" />
     <ClInclude Include="ITexture.h" />
@@ -128,7 +128,7 @@
     <ClInclude Include="RenderableNode.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderState.h" />
-    <ClInclude Include="RGBABufferedTexture.h" />
+    <ClInclude Include="RGBATexture.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderDataNode.h" />
@@ -136,7 +136,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="ShaderSyncNode.h" />
-    <ClInclude Include="DepthStencilBufferedTexture.h" />
+    <ClInclude Include="DepthStencilTexture.h" />
     <ClInclude Include="TextMesh.h" />
     <ClInclude Include="TextNode.h" />
     <ClInclude Include="Texture.h" />
