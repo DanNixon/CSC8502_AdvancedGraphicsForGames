@@ -35,16 +35,16 @@ framerate.
 This is the list of standard features which must be well implemented and
 integrated into the scene.
 
-- [ ] The planet surface (not the height-map that is provided in tutorials)
-- [ ] The environment should be lit with ambient, diffuse and specular
+- [x] The planet surface (not the height-map that is provided in tutorials)
+- [x] The environment should be lit with ambient, diffuse and specular
 - [ ] Shadows
-- [ ] Skybox
+- [x] Skybox
 - [ ] Explosion is triggered by pressing a key. It consists of
   - [ ] A bright flash which overwhelms the screen
   - [ ] Particle effects
-- [ ] A navigable camera, moving around the 3D environment
-- [ ] Display the framerate being achieved
-- [ ] Display the total memory being used
+- [x] A navigable camera, moving around the 3D environment
+- [x] Display the framerate being achieved
+- [x] Display the total memory being used
 
 ## Coursework part B – advanced features
 
@@ -67,7 +67,7 @@ higher the mark awarded for that feature.
 - [ ] Lens-flare
 - [ ] A light that casts shadows appropriately (ie from the light’s position in all
   directions)
-- [ ] A pool of realistic water which reflects the scene
+- [x] A pool of realistic water which reflects the scene
 - Any additional post-processing effect
 - Any other advanced graphical effects
 
