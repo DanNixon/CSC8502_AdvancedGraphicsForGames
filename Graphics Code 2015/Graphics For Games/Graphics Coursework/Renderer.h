@@ -26,6 +26,21 @@ public:
     return m_postProcessingGraphRoot;
   }
 
+  inline SceneNode *PostProcessingPresentationRoot()
+  {
+    return m_postProcessingPresentationGraphRoot;
+  }
+
+  inline GLuint BufferFBO()
+  {
+    return m_bufferFBO;
+  }
+
+  inline GLuint ProcessingFBO()
+  {
+    return m_processFBO;
+  }
+
   virtual void AddPersistentDataNode(ShaderDataNode *node);
   virtual bool RemovePersistentDataNode(ShaderDataNode *node);
 
@@ -43,10 +58,9 @@ protected:
 
   SceneNode *m_sceneGraphRoot;
   SceneNode *m_postProcessingGraphRoot;
+  SceneNode *m_postProcessingPresentationGraphRoot;
 
   GLuint m_bufferFBO;
   GLuint m_processFBO;
-  GLuint m_bufferColourTex[2];
-  GLuint m_bufferDepthTex;
 };
 }

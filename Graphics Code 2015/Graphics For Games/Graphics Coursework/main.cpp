@@ -24,6 +24,8 @@
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
+#include "RGBABufferedTexture.h"
+#include "StencilBufferedTexture.h"
 
 using namespace GraphicsCoursework;
 
@@ -237,6 +239,56 @@ int main()
     waterQuad->SpecularPower() = 2.0f;
   }
   // END WATER
+
+  // FBO TEXTURES
+  ITexture * bufferDepthTex = new StencilBufferedTexture(640, 480);
+  ITexture * bufferColourTex1 = new RGBABufferedTexture(640, 480);
+  ITexture * bufferColourTex2 = new RGBABufferedTexture(640, 480);
+  {
+    glBindFramebuffer(GL_FRAMEBUFFER, r.BufferFBO());
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, bufferDepthTex->GetTextureID(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, bufferDepthTex->GetTextureID(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bufferColourTex1->GetTextureID(), 0);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      return 2;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
+
+  // POST PROCESSING
+  {
+    auto shader = r.PostProcessingPresentationRoot()->AddChild(new ShaderNode("shader",
+      new ShaderProgram({new VertexShader(SHADERDIR "TexturedFragment.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
+
+    auto proj = shader->AddChild(new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, -1, 1)));
+    auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
+
+    auto pixelSize = view->AddChild(nullptr); // TODO
+    auto repeat = pixelSize->AddChild(nullptr); // TODO
+
+    auto texture1 = repeat->AddChild(new TextureNode("texture1", { {bufferColourTex1, "tex", 1} }));
+    auto sync1 = texture1->AddChild(new ShaderSyncNode("sync1"));
+    auto quad1 = sync1->AddChild(new MeshNode("quad1", Mesh::GenerateQuad()));
+
+    auto texture2 = repeat->AddChild(new TextureNode("texture2", { { bufferColourTex2, "tex", 1 } }));
+    auto sync2 = texture2->AddChild(new ShaderSyncNode("sync2"));
+    auto quad2 = sync2->AddChild(new MeshNode("quad2", Mesh::GenerateQuad()));
+  }
+
+  // POST PROCESSING PRESENTATION
+  {
+    auto shader = r.PostProcessingPresentationRoot()->AddChild(new ShaderNode("shader",
+      new ShaderProgram({ new VertexShader(SHADERDIR "TexturedFragment.glsl"), new FragmentShader(SHADERDIR "ProcessFragment.glsl") })));
+
+    auto proj = shader->AddChild(new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, -1, 1)));
+    auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
+
+    auto texture = view->AddChild(new TextureNode("texture", { { bufferColourTex1, "tex", 1 } }));
+    auto sync = texture->AddChild(new ShaderSyncNode("sync"));
+    auto quad = sync->AddChild(new MeshNode("quad", Mesh::GenerateQuad()));
+  }
 
   // Output scene tree and mark loading as completed
   std::cout << r;

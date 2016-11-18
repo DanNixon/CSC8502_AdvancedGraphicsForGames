@@ -18,42 +18,8 @@ Renderer::Renderer(Window &parent)
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  // POST PROCESSING
-  {
-    glGenTextures(1, &m_bufferDepthTex);
-    glBindTexture(GL_TEXTURE_2D, m_bufferDepthTex);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
-
-    for (int i = 0; i < 2; ++i)
-    {
-      glGenTextures(1, &m_bufferColourTex[i]);
-      glBindTexture(GL_TEXTURE_2D, m_bufferColourTex[i]);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    }
-
-    glGenFramebuffers(1, &m_bufferFBO);  // We ’ll render the scene into this
-    glGenFramebuffers(1, &m_processFBO); // And do post processing in this
-
-    glBindFramebuffer(GL_FRAMEBUFFER, m_bufferFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_bufferDepthTex, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_bufferDepthTex, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_bufferColourTex[0], 0);
-
-    // We can check FBO attachment success using this command !
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE || !m_bufferDepthTex ||
-        !m_bufferColourTex[0])
-      return;
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  }
+  glGenFramebuffers(1, &m_bufferFBO);
+  glGenFramebuffers(1, &m_processFBO);
 
   this->init = true;
 }
@@ -62,8 +28,6 @@ Renderer::~Renderer()
 {
   delete m_sceneGraphRoot;
 
-  glDeleteTextures(2, m_bufferColourTex);
-  glDeleteTextures(1, &m_bufferDepthTex);
   glDeleteFramebuffers(1, &m_bufferFBO);
   glDeleteFramebuffers(1, &m_processFBO);
 }
@@ -116,20 +80,20 @@ void Renderer::DrawScene()
 void Renderer::DrawPostProcess()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, m_processFBO);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_bufferColourTex[1], 0);
 
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-  SetCurrentShader(processShader);
-  projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
-  viewMatrix.ToIdentity();
-  UpdateShaderMatrices();
-
   glDisable(GL_DEPTH_TEST);
 
+  RenderState state;
+  m_postProcessingGraphRoot->Render(state);
+
+  glEnable(GL_DEPTH_TEST);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+#if 0
   glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
 
-  for (int i = 0; i < POST_PASSES; ++i)
+  for (int i = 0; i < 2; ++i)
   {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_bufferColourTex[1], 0);
     glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "isVertical"), 0);
@@ -143,26 +107,15 @@ void Renderer::DrawPostProcess()
     quad->SetTexture(m_bufferColourTex[1]);
     quad->Draw();
   }
-
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glUseProgram(0);
-
-  glEnable(GL_DEPTH_TEST);
+#endif
 }
 
 void Renderer::PresentScene()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-  SetCurrentShader(sceneShader);
-  projMatrix = Matrix4::Orthographic(-1, 1, 1, -1, -1, 1);
-  viewMatrix.ToIdentity();
-  UpdateShaderMatrices();
-  quad->SetTexture(bufferColourTex[0]);
-  quad->Draw();
-
+  RenderState state;
+  m_postProcessingPresentationGraphRoot->Render(state);
   glUseProgram(0);
 }
 

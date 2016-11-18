@@ -15,7 +15,7 @@ out Vertex
   vec2 texCoord;
 } OUT;
 
-void main(void)
+void main()
 {
   mat4 mvp = projMatrix * viewMatrix * modelMatrix;
   gl_Position = mvp * vec4(position, 1.0);
