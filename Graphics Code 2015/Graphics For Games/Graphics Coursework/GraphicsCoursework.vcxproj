@@ -134,7 +134,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="ShaderSyncNode.h" />
-    <ClInclude Include="StencilBufferedTexture.h" />
+    <ClInclude Include="DepthStencilBufferedTexture.h" />
     <ClInclude Include="TextMesh.h" />
     <ClInclude Include="TextNode.h" />
     <ClInclude Include="Texture.h" />

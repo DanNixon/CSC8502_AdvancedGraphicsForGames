@@ -6,6 +6,7 @@
 
 #include "CameraSelectorNode.h"
 #include "CubeMapTexture.h"
+#include "DepthStencilBufferedTexture.h"
 #include "Font.h"
 #include "FractalBrownianMotion.h"
 #include "FramebufferNode.h"
@@ -23,7 +24,6 @@
 #include "ShaderProgram.h"
 #include "ShaderSyncNode.h"
 #include "Shaders.h"
-#include "StencilBufferedTexture.h"
 #include "Texture.h"
 #include "TextureNode.h"
 #include "WindowsSystemMonitor.h"
@@ -51,15 +51,11 @@ int main()
   WindowsSystemMonitor sysMon;
 
   // SYSTEM MONITOR STUFF
-  ShaderProgram *sysMonShader;
   TextNode *loadingNode;
 
   {
     Font *sysMonFont = new Font(16, 16);
     sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
-
-    sysMonShader = new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
-                                      new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")});
 
     r.Root()->AddChild(new CameraNode("sysMonCamera"));
 
@@ -67,22 +63,19 @@ int main()
     screenBuffer->AddChild(sysMonCameraSelect);
     sysMonCameraSelect->SetCamera("sysMonCamera");
 
-    auto dims = r.ParentWindow().GetScreenSize();
-    r.Root()
-        ->FindFirstChildByName("sysMonCameraSelect")
-        ->AddChild(
-            new MatrixNode("sysMonProj", "projMatrix", Matrix4::Orthographic(-1.0f, 1.0f, dims.x, 0.0f, dims.y, 0.0f)));
+    auto sysMonProj = sysMonCameraSelect->AddChild(new MatrixNode(
+        "sysMonProj", "projMatrix", Matrix4::Orthographic(-1.0f, 1.0f, winDims.x, 0.0f, winDims.y, 0.0f)));
 
-    r.Root()->FindFirstChildByName("sysMonProj")->AddChild(new ShaderNode("sysMonShader", sysMonShader));
+    auto sysMonShader = sysMonProj->AddChild(new ShaderNode(
+        "sysMonShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
+                                           new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")})));
 
-    r.Root()
-        ->FindFirstChildByName("sysMonShader")
-        ->AddChild(new TextureNode("sysMonFontTex", {{sysMonFont, "diffuseTex", 1}}));
+    auto sysMonFontTex = sysMonShader->AddChild(new TextureNode("sysMonFontTex", {{sysMonFont, "diffuseTex", 1}}));
 
-    r.Root()->FindFirstChildByName("sysMonFontTex")->AddChild(new ShaderSyncNode("sysMonShaderSync"));
+    auto sysMonShaderSync = sysMonFontTex->AddChild(new ShaderSyncNode("sysMonShaderSync"));
 
     TextNode *sysMonNode = new PerformanceMonitorNode("sysMonNode", sysMonFont, &sysMon);
-    r.Root()->FindFirstChildByName("sysMonShaderSync")->AddChild(sysMonNode);
+    sysMonShaderSync->AddChild(sysMonNode);
     sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
 
     loadingNode = new TextNode("loadingNode", sysMonFont, 10);
@@ -123,8 +116,22 @@ int main()
   auto proj1 = globalTexMatrixIdentity->AddChild(
       new MatrixNode("proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, winDims.x / winDims.y, 45.0f)));
 
+  // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
   proj1->AddChild(sceneBuffer);
+
+  ITexture *bufferDepthTex = new DepthStencilBufferedTexture(winDims.x, winDims.y);
+  ITexture *bufferColourTex1 = new RGBABufferedTexture(winDims.x, winDims.y);
+  ITexture *bufferColourTex2 = new RGBABufferedTexture(winDims.x, winDims.y);
+
+  {
+    sceneBuffer->BindTexture(GL_DEPTH_ATTACHMENT, bufferDepthTex);
+    sceneBuffer->BindTexture(GL_STENCIL_ATTACHMENT, bufferDepthTex);
+    sceneBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTex1);
+
+    if (!sceneBuffer->Valid())
+      return 2;
+  }
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles({
@@ -188,23 +195,21 @@ int main()
   }
   // END LIGHTS
 
-  sceneBuffer->AddChild(new ShaderNode("shader1", shader1));
+  auto envShader = sceneBuffer->AddChild(new ShaderNode("envShader", shader1));
+  auto envTextures = envShader->AddChild(new TextureNode("envTextures", {{tex1, "diffuseTex", 1}}));
+  auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
-  r.Root()->FindFirstChildByName("shader1")->AddChild(new TextureNode("texm1", {{tex1, "diffuseTex", 1}}));
-
-  r.Root()->FindFirstChildByName("texm1")->AddChild(new ShaderSyncNode("ss1"));
-
-  MeshNode *s0 = new MeshNode("tri1", Mesh::GenerateSphere());
-  r.Root()->FindFirstChildByName("ss1")->AddChild(s0);
-  s0->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -20.0f)));
-  s0->SpecularIntensity() = 0.5f;
-  s0->SpecularPower() = 100.0f;
+  MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere());
+  envShaderSync->AddChild(sphere1);
+  sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
+  sphere1->SpecularIntensity() = 0.5f;
+  sphere1->SpecularPower() = 100.0f;
 
   // HEIGHTMAP
   {
-    auto texm2 = sceneBuffer->AddChild(new TextureNode("texm2", {{tex2, "diffuseTex", 1}}));
-    auto shader2 = texm2->AddChild(new ShaderNode("shader2", shader1));
-    auto ss2 = shader2->AddChild(new ShaderSyncNode("ss2"));
+    auto terrainTexture = sceneBuffer->AddChild(new TextureNode("terrainTexture", {{tex2, "diffuseTex", 1}}));
+    auto terrainShader = terrainTexture->AddChild(new ShaderNode("terrainShader", shader1));
+    auto terrainShaderSync = terrainShader->AddChild(new ShaderSyncNode("terrainShaderSync"));
 
     PerlinNoise noise;
     FractalBrownianMotion fbm(noise);
@@ -218,9 +223,9 @@ int main()
     HeightMapMesh *hmm = new HeightMapMesh(1000.0f, 1000.0f, 100, 100);
     hmm->SetHeightmapFromFBM(&fbm);
 
-    MeshNode *hm = new MeshNode("hm", hmm);
-    ss2->AddChild(hm);
-    hm->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)));
+    MeshNode *terrainMesh = new MeshNode("terrainMesh", hmm);
+    terrainShaderSync->AddChild(terrainMesh);
+    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)));
   }
   // END HEIGHTMAP
 
@@ -249,24 +254,6 @@ int main()
     waterQuad->SpecularPower() = 2.0f;
   }
   // END WATER
-
-  // FBO TEXTURES
-  ITexture *bufferDepthTex = new StencilBufferedTexture(winDims.x, winDims.y);
-  ITexture *bufferColourTex1 = new RGBABufferedTexture(winDims.x, winDims.y);
-  ITexture *bufferColourTex2 = new RGBABufferedTexture(winDims.x, winDims.y);
-
-  {
-    glBindFramebuffer(GL_FRAMEBUFFER, sceneBuffer->Buffer());
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, bufferDepthTex->GetTextureID(), 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, bufferDepthTex->GetTextureID(), 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bufferColourTex1->GetTextureID(), 0);
-
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      return 2;
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  }
 
   // POST PROCESSING
   {

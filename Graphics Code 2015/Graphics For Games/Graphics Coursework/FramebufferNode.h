@@ -6,6 +6,8 @@
 
 namespace GraphicsCoursework
 {
+class ITexture;
+
 class FramebufferNode : public SceneNode
 {
 public:
@@ -16,6 +18,10 @@ public:
   {
     return m_buffer;
   }
+
+  bool Valid() const;
+
+  void BindTexture(GLuint target, ITexture *texture);
 
   virtual void PreRender(RenderState &state);
   virtual void PostRender(RenderState &state);

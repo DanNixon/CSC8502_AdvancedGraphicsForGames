@@ -9,10 +9,10 @@ namespace GraphicsCoursework
 class RGBABufferedTexture : public BufferedTexture
 {
 public:
-  RGBABufferedTexture(size_t width, size_t height)
+  RGBABufferedTexture(float width, float height)
       : BufferedTexture()
   {
-    glTexImage2D(m_type, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(m_type, 0, GL_RGBA8, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
   }
 
   virtual ~RGBABufferedTexture()

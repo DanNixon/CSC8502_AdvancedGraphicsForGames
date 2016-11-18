@@ -2,6 +2,8 @@
 
 #include "FramebufferNode.h"
 
+#include "ITexture.h"
+
 namespace GraphicsCoursework
 {
 FramebufferNode::FramebufferNode(const std::string &name, bool generate)
@@ -15,6 +17,21 @@ FramebufferNode::FramebufferNode(const std::string &name, bool generate)
 FramebufferNode::~FramebufferNode()
 {
   glDeleteFramebuffers(1, &m_buffer);
+}
+
+bool FramebufferNode::Valid() const
+{
+  glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
+  bool retVal = glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  return retVal;
+}
+
+void FramebufferNode::BindTexture(GLuint target, ITexture *texture)
+{
+  glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, target, texture->Type(), texture->GetTextureID(), 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void FramebufferNode::PreRender(RenderState &state)
