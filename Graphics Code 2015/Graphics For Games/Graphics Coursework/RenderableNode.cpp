@@ -9,6 +9,7 @@ namespace GraphicsCoursework
 RenderableNode::RenderableNode(const std::string &name, bool transparent)
     : SceneNode(name)
     , m_transparent(transparent)
+    , m_repeatedDraw(1)
     , m_cameraDistance(0.0f)
     , m_specularPower(10.0f)
     , m_specularIntensity(0.33f)
@@ -30,7 +31,8 @@ void RenderableNode::RenderSingle(RenderState &state)
       (*it)->PreRender(state);
   }
 
-  Draw(state);
+  for (size_t i = 0; i < m_repeatedDraw; i++)
+    Draw(state);
 
   for (auto it = stack.begin(); it != stack.end(); ++it)
   {
@@ -55,7 +57,8 @@ void RenderableNode::PreRender(RenderState &state)
 {
   if (!m_transparent)
   {
-    Draw(state);
+    for (size_t i = 0; i < m_repeatedDraw; i++)
+      Draw(state);
   }
   else
   {

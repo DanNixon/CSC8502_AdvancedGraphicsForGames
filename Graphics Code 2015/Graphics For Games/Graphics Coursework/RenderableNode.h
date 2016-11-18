@@ -17,6 +17,11 @@ public:
     return m_transparent;
   }
 
+  inline size_t &RepeatedDraw()
+  {
+    return m_repeatedDraw;
+  }
+
   inline float CameraDistance() const
   {
     return m_cameraDistance;
@@ -39,6 +44,7 @@ public:
 
 protected:
   bool m_transparent;
+  size_t m_repeatedDraw;
   float m_cameraDistance;
 
   float m_specularPower;

@@ -49,9 +49,13 @@ void SceneNode::GetStack(std::vector<SceneNode *> &stack)
 
 SceneNode *SceneNode::AddChild(SceneNode *child)
 {
+  if (this == child)
+    return nullptr;
+
   child->m_renderer = m_renderer;
   child->m_parent = this;
   m_children.push_back(child);
+
   return child;
 }
 
