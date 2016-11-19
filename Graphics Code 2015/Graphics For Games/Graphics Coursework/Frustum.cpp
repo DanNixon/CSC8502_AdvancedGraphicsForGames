@@ -4,12 +4,25 @@
 
 namespace GraphicsCoursework
 {
+const size_t Frustum::NUM_PLANES = 6;
+
 Frustum::Frustum()
 {
 }
 
+Frustum::Frustum(const Matrix4 & m)
+{
+  FromMatrix(m);
+}
+
 Frustum::~Frustum()
 {
+}
+
+void Frustum::Reset()
+{
+  for (int i = 0; i < NUM_PLANES; i++)
+    m_planes[i].Reset();
 }
 
 void Frustum::FromMatrix(const Matrix4 &m)
@@ -35,11 +48,10 @@ void Frustum::FromMatrix(const Matrix4 &m)
 
 bool Frustum::ContainsSceneNode(RenderableNode &n)
 {
-  for (int p = 0; p < 6; ++p)
+  for (int i = 0; i < NUM_PLANES; i++)
   {
-    // if (!m_planes[p].SphereInPlane(n.GetWorldTransformation().GetPositionVector(),
-    // n.GetBoundingRadius()))
-    return false;
+    if (!m_planes[i].SphereInPlane(n.GetWorldTransformation().GetPositionVector(), n.BoundingSphereRadius()))
+      return false;
   }
 
   return true;

@@ -27,6 +27,11 @@ public:
     return m_cameraDistance;
   }
 
+  inline float BoundingSphereRadius() const
+  {
+    return m_boundingSphereRadius;
+  }
+
   inline float &SpecularPower()
   {
     return m_specularPower;
@@ -45,7 +50,9 @@ public:
 protected:
   bool m_transparent;
   size_t m_repeatedDraw;
+
   float m_cameraDistance;
+  float m_boundingSphereRadius;
 
   float m_specularPower;
   float m_specularIntensity;

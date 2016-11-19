@@ -10,9 +10,14 @@ class RenderableNode;
 class Frustum
 {
 public:
+  static const size_t NUM_PLANES;
+
+public:
   Frustum();
+  Frustum(const Matrix4 &m);
   virtual ~Frustum();
 
+  void Reset();
   void FromMatrix(const Matrix4 &m);
   bool ContainsSceneNode(RenderableNode &n);
 

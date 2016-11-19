@@ -6,6 +6,8 @@
 #include <GL/glew.h>
 #include <vector>
 
+#include "Frustum.h"
+
 namespace GraphicsCoursework
 {
 class ShaderProgram;
@@ -23,6 +25,7 @@ struct RenderState
   }
 
   CameraNode *camera;
+  Frustum cameraViewFrustum;
 
   ShaderProgram *shader;
   GLuint numLights;

@@ -1,5 +1,9 @@
 #include "Plane.h"
 
+Plane::Plane()
+{
+}
+
 Plane::Plane(const Vector3 &normal, float distance, bool normalise)
 {
   if (normalise)
@@ -14,6 +18,16 @@ Plane::Plane(const Vector3 &normal, float distance, bool normalise)
     m_normal = normal;
     m_distance = distance;
   }
+}
+
+Plane::~Plane()
+{
+}
+
+void Plane::Reset()
+{
+  m_normal.ToZero();
+  m_distance = 0.0f;
 }
 
 bool Plane::SphereInPlane(const Vector3 &position, float radius) const

@@ -5,6 +5,7 @@
 #include "CameraNode.h"
 #include "Renderer.h"
 #include "ShaderProgram.h"
+#include "Frustum.h"
 
 namespace GraphicsCoursework
 {
@@ -49,12 +50,14 @@ void CameraSelectorNode::PreRender(RenderState &state)
 {
   ShaderDataNode::PreRender(state);
   state.camera = m_camera;
+  state.cameraViewFrustum = m_camera->ViewFrustum();
 }
 
 void CameraSelectorNode::PostRender(RenderState &state)
 {
   ShaderDataNode::PostRender(state);
   state.camera = nullptr;
+  state.cameraViewFrustum.Reset();
 }
 
 void CameraSelectorNode::ShaderBind(ShaderProgram *s)

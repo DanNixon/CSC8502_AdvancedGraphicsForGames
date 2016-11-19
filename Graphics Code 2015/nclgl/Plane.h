@@ -5,9 +5,11 @@
 class Plane
 {
 public:
-  Plane(){};
+  Plane();
   Plane(const Vector3 &normal, float distance, bool normalise = false);
-  ~Plane(){};
+  virtual ~Plane();
+
+  void Reset();
 
   inline void SetNormal(const Vector3 &normal)
   {
