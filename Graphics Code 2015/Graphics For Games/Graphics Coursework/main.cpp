@@ -178,7 +178,7 @@ int main()
     lightShaderSync->AddChild(moon);
     r.AddPersistentDataNode(moon);
     moon->Radius() = 80.0f;
-    moon->AmbientIntensity() = 0.05f;
+    moon->AmbientIntensity() = 0.3f;
     moon->Colour() = moonColour;
     moon->SetLocalTransformation(Matrix4::Translation(Vector3(-50.0f, 50.0f, -50.0f)));
 
