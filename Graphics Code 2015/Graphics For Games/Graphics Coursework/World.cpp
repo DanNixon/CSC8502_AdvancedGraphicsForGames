@@ -126,7 +126,7 @@ void World::Build(SceneNode *root)
 
   // LIGHTS
   {
-    Vector4 sunColour(1.0f, 1.0f, 0.85f, 1.0f);
+    Vector4 sunColour(1.0f, 1.0f, 0.75f, 1.0f);
     Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
 
     auto lightRenderShader = sceneBuffer->AddChild(
@@ -288,7 +288,7 @@ void World::Update(float msec)
 
   Matrix4 sunMoonTrans = Matrix4::Rotation(360.0f * m_state.timeOfDay, Vector3(0.0f, 0.0f, 1.0f));
 
-  m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) * Matrix4::Scale(10.0f));
+  m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) * Matrix4::Scale(25.0f));
   m_state.sun->Colour().w = max(0.1f, m_state.sun->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
 
   m_state.moon->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, -m_state.worldBounds, 0.0f)) * Matrix4::Scale(10.0f));
