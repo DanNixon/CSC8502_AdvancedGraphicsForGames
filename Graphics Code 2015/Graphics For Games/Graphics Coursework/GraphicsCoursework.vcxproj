@@ -102,6 +102,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureNode.cpp" />
     <ClCompile Include="WindowsSystemMonitor.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedTexture.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureNode.h" />
     <ClInclude Include="WindowsSystemMonitor.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

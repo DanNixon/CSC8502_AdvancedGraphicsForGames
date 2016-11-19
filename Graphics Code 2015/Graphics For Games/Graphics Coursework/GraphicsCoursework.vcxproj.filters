@@ -98,6 +98,7 @@
     <ClCompile Include="HeightmapTexture.cpp">
       <Filter>Texture Managment</Filter>
     </ClCompile>
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -208,6 +209,7 @@
     <ClInclude Include="RGBATexture.h">
       <Filter>Texture Managment</Filter>
     </ClInclude>
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Performance Monitoring">
