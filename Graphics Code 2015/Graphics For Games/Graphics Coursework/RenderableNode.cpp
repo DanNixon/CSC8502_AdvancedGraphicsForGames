@@ -21,13 +21,6 @@ RenderableNode::~RenderableNode()
 {
 }
 
-bool RenderableNode::IsInCamera(RenderState & state) const
-{
-  float cameraDistance = DistanceFrom((SceneNode *)state.camera);
-
-  return false;
-}
-
 void RenderableNode::RenderSingle(RenderState &state)
 {
   std::vector<SceneNode *> stack;
@@ -39,8 +32,11 @@ void RenderableNode::RenderSingle(RenderState &state)
       (*it)->PreRender(state);
   }
 
-  for (size_t i = 0; i < m_repeatedDraw; i++)
-    Draw(state);
+  if (state.cameraViewFrustum.ContainsSceneNode(this))
+  {
+    for (size_t i = 0; i < m_repeatedDraw; i++)
+      Draw(state);
+  }
 
   for (auto it = stack.rbegin(); it != stack.rend(); ++it)
   {
@@ -65,8 +61,11 @@ void RenderableNode::PreRender(RenderState &state)
 {
   if (!m_transparent)
   {
-    for (size_t i = 0; i < m_repeatedDraw; i++)
-      Draw(state);
+    if (state.cameraViewFrustum.ContainsSceneNode(this))
+    {
+      for (size_t i = 0; i < m_repeatedDraw; i++)
+        Draw(state);
+    }
   }
   else
   {

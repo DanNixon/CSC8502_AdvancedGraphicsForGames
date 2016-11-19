@@ -19,7 +19,7 @@ public:
 
   void Reset();
   void FromMatrix(const Matrix4 &m);
-  bool ContainsSceneNode(RenderableNode &n);
+  bool ContainsSceneNode(RenderableNode *n);
 
 protected:
   Plane m_planes[6];

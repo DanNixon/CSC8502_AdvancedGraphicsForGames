@@ -46,11 +46,11 @@ void Frustum::FromMatrix(const Matrix4 &m)
   m_planes[5] = Plane(wAxis + zAxis, (m.values[15] + m.values[14]), true);
 }
 
-bool Frustum::ContainsSceneNode(RenderableNode &n)
+bool Frustum::ContainsSceneNode(RenderableNode *n)
 {
   for (int i = 0; i < NUM_PLANES; i++)
   {
-    if (!m_planes[i].SphereInPlane(n.GetWorldTransformation().GetPositionVector(), n.BoundingSphereRadius()))
+    if (!m_planes[i].SphereInPlane(n->GetWorldTransformation().GetPositionVector(), n->BoundingSphereRadius()))
       return false;
   }
 
