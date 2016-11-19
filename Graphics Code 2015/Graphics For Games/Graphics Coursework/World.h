@@ -12,11 +12,15 @@ namespace GraphicsCoursework
 class Renderer;
 class SceneNode;
 class FramebufferNode;
+class Light;
 
 struct WorldState
 {
   WorldState()
       : screenBuffer(nullptr)
+      , worldBounds(1000.0f)
+      , worldClockSpeed((1.0f / 1000.0f) / 60.0f) // 1 day = 60 seconds
+      , timeOfDay(0.0f)
       , loadingNode(nullptr)
       , sun(nullptr)
       , moon(nullptr)
@@ -30,11 +34,14 @@ struct WorldState
 
   Vector2 screenDims;
 
+  const float worldBounds;
+
+  float worldClockSpeed;
   float timeOfDay;
 
   SceneNode *loadingNode;
-  SceneNode *sun;
-  SceneNode *moon;
+  Light *sun;
+  Light *moon;
 };
 
 class World

@@ -33,7 +33,6 @@ int main()
 
   // Build and render loading screen
   w.BuildLoadingScreen(r.Root());
-  w.Update(msec);
   r.Root()->Update(msec);
   r.RenderScene();
 

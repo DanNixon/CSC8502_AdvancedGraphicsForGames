@@ -43,8 +43,9 @@ vec3 processLight(vec4 diffuse, vec4 lightCol, vec3 lightPos, float lightRadius,
   float rFactor = max(0.0, dot(halfDir, IN.normal));
   float sFactor = pow(rFactor, specularPower);
 
-  vec3 diffuseColour = diffuse.rgb * lightCol.rgb;
-  vec3 specColour = (lightCol.rgb * sFactor) * specularIntensity;
+	vec3 lColour = lightCol.rgb * lightCol.a;
+  vec3 diffuseColour = diffuse.rgb * lColour;
+  vec3 specColour = (lColour * sFactor) * specularIntensity;
 
   vec3 finalColour = vec3((diffuseColour + specColour) * atten * lambert);
   finalColour += diffuseColour * lightAmbInt;

@@ -133,8 +133,6 @@ void World::Build(SceneNode *root)
   // END SKYBOX
 
   // LIGHTS
-  Light *sun;
-  Light *moon;
   {
     Vector4 sunColour(1.0f, 1.0f, 0.85f, 1.0f);
     Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
@@ -145,28 +143,26 @@ void World::Build(SceneNode *root)
                                           new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
     auto lightShaderSync = lightRenderShader->AddChild(new ShaderSyncNode("lightShaderSync"));
 
-    sun = new Light("sun");
-    lightShaderSync->AddChild(sun);
-    m_renderer.AddPersistentDataNode(sun);
-    sun->Radius() = 1000.0f;
-    sun->AmbientIntensity() = 0.3f;
-    sun->Colour() = sunColour;
-    sun->SetLocalTransformation(Matrix4::Translation(Vector3(50.0f, 50.0f, -50.0f)));
+    m_state.sun = new Light("sun");
+    lightShaderSync->AddChild(m_state.sun);
+    m_renderer.AddPersistentDataNode(m_state.sun);
+    m_state.sun->Radius() = m_state.worldBounds;
+    m_state.sun->AmbientIntensity() = 0.3f;
+    m_state.sun->Colour() = sunColour;
 
     MeshNode *sunMesh = new MeshNode("sunMesh", Mesh::GenerateSphere());
-    sun->AddChild(sunMesh);
+    m_state.sun->AddChild(sunMesh);
     sunMesh->GetMesh()->SetUniformColour(sunColour);
 
-    moon = new Light("moon");
-    lightShaderSync->AddChild(moon);
-    m_renderer.AddPersistentDataNode(moon);
-    moon->Radius() = 80.0f;
-    moon->AmbientIntensity() = 0.3f;
-    moon->Colour() = moonColour;
-    moon->SetLocalTransformation(Matrix4::Translation(Vector3(-50.0f, 50.0f, -50.0f)));
+    m_state.moon = new Light("moon");
+    lightShaderSync->AddChild(m_state.moon);
+    m_renderer.AddPersistentDataNode(m_state.moon);
+    m_state.moon->Radius() = 80.0f;
+    m_state.moon->AmbientIntensity() = 0.3f;
+    m_state.moon->Colour() = moonColour;
 
     MeshNode *moonMesh = new MeshNode("moonMesh", Mesh::GenerateSphere());
-    moon->AddChild(moonMesh);
+    m_state.moon->AddChild(moonMesh);
     moonMesh->GetMesh()->SetUniformColour(moonColour);
   }
   // END LIGHTS
@@ -211,7 +207,7 @@ void World::Build(SceneNode *root)
     terrainShaderSync->AddChild(terrainMesh);
     terrainMesh->GetMesh()->SetGLPatches();
     terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
-    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -3.0f, -8.0f)) * Matrix4::Scale(1000.0f));
+    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -3.0f, -8.0f)) * Matrix4::Scale(m_state.worldBounds));
   }
   // END HEIGHTMAP
 
@@ -293,10 +289,16 @@ void World::Update(float msec)
   if (m_state.sysMonitorTimer.GetTimedMS(false) > 1000.0f)
     m_state.sysMonitor.Update(m_state.sysMonitorTimer.GetTimedMS());
 
-  if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
-    m_state.sun->SetActive(!m_state.sun->IsActive(), true);
+  m_state.timeOfDay += msec * m_state.worldClockSpeed;
+  if (m_state.timeOfDay > 1.0f)
+    m_state.timeOfDay = 0.0f;
 
-  if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
-    m_state.moon->SetActive(!m_state.moon->IsActive(), true);
+  Matrix4 sunMoonTrans = Matrix4::Rotation(360.0f * m_state.timeOfDay, Vector3(0.0f, 0.0f, 1.0f));
+
+  m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) * Matrix4::Scale(10.0f));
+  m_state.sun->Colour().w = max(0.1f, m_state.sun->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
+
+  m_state.moon->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, -m_state.worldBounds, 0.0f)) * Matrix4::Scale(10.0f));
+  m_state.moon->Colour().w = max(0.1f, m_state.moon->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
 }
 }
