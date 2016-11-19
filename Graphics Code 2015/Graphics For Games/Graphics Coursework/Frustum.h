@@ -23,5 +23,6 @@ public:
 
 protected:
   Plane m_planes[6];
+  bool m_passAllTests;
 };
 }

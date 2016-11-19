@@ -29,8 +29,3 @@ void Plane::Reset()
   m_normal.ToZero();
   m_distance = 0.0f;
 }
-
-bool Plane::SphereInPlane(const Vector3 &position, float radius) const
-{
-  return (Vector3::Dot(position, m_normal) + m_distance <= -radius);
-}

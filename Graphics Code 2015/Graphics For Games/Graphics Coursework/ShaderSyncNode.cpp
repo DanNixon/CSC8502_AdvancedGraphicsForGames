@@ -4,6 +4,7 @@
 
 #include "ShaderDataNode.h"
 #include "ShaderProgram.h"
+#include "CameraNode.h"
 
 namespace GraphicsCoursework
 {
@@ -27,6 +28,13 @@ void ShaderSyncNode::PreRender(RenderState &state)
   }
 
   glUniform1i(glGetUniformLocation(state.shader->Program(), "numLights"), state.numLights);
+
+  if (state.camera != nullptr)
+  {
+    Matrix4 proj;
+    glGetUniformfv(state.shader->Program(), glGetUniformLocation(state.shader->Program(), "projMatrix"), (float *)&proj);
+    state.cameraViewFrustum = Frustum(proj * state.camera->ViewMatrix());  //proj matrix
+  }
 }
 
 void ShaderSyncNode::PostRender(RenderState &state)
@@ -35,5 +43,6 @@ void ShaderSyncNode::PostRender(RenderState &state)
     (*it)->ShaderUnBind(state.shader);
 
   glUniform1i(glGetUniformLocation(state.shader->Program(), "numLights"), 0);
+  state.cameraViewFrustum.Reset();
 }
 }

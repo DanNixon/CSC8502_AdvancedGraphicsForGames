@@ -31,7 +31,10 @@ public:
     return m_distance;
   }
 
-  bool SphereInPlane(const Vector3 &position, float radius) const;
+  inline bool SphereInPlane(const Vector3 &position, float radius) const
+  {
+    return Vector3::Dot(position, m_normal) + m_distance + radius >= 0;
+  }
 
 protected:
   Vector3 m_normal;

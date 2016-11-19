@@ -17,10 +17,5 @@ public:
   virtual ~CameraNode();
 
   Matrix4 ViewMatrix() const;
-
-  inline Frustum ViewFrustum() const
-  {
-    return Frustum(ViewMatrix());
-  }
 };
 }

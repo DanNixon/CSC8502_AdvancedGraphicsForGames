@@ -4,8 +4,6 @@
 
 #include "../nclgl/Matrix4.h"
 
-#include "Frustum.h"
-
 namespace GraphicsCoursework
 {
 /**
