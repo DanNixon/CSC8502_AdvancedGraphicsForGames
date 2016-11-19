@@ -8,6 +8,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class CameraNode
+ * @brief Scenen node containing a basic camera.
+ */
 class CameraNode : public SceneNode
 {
 public:

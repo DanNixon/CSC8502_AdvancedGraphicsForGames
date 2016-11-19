@@ -8,6 +8,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new camera selector node.
+ * @param name Node name
+ */
 CameraSelectorNode::CameraSelectorNode(const std::string &name)
     : ShaderDataNode(name)
     , m_camera(nullptr)
@@ -18,6 +22,10 @@ CameraSelectorNode::~CameraSelectorNode()
 {
 }
 
+/**
+ * @brief Sets the camera to be selected given it's node name.
+ * @param cameraName Name of camera nose
+ */
 void CameraSelectorNode::SetCamera(const std::string &cameraName)
 {
   if (m_renderer == nullptr)

@@ -8,10 +8,6 @@
 
 namespace GraphicsCoursework
 {
-void fbmFractalBatch()
-{
-}
-
 FractalBrownianMotion::FractalBrownianMotion(const PerlinNoise &perlin)
     : m_perlin(perlin)
     , m_numOctaves(1)

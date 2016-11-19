@@ -6,6 +6,10 @@ namespace GraphicsCoursework
 {
 class PerlinNoise;
 
+/**
+ * @class FractalBrownianMotion
+ * @brief Provides functionality for generating Fractal Brownian Motion in two dimensions.
+ */
 class FractalBrownianMotion
 {
 public:
@@ -68,15 +72,16 @@ protected:
   void FractalArray(float *out, size_t start, size_t end, FractralArrayGenState &state) const;
 
 protected:
-  const PerlinNoise &m_perlin;
+  const PerlinNoise &m_perlin; //!< Perlin noise generator
 
-  size_t m_numOctaves;
-  float m_zValue;
+  size_t m_numOctaves; //!< Number of octaves
+  float m_zValue; //!< Z value passed to Perlin noise generator
   float m_frequency;
   float m_amplitude;
   float m_lacunarity;
   float m_persistence;
-  float m_uniformAmplitude;
-  float m_offset;
+
+  float m_uniformAmplitude; //!< Uniform multiplicative factor applied to output
+  float m_offset; //!< Uniform additive factor applied to output
 };
 }

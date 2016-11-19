@@ -6,6 +6,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class CubeMapTexture
+ * @brief Holds a texture that stroes a cube map image.
+ */
 class CubeMapTexture : public ITexture
 {
 public:

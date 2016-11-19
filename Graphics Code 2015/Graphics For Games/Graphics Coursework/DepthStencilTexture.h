@@ -6,6 +6,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class DepthStencilTexture
+ * @brief Holds a texture that stores depth data.
+ */
 class DepthStencilTexture : public GeneratedTexture
 {
 public:
