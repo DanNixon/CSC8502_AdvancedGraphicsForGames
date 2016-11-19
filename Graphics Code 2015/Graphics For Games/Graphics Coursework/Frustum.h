@@ -7,6 +7,10 @@ namespace GraphicsCoursework
 {
 class RenderableNode;
 
+/**
+ * @class Frustum
+ * @brief Represents a view frustum used for out of camera frame clipping.
+ */
 class Frustum
 {
 public:
@@ -19,10 +23,11 @@ public:
 
   void Reset();
   void FromMatrix(const Matrix4 &m);
+
   bool ContainsSceneNode(RenderableNode *n);
 
 protected:
-  Plane m_planes[6];
-  bool m_passAllTests;
+  Plane m_planes[NUM_PLANES]; //!< Planes that make up the frustum
+  bool m_passAllTests;        //!< Flag indicating that the intersection test will always pass
 };
 }

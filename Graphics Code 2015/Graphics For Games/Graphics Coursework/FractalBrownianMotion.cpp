@@ -8,6 +8,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Create a new Fractal Brownian motion generator.
+ * @param perlin Perlin Noise generator to use
+ */
 FractalBrownianMotion::FractalBrownianMotion(const PerlinNoise &perlin)
     : m_perlin(perlin)
     , m_numOctaves(1)
@@ -25,6 +29,12 @@ FractalBrownianMotion::~FractalBrownianMotion()
 {
 }
 
+/**
+ * @brief Gets the intensity of a given position.
+ * @param x X position (0.0 - 1.0)
+ * @param y Y position (0.0 - 1.0)
+ * @return Intensity
+ */
 float FractalBrownianMotion::Fractal(float x, float y) const
 {
   float retVal = 0.0f;
@@ -50,6 +60,13 @@ float FractalBrownianMotion::Fractal(float x, float y) const
   return retVal;
 }
 
+/**
+ * @brief Fills an array of floats with data fromt he generator, splitting the load over several threads.
+ * @param out Output data array
+ * @param x X dimension
+ * @param y Y dimension
+ * @param numThreads NUmber of threads (default is number of cores)
+ */
 void FractalBrownianMotion::FractalArrayThreaded(float *out, size_t x, size_t y, size_t numThreads)
 {
   if (numThreads == 0)
@@ -89,6 +106,14 @@ void FractalBrownianMotion::FractalArrayThreaded(float *out, size_t x, size_t y,
   }
 }
 
+/**
+ * @brief Worker function for FractalArrayThreaded.
+ * @param out Output data array
+ * @param start Start index
+ * @param end End index
+ * @param state Generation state
+ * @see FractalBrownianMotion::FractalArrayThreaded()
+ */
 void FractalBrownianMotion::FractalArray(float *out, size_t start, size_t end, FractralArrayGenState &state) const
 {
   for (size_t i = start; i < end; i++)

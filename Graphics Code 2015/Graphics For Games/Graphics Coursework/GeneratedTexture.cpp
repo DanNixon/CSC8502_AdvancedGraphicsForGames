@@ -4,6 +4,11 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new texture.
+ * @param width Width of the texture
+ * @param height Height of the texture
+ */
 GeneratedTexture::GeneratedTexture(GLsizei width, GLsizei height)
     : ITexture(GL_TEXTURE_2D)
     , m_width(width)
@@ -23,6 +28,13 @@ GeneratedTexture::~GeneratedTexture()
 {
 }
 
+/**
+ * @brief Copies buffered data into the texture.
+ * @param format Texture format
+ * @param internalFormat Texture format
+ * @param type Data type
+ * @param data Pointer to image data
+ */
 void GeneratedTexture::BufferImage(GLenum format, GLint internalFormat, GLenum type, void *data)
 {
   glBindTexture(m_type, m_textureID);

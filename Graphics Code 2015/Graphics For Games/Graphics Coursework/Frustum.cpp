@@ -4,15 +4,25 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Number of planes in a Frustum.
+ */
 const size_t Frustum::NUM_PLANES = 6;
 
+/**
+ * @brief Create a new empty frustum.
+ */
 Frustum::Frustum()
-  : m_passAllTests(true)
+    : m_passAllTests(true)
 {
 }
 
-Frustum::Frustum(const Matrix4 & m)
-  : m_passAllTests(false)
+/**
+ * @brief Create a new frustum from a view-projection matrix.
+ * @param m VP matrix
+ */
+Frustum::Frustum(const Matrix4 &m)
+    : m_passAllTests(false)
 {
   FromMatrix(m);
 }
@@ -21,6 +31,9 @@ Frustum::~Frustum()
 {
 }
 
+/**
+ * @brief Resets the frustum to one of zero volume.
+ */
 void Frustum::Reset()
 {
   for (int i = 0; i < NUM_PLANES; i++)
@@ -29,6 +42,10 @@ void Frustum::Reset()
   m_passAllTests = true;
 }
 
+/**
+ * @brief Builds the frustum from a view-projection matrix.
+ * @param m VP matrix
+ */
 void Frustum::FromMatrix(const Matrix4 &m)
 {
   Vector3 xAxis = Vector3(m.values[0], m.values[4], m.values[8]);
@@ -52,6 +69,11 @@ void Frustum::FromMatrix(const Matrix4 &m)
   m_passAllTests = false;
 }
 
+/**
+ * @brief Tests if a renderable node may be contained in this frustum.
+ * @param n Node to test
+ * @return True if the node (partially or fully) overlaps with the frustum
+ */
 bool Frustum::ContainsSceneNode(RenderableNode *n)
 {
   bool retVal = true;

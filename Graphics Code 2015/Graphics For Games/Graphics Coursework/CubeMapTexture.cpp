@@ -4,6 +4,9 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Create a new cube map texture.
+ */
 CubeMapTexture::CubeMapTexture()
     : ITexture(GL_TEXTURE_CUBE_MAP)
 {

@@ -11,10 +11,10 @@
 
 using namespace GraphicsCoursework;
 
-struct WorldState
-{
-};
-
+/**
+ * @brief Entry point.
+ * @return Exit code
+ */
 int main()
 {
   Window window("Planet", 1440, 720, false);

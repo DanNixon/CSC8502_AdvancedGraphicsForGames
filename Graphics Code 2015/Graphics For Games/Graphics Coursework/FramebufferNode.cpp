@@ -6,6 +6,13 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new framebuffer node.
+ * @param name Node name
+ * @param generate True to generate a new framebuffer
+ *
+ * Setting generate to false will set this node to be the default (screen/back) buffer.
+ */
 FramebufferNode::FramebufferNode(const std::string &name, bool generate)
     : SceneNode(name)
     , m_buffer(0)
@@ -19,6 +26,10 @@ FramebufferNode::~FramebufferNode()
   glDeleteFramebuffers(1, &m_buffer);
 }
 
+/**
+ * @brief Tests the validity of the underlying framebuffer.
+ * @return True if framebuffer is complete
+ */
 bool FramebufferNode::Valid() const
 {
   glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
@@ -27,6 +38,11 @@ bool FramebufferNode::Valid() const
   return retVal;
 }
 
+/**
+ * @brief Binds a texture to the framebuffer.
+ * @param target Texture type
+ * @param texture Texture
+ */
 void FramebufferNode::BindTexture(GLuint target, ITexture *texture)
 {
   glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
