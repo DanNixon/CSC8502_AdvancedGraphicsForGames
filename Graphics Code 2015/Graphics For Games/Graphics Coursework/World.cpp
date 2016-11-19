@@ -70,21 +70,14 @@ void World::BuildLoadingScreen(SceneNode *root)
 
 void World::Build(SceneNode *root)
 {
-  ITexture *tex1 = new Texture();
-  tex1->LoadFromFile(TEXTUREDIR "brick.tga");
+  // Textures
+  ITexture *brickTexture = new Texture();
+  brickTexture->LoadFromFile(TEXTUREDIR "brick.tga");
 
-  ITexture *tex2 = new Texture();
-  tex2->LoadFromFile(TEXTUREDIR "Barren Reds.jpg");
+  ITexture *barrenRedsTexture = new Texture();
+  barrenRedsTexture->LoadFromFile(TEXTUREDIR "Barren Reds.jpg");
 
-  ITexture *tex3 = new Texture();
-  tex3->LoadFromFile(TEXTUREDIR "stainedglass.tga");
-
-  ShaderProgram *shader1 = new ShaderProgram(
-      {new VertexShader(SHADERDIR "PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "PerPixelFragment.glsl")});
-
-  ShaderProgram *shader2 = new ShaderProgram(
-      {new VertexShader(SHADERDIR "TexVertex.glsl"), new FragmentShader(SHADERDIR "TexTranspFrag.glsl")});
-
+  // Main camera and view
   PositionableCamera *cam1 = new PositionableCamera("cam1");
   root->AddChild(cam1);
   cam1->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
@@ -130,7 +123,6 @@ void World::Build(SceneNode *root)
     auto skyboxShaderSync = skyboxTexture->AddChild(new ShaderSyncNode("skyboxShaderSync"));
     auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
   }
-  // END SKYBOX
 
   // LIGHTS
   {
@@ -146,7 +138,7 @@ void World::Build(SceneNode *root)
     m_state.sun = new Light("sun");
     lightShaderSync->AddChild(m_state.sun);
     m_renderer.AddPersistentDataNode(m_state.sun);
-    m_state.sun->Radius() = m_state.worldBounds;
+    m_state.sun->Radius() = m_state.worldBounds * 1.8f;
     m_state.sun->AmbientIntensity() = 0.3f;
     m_state.sun->Colour() = sunColour;
 
@@ -157,7 +149,7 @@ void World::Build(SceneNode *root)
     m_state.moon = new Light("moon");
     lightShaderSync->AddChild(m_state.moon);
     m_renderer.AddPersistentDataNode(m_state.moon);
-    m_state.moon->Radius() = 80.0f;
+    m_state.moon->Radius() = m_state.worldBounds * 1.2f;
     m_state.moon->AmbientIntensity() = 0.3f;
     m_state.moon->Colour() = moonColour;
 
@@ -165,17 +157,20 @@ void World::Build(SceneNode *root)
     m_state.moon->AddChild(moonMesh);
     moonMesh->GetMesh()->SetUniformColour(moonColour);
   }
-  // END LIGHTS
 
-  auto envShader = sceneBuffer->AddChild(new ShaderNode("envShader", shader1));
-  auto envTextures = envShader->AddChild(new TextureNode("envTextures", {{tex1, "diffuseTex", 1}}));
-  auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
+  // ENVIRONMENT
+  {
+    auto envShader = sceneBuffer->AddChild(new ShaderNode("envShader", new ShaderProgram(
+    { new VertexShader(SHADERDIR "PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "PerPixelFragment.glsl") })));
+    auto envTextures = envShader->AddChild(new TextureNode("envTextures", { { brickTexture, "diffuseTex", 1} }));
+    auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
-  MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere());
-  envShaderSync->AddChild(sphere1);
-  sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
-  sphere1->SpecularIntensity() = 0.5f;
-  sphere1->SpecularPower() = 100.0f;
+    MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere());
+    envShaderSync->AddChild(sphere1);
+    sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
+    sphere1->SpecularIntensity() = 0.5f;
+    sphere1->SpecularPower() = 100.0f;
+  }
 
   // HEIGHTMAP
   {
@@ -189,7 +184,7 @@ void World::Build(SceneNode *root)
     heightmapTexture->SetFromFBM(&fbm);
 
     auto terrainTexture = sceneBuffer->AddChild(
-        new TextureNode("terrainTexture", {{tex2, "diffuseTex", 1}, {heightmapTexture, "heightmapTex", 2}}));
+        new TextureNode("terrainTexture", {{ barrenRedsTexture, "diffuseTex", 1}, {heightmapTexture, "heightmapTex", 2}}));
 
     auto terrainShader = terrainTexture->AddChild(
         new ShaderNode("terrainShader",
@@ -207,9 +202,8 @@ void World::Build(SceneNode *root)
     terrainShaderSync->AddChild(terrainMesh);
     terrainMesh->GetMesh()->SetGLPatches();
     terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
-    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -3.0f, -8.0f)) * Matrix4::Scale(m_state.worldBounds));
+    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -30.0f, -8.0f)) * Matrix4::Scale(m_state.worldBounds));
   }
-  // END HEIGHTMAP
 
   // WATER
   {
@@ -235,7 +229,6 @@ void World::Build(SceneNode *root)
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     waterQuad->SpecularPower() = 2.0f;
   }
-  // END WATER
 
   // POST PROCESSING
   {
