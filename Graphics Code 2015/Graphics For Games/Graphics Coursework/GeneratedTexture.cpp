@@ -23,7 +23,7 @@ GeneratedTexture::~GeneratedTexture()
 {
 }
 
-void GeneratedTexture::BufferImage(GLenum format, GLint internalFormat, GLenum type, void * data)
+void GeneratedTexture::BufferImage(GLenum format, GLint internalFormat, GLenum type, void *data)
 {
   glBindTexture(m_type, m_textureID);
   glTexImage2D(m_type, 0, internalFormat, m_width, m_height, 0, format, type, data);

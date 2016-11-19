@@ -6,10 +6,11 @@
 
 namespace GraphicsCoursework
 {
-GenericControlNode::GenericControlNode(const std::string & name, ControlCallbackFunc onBind, ControlCallbackFunc onUnBind)
-  : ShaderDataNode(name)
-  , m_onBind(onBind)
-  , m_onUnBind(onUnBind)
+GenericControlNode::GenericControlNode(const std::string &name, ControlCallbackFunc onBind,
+                                       ControlCallbackFunc onUnBind)
+    : ShaderDataNode(name)
+    , m_onBind(onBind)
+    , m_onUnBind(onUnBind)
 {
 }
 

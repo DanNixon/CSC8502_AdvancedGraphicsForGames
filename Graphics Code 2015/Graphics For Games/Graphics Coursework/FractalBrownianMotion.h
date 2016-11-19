@@ -75,13 +75,13 @@ protected:
   const PerlinNoise &m_perlin; //!< Perlin noise generator
 
   size_t m_numOctaves; //!< Number of octaves
-  float m_zValue; //!< Z value passed to Perlin noise generator
+  float m_zValue;      //!< Z value passed to Perlin noise generator
   float m_frequency;
   float m_amplitude;
   float m_lacunarity;
   float m_persistence;
 
   float m_uniformAmplitude; //!< Uniform multiplicative factor applied to output
-  float m_offset; //!< Uniform additive factor applied to output
+  float m_offset;           //!< Uniform additive factor applied to output
 };
 }

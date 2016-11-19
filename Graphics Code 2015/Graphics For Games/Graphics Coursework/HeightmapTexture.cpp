@@ -19,7 +19,7 @@ HeightmapTexture::~HeightmapTexture()
   delete[] m_yData;
 }
 
-void HeightmapTexture::SetFromFBM(FractalBrownianMotion * fbm)
+void HeightmapTexture::SetFromFBM(FractalBrownianMotion *fbm)
 {
   fbm->FractalArrayThreaded(m_yData, m_width, m_height);
   BufferImage(GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT, m_yData);
