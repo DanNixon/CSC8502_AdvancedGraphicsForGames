@@ -11,8 +11,8 @@ TextNode::TextNode(const std::string &name, Font *font, size_t len)
 {
 }
 
-TextNode::TextNode(const std::string & name, Font * font, const std::string & text)
-  : MeshNode(name, new TextMesh(text.size(), font))
+TextNode::TextNode(const std::string &name, Font *font, const std::string &text)
+    : MeshNode(name, new TextMesh(text.size(), font))
 {
   SetText(text);
 }
