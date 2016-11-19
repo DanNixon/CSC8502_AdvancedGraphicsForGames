@@ -27,7 +27,7 @@ in Vertex
   vec3 worldPos;
 } IN;
 
-out vec4 fragColor;
+out vec4 fragColour;
 
 vec3 processLight(vec4 diffuse, vec4 lightCol, vec3 lightPos, float lightRadius, float lightAmbInt)
 {
@@ -56,7 +56,9 @@ void main(void)
 {
   vec4 diffuse = texture(diffuseTex, IN.texCoord);
 
-  fragColor = vec4(0.0, 0.0, 0.0, diffuse.a);
-  fragColor.rgb += processLight(diffuse, sun_colour, sun_position, sun_radius, sun_ambientIntensity);
-	fragColor.rgb += processLight(diffuse, moon_colour, moon_position, moon_radius, moon_ambientIntensity);
+  fragColour = vec4(0.0, 0.0, 0.0, diffuse.a);
+  fragColour.rgb += processLight(diffuse, sun_colour, sun_position, sun_radius, sun_ambientIntensity);
+	fragColour.rgb += processLight(diffuse, moon_colour, moon_position, moon_radius, moon_ambientIntensity);
+	
+	fragColour = vec4(IN.normal, 1.0);
 }

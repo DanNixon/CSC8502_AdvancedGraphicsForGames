@@ -138,10 +138,7 @@ int main()
 
   // SKYBOX
   {
-    auto skyboxGLcontrol = new GenericControlNode("skyboxGLcontrol");
-    sceneBuffer->AddChild(skyboxGLcontrol);
-    skyboxGLcontrol->OnBind() = [](ShaderProgram *) { glDepthMask(GL_FALSE); };
-    skyboxGLcontrol->OnUnBind() = [](ShaderProgram *) { glDepthMask(GL_TRUE); };
+    auto skyboxGLcontrol = sceneBuffer->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); }, [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
 
     auto skyboxShader = skyboxGLcontrol->AddChild(
         new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "SkyboxVertex.glsl"),
@@ -209,7 +206,7 @@ int main()
     fbm.Frequency() = 15.0f;
     fbm.ZValue() = 0.8f;
 
-    HeightmapTexture *heightmapTexture = new HeightmapTexture(1000, 1000);
+    HeightmapTexture *heightmapTexture = new HeightmapTexture(200, 200);
     heightmapTexture->SetFromFBM(&fbm);
 
     auto terrainTexture = sceneBuffer->AddChild(
@@ -221,13 +218,17 @@ int main()
                                                            new TesselationControlShader(SHADERDIR "coursework/HeightmapTCS.glsl"),
                                                            new TesselationEvaluationShader(SHADERDIR "coursework/HeightmapTES.glsl")})));
 
-    auto terrainShaderSync = terrainShader->AddChild(new ShaderSyncNode("terrainShaderSync"));
+    auto terrainControlNode = terrainShader->AddChild(new GenericControlNode("terrainControlNode", [](ShaderProgram *) {
+      glPatchParameteri(GL_PATCH_VERTICES, 4);
+    }));
+    
+    auto terrainShaderSync = terrainControlNode->AddChild(new ShaderSyncNode("terrainShaderSync"));
 
     MeshNode *terrainMesh = new MeshNode("terrainMesh", Mesh::GenerateQuad());
     terrainMesh->GetMesh()->SetGLPatches();
     terrainShaderSync->AddChild(terrainMesh);
     terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
-    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, -8.0f)) * Matrix4::Scale(100.0f));
+    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -3.0f, -8.0f)) * Matrix4::Scale(1000.0f));
   }
   // END HEIGHTMAP
 
@@ -262,10 +263,7 @@ int main()
     FramebufferNode *processBuffer = new FramebufferNode("processBuffer");
     r.Root()->AddChild(processBuffer);
 
-    GenericControlNode *depthDisable = new GenericControlNode("depthDisable");
-    processBuffer->AddChild(depthDisable);
-    depthDisable->OnBind() = [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); };
-    depthDisable->OnUnBind() = [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); };
+    auto depthDisable = processBuffer->AddChild(new GenericControlNode("depthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); }, [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
     auto shader = depthDisable->AddChild(
         new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"),
@@ -277,11 +275,10 @@ int main()
         new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    GenericControlNode *control1 = new GenericControlNode("control1");
-    view->AddChild(control1);
-    control1->OnBind() = [bufferColourTex2](ShaderProgram *s) {
+    auto control1 = view->AddChild(new GenericControlNode("control1", [bufferColourTex2](ShaderProgram *s) {
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bufferColourTex2->GetTextureID(), 0);
-    };
+    }));
+
     auto texture1 = control1->AddChild(new TextureNode("texture1", {{bufferColourTex1, "diffuseTex", 1}}));
     auto sync1 = texture1->AddChild(new ShaderSyncNode("sync1"));
     RenderableNode *quad1 = new MeshNode("quad1", Mesh::GenerateQuad());
