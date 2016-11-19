@@ -17,6 +17,8 @@ public:
     return m_transparent;
   }
 
+  bool IsInCamera(RenderState &state) const;
+
   inline size_t &RepeatedDraw()
   {
     return m_repeatedDraw;

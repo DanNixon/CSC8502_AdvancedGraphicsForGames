@@ -11,6 +11,7 @@ RenderableNode::RenderableNode(const std::string &name, bool transparent)
     , m_transparent(transparent)
     , m_repeatedDraw(1)
     , m_cameraDistance(0.0f)
+    , m_boundingSphereRadius(0.0f)
     , m_specularPower(10.0f)
     , m_specularIntensity(0.33f)
 {
@@ -18,6 +19,13 @@ RenderableNode::RenderableNode(const std::string &name, bool transparent)
 
 RenderableNode::~RenderableNode()
 {
+}
+
+bool RenderableNode::IsInCamera(RenderState & state) const
+{
+  float cameraDistance = DistanceFrom((SceneNode *)state.camera);
+
+  return false;
 }
 
 void RenderableNode::RenderSingle(RenderState &state)
