@@ -326,7 +326,5 @@ int main()
     r.RenderScene();
   }
 
-  delete r.Root();
-
   return 0;
 }

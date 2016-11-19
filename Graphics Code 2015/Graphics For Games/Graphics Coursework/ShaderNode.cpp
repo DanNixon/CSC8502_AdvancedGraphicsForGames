@@ -11,7 +11,6 @@ ShaderNode::ShaderNode(const std::string &name, ShaderProgram *program)
     , m_program(program)
     , m_previousProgram(nullptr)
 {
-  m_owner = false;
   SetActive(true);
 }
 
