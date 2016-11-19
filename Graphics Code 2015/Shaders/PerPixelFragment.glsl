@@ -59,6 +59,4 @@ void main(void)
   fragColour = vec4(0.0, 0.0, 0.0, diffuse.a);
   fragColour.rgb += processLight(diffuse, sun_colour, sun_position, sun_radius, sun_ambientIntensity);
 	fragColour.rgb += processLight(diffuse, moon_colour, moon_position, moon_radius, moon_ambientIntensity);
-	
-	fragColour = vec4(IN.normal, 1.0);
 }

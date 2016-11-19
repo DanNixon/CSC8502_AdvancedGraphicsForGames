@@ -225,8 +225,8 @@ int main()
     auto terrainShaderSync = terrainControlNode->AddChild(new ShaderSyncNode("terrainShaderSync"));
 
     MeshNode *terrainMesh = new MeshNode("terrainMesh", Mesh::GenerateQuad());
-    terrainMesh->GetMesh()->SetGLPatches();
     terrainShaderSync->AddChild(terrainMesh);
+    terrainMesh->GetMesh()->SetGLPatches();
     terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -3.0f, -8.0f)) * Matrix4::Scale(1000.0f));
   }

@@ -23,6 +23,8 @@ out Vertex
 	vec3 worldPos;
 } OUT;
 
+const ivec3 off = ivec3(-1, 0, 1);
+
 void main()
 {
 	// Texture coordinate
@@ -31,14 +33,14 @@ void main()
   OUT.texCoord = mix(tc_a, tc_b, gl_TessCoord.y);
 
 	// Normal
-  vec3 p0 = gl_in[0].gl_Position.xyz;
-  vec3 p1 = gl_in[1].gl_Position.xyz;
-  vec3 p2 = gl_in[2].gl_Position.xyz;
-
-  vec3 v0 = p0 - p1;
-  vec3 v1 = p2 - p1;
-
-	OUT.normal = normalize(cross(v1, v0));
+  float hL = textureOffset(heightmapTex, OUT.texCoord, off.xy).r;
+  float hR = textureOffset(heightmapTex, OUT.texCoord, off.zy).r;
+  float hD = textureOffset(heightmapTex, OUT.texCoord, off.yx).r;
+  float hU = textureOffset(heightmapTex, OUT.texCoord, off.yz).r;
+	
+	OUT.normal = vec3(hL - hR, 0.0, hD - hU) * 50.0;
+	OUT.normal.y = 2.0;
+	OUT.normal = normalize(OUT.normal);
 
 	// Position
 	vec3 pos_a = mix(gl_in[0].gl_Position.xyz, gl_in[1].gl_Position.xyz, gl_TessCoord.x);
