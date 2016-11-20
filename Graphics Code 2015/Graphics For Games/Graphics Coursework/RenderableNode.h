@@ -32,6 +32,11 @@ public:
     return m_boundingSphereRadius;
   }
 
+  virtual void SetBoundingSphereRadius(float radius)
+  {
+    m_boundingSphereRadius = radius;
+  }
+
   inline float &SpecularPower()
   {
     return m_specularPower;

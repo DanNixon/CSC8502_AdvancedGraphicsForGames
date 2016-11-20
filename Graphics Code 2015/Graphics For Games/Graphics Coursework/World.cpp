@@ -147,6 +147,7 @@ void World::Build(SceneNode *root)
     MeshNode *sunMesh = new MeshNode("sunMesh", Mesh::GenerateSphere());
     m_state.sun->AddChild(sunMesh);
     sunMesh->GetMesh()->SetUniformColour(sunColour);
+    sunMesh->SetBoundingSphereRadius(12.5f);
 
     m_state.moon = new PointLight("moon");
     lightShaderSync->AddChild(m_state.moon);
@@ -158,6 +159,7 @@ void World::Build(SceneNode *root)
     MeshNode *moonMesh = new MeshNode("moonMesh", Mesh::GenerateSphere());
     m_state.moon->AddChild(moonMesh);
     moonMesh->GetMesh()->SetUniformColour(moonColour);
+    moonMesh->SetBoundingSphereRadius(5.0f);
   }
 
   // PLAYER LIGHTS
