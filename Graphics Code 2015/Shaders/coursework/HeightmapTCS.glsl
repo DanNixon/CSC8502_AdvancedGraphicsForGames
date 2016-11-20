@@ -20,13 +20,13 @@ patch out vec4 subColour;
 
 void main()
 {
-  gl_TessLevelOuter[0] = 128;
-  gl_TessLevelOuter[1] = 128;
-  gl_TessLevelOuter[2] = 128;
-  gl_TessLevelOuter[3] = 128;
+  gl_TessLevelOuter[0] = 256;
+  gl_TessLevelOuter[1] = 256;
+  gl_TessLevelOuter[2] = 256;
+  gl_TessLevelOuter[3] = 256;
  
-  gl_TessLevelInner[0] = 128;
-  gl_TessLevelInner[1] = 128;
+  gl_TessLevelInner[0] = 256;
+  gl_TessLevelInner[1] = 256;
 
 	OUT[gl_InvocationID].colour = IN[gl_InvocationID].colour;
   OUT[gl_InvocationID].texCoord = IN[gl_InvocationID].texCoord;

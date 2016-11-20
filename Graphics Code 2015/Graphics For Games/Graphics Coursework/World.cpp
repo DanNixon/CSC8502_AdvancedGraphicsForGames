@@ -28,6 +28,9 @@
 #include "SpotLight.h"
 #include "TextureNode.h"
 
+#define CW_SHADER_DIR SHADERDIR"coursework/"
+#define CW_TEXTURE_DIR TEXTUREDIR"coursework/"
+
 namespace GraphicsCoursework
 {
 World::World(Renderer &renderer)
@@ -41,7 +44,7 @@ World::World(Renderer &renderer)
 void World::BuildLoadingScreen(SceneNode *root)
 {
   Font *sysMonFont = new Font(16, 16);
-  sysMonFont->LoadFromFile(TEXTUREDIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
+  sysMonFont->LoadFromFile(CW_TEXTURE_DIR "tahoma.tga", SOIL_FLAG_COMPRESS_TO_DXT);
 
   root->AddChild(new CameraNode("sysMonCamera"));
 
@@ -54,8 +57,8 @@ void World::BuildLoadingScreen(SceneNode *root)
                      Matrix4::Orthographic(-1.0f, 1.0f, m_state.screenDims.x, 0.0f, m_state.screenDims.y, 0.0f)));
 
   auto sysMonShader = sysMonProj->AddChild(new ShaderNode(
-      "sysMonShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/BasicTextureVertex.glsl"),
-                                         new FragmentShader(SHADERDIR "coursework/BasicTextureFragment.glsl")})));
+      "sysMonShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "BasicTextureVertex.glsl"),
+                                         new FragmentShader(CW_SHADER_DIR "BasicTextureFragment.glsl")})));
 
   auto sysMonFontTex = sysMonShader->AddChild(new TextureNode("sysMonFontTex", {{sysMonFont, "diffuseTex", 1}}));
 
@@ -73,10 +76,7 @@ void World::Build(SceneNode *root)
 {
   // Textures
   ITexture *brickTexture = new Texture();
-  brickTexture->LoadFromFile(TEXTUREDIR "brick.tga");
-
-  ITexture *barrenRedsTexture = new Texture();
-  barrenRedsTexture->LoadFromFile(TEXTUREDIR "Barren Reds.jpg");
+  brickTexture->LoadFromFile(CW_TEXTURE_DIR "brick.tga");
 
   // Main camera and view
   PositionableCamera *playerCamera = new PositionableCamera("playerCamera");
@@ -107,8 +107,8 @@ void World::Build(SceneNode *root)
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles({
-      TEXTUREDIR "rusted_west.jpg", TEXTUREDIR "rusted_east.jpg", TEXTUREDIR "rusted_up.jpg",
-      TEXTUREDIR "rusted_down.jpg", TEXTUREDIR "rusted_south.jpg", TEXTUREDIR "rusted_north.jpg",
+    CW_TEXTURE_DIR "sb_west.jpg", CW_TEXTURE_DIR "sb_east.jpg", CW_TEXTURE_DIR "sb_up.jpg",
+    CW_TEXTURE_DIR "sb_down.jpg", CW_TEXTURE_DIR "sb_south.jpg", CW_TEXTURE_DIR "sb_north.jpg",
   });
   cubeMapTex->SetRepeating(true);
 
@@ -119,8 +119,8 @@ void World::Build(SceneNode *root)
                                                      [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
 
     auto skyboxShader = skyboxGLcontrol->AddChild(new ShaderNode(
-        "skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/SkyboxVertex.glsl"),
-                                           new FragmentShader(SHADERDIR "coursework/SkyboxFragment.glsl")})));
+        "skyboxShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "SkyboxVertex.glsl"),
+                                           new FragmentShader(CW_SHADER_DIR "SkyboxFragment.glsl")})));
     auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", {{cubeMapTex, "skyboxTexture", 1}}));
     auto skyboxShaderSync = skyboxTexture->AddChild(new ShaderSyncNode("skyboxShaderSync"));
     auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
@@ -133,8 +133,8 @@ void World::Build(SceneNode *root)
 
     auto lightRenderShader = sceneBuffer->AddChild(
         new ShaderNode("lightRenderShader",
-                       new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
-                                          new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
+                       new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+                                          new FragmentShader(CW_SHADER_DIR "PlanetLightSourceFragment.glsl")})));
     auto lightShaderSync = lightRenderShader->AddChild(new ShaderSyncNode("lightShaderSync"));
 
     m_state.sun = new PointLight("sun");
@@ -187,8 +187,8 @@ void World::Build(SceneNode *root)
   // ENVIRONMENT
   {
     auto envShader = sceneBuffer->AddChild(new ShaderNode(
-        "envShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
-                                        new FragmentShader(SHADERDIR "coursework/PerPixelFragment.glsl")})));
+        "envShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+                                        new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl")})));
     auto envTextures = envShader->AddChild(new TextureNode("envTextures", {{brickTexture, "diffuseTex", 1}}));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
@@ -201,29 +201,53 @@ void World::Build(SceneNode *root)
 
   // HEIGHTMAP
   {
+    // Height generation
     PerlinNoise noise;
     FractalBrownianMotion fbm(noise);
-    fbm.NumOctaves() = 3;
-    fbm.Frequency() = 15.0f;
+    fbm.NumOctaves() = 5;
+    fbm.Frequency() = 5.0f;
+    fbm.Lacunarity() = 20.0f;
     fbm.ZValue() = 0.8f;
 
     HeightmapTexture *heightmapTexture = new HeightmapTexture(200, 200);
     heightmapTexture->SetFromFBM(&fbm);
+    heightmapTexture->SetRepeating(true);
 
-    auto terrainTexture = sceneBuffer->AddChild(new TextureNode(
-        "terrainTexture", {{barrenRedsTexture, "diffuseTex", 1}, {heightmapTexture, "heightmapTex", 2}}));
+    // Textures
+    ITexture * sandTex = new Texture();
+    sandTex->LoadFromFile(CW_TEXTURE_DIR "sand.jpg");
+    sandTex->SetRepeating(true);
 
-    auto terrainShader = terrainTexture->AddChild(
+    ITexture * grassTex = new Texture();
+    grassTex->LoadFromFile(CW_TEXTURE_DIR "grass.jpg");
+    grassTex->SetRepeating(true);
+
+    ITexture * rockTex = new Texture();
+    rockTex->LoadFromFile(CW_TEXTURE_DIR "rock.jpg");
+    rockTex->SetRepeating(true);
+
+    // Scene subtree
+    auto terrainTextures = sceneBuffer->AddChild(new TextureNode(
+        "terrainTextures", {
+          { heightmapTexture, "heightmapTex", 1 },
+          { sandTex, "levelTex[0]", 2 },
+          { grassTex, "levelTex[1]", 3 },
+          { rockTex, "levelTex[2]", 4 },
+        }));
+
+    auto terrainShader = terrainTextures->AddChild(
         new ShaderNode("terrainShader",
-                       new ShaderProgram({new VertexShader(SHADERDIR "coursework/HeightmapVertex.glsl"),
-                                          new FragmentShader(SHADERDIR "coursework/PerPixelFragment.glsl"),
-                                          new TesselationControlShader(SHADERDIR "coursework/HeightmapTCS.glsl"),
-                                          new TesselationEvaluationShader(SHADERDIR "coursework/HeightmapTES.glsl")})));
+                       new ShaderProgram({new VertexShader(CW_SHADER_DIR "HeightmapVertex.glsl"),
+                                          new FragmentShader(CW_SHADER_DIR "HeightmapFragment.glsl"),
+                                          new TesselationControlShader(CW_SHADER_DIR "HeightmapTCS.glsl"),
+                                          new TesselationEvaluationShader(CW_SHADER_DIR "HeightmapTES.glsl")})));
 
     auto terrainControlNode = terrainShader->AddChild(
         new GenericControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
 
-    auto terrainShaderSync = terrainControlNode->AddChild(new ShaderSyncNode("terrainShaderSync"));
+    auto terrainTextureMatrix = terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(100.0f)));
+
+    auto terrainShaderSync = terrainTextureMatrix->AddChild(new ShaderSyncNode("terrainShaderSync"));
 
     MeshNode *terrainMesh = new MeshNode("terrainMesh", Mesh::GenerateQuad());
     terrainShaderSync->AddChild(terrainMesh);
@@ -236,17 +260,17 @@ void World::Build(SceneNode *root)
   // WATER
   {
     ITexture *waterTex = new Texture();
-    waterTex->LoadFromFile(TEXTUREDIR "water_surface.jpg");
+    waterTex->LoadFromFile(CW_TEXTURE_DIR "water_surface.jpg");
     waterTex->SetRepeating(true);
 
     auto waterShader = sceneBuffer->AddChild(new ShaderNode(
-        "waterShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
-                                          new FragmentShader(SHADERDIR "coursework/ReflectFragment.glsl")})));
+        "waterShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+                                          new FragmentShader(CW_SHADER_DIR "ReflectFragment.glsl")})));
 
     auto waterTexture = waterShader->AddChild(
         new TextureNode("waterTexture", {{waterTex, "waterTexture", 1}, {cubeMapTex, "cubeTex", 2}}));
     auto waterTexMatrix = waterTexture->AddChild(
-        new MatrixNode("waterTexMatrix", "textureMatrix", Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) *
+        new MatrixNode("waterTexMatrix", "textureMatrix", Matrix4::Scale(10.0f) *
                                                               Matrix4::Rotation(90.0f, Vector3(0.0f, 0.0f, 1.0f))));
 
     auto waterShaderSync = waterTexMatrix->AddChild(new ShaderSyncNode("waterShaderSync"));
@@ -268,8 +292,8 @@ void World::Build(SceneNode *root)
                                [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
     auto shader = depthDisable->AddChild(
-        new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/TexturedVertex.glsl"),
-                                                    new FragmentShader(SHADERDIR "coursework/ProcessFragment.glsl")})));
+        new ShaderNode("shader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
+                                                    new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
 
@@ -290,8 +314,8 @@ void World::Build(SceneNode *root)
   // POST PROCESSING PRESENTATION
   {
     auto shader = m_state.screenBuffer->AddChild(
-        new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/TexturedVertex.glsl"),
-                                                    new FragmentShader(SHADERDIR "coursework/ProcessFragment.glsl")})));
+        new ShaderNode("shader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
+                                                    new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
 
