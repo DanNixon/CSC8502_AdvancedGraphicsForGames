@@ -5,6 +5,8 @@
 #include <algorithm>
 
 #include "RenderableNode.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 namespace GraphicsCoursework
 {
@@ -29,6 +31,14 @@ Renderer::~Renderer()
 void Renderer::AddPersistentDataNode(ShaderDataNode *node)
 {
   m_state.shaderDataNodeStack.push_back(node);
+
+  PointLight * pointLight = dynamic_cast<PointLight *>(node);
+  if (pointLight != nullptr)
+    pointLight->SetIndex(m_state.numPointLights++);
+
+  SpotLight * spotLight = dynamic_cast<SpotLight *>(node);
+  if (spotLight != nullptr)
+    spotLight->SetIndex(m_state.numSpotLights++);
 }
 
 bool Renderer::RemovePersistentDataNode(ShaderDataNode *node)
@@ -37,6 +47,7 @@ bool Renderer::RemovePersistentDataNode(ShaderDataNode *node)
   bool found = (it != m_state.shaderDataNodeStack.end());
   if (found)
     m_state.shaderDataNodeStack.erase(it);
+
   return found;
 }
 

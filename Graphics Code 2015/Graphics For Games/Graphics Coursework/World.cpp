@@ -14,6 +14,7 @@
 #include "GenericControlNode.h"
 #include "HeightmapTexture.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 #include "MatrixNode.h"
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
@@ -78,16 +79,16 @@ void World::Build(SceneNode *root)
   barrenRedsTexture->LoadFromFile(TEXTUREDIR "Barren Reds.jpg");
 
   // Main camera and view
-  PositionableCamera *cam1 = new PositionableCamera("cam1");
-  root->AddChild(cam1);
-  cam1->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
-  cam1->LinearSpeed() = 0.01f;
+  PositionableCamera *playerCamera = new PositionableCamera("playerCamera");
+  root->AddChild(playerCamera);
+  playerCamera->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
+  playerCamera->LinearSpeed() = 0.01f;
 
-  CameraSelectorNode *cs1 = new CameraSelectorNode("cs1");
-  root->AddChild(cs1);
-  cs1->SetCamera("cam1");
+  CameraSelectorNode *playerCameraSelect = new CameraSelectorNode("playerCameraSelect");
+  root->AddChild(playerCameraSelect);
+  playerCameraSelect->SetCamera(playerCamera);
 
-  auto globalTexMatrixIdentity = cs1->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
+  auto globalTexMatrixIdentity = playerCameraSelect->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
   auto proj1 = globalTexMatrixIdentity->AddChild(new MatrixNode(
       "proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
 
@@ -156,6 +157,29 @@ void World::Build(SceneNode *root)
     MeshNode *moonMesh = new MeshNode("moonMesh", Mesh::GenerateSphere());
     m_state.moon->AddChild(moonMesh);
     moonMesh->GetMesh()->SetUniformColour(moonColour);
+  }
+
+  // PLAYER LIGHTS
+  {
+    Matrix4 playerLightTransform = Matrix4::Translation(Vector3(0.0f, -0.5f, 0.0f));
+
+    m_state.lantern = new PointLight("playerLantern");
+    playerCamera->AddChild(m_state.lantern);
+    m_renderer.AddPersistentDataNode(m_state.lantern);
+    m_state.lantern->SetActive(false);
+    m_state.lantern->SetLocalTransformation(playerLightTransform);
+    m_state.lantern->Colour() = Vector4(1.0f, 0.95f, 0.75f, 0.9f);
+    m_state.lantern->AmbientIntensity() = 0.02f;
+    m_state.lantern->Radius() = 50.0f;
+
+    m_state.flashlight = new SpotLight("playerFlashlight");
+    playerCamera->AddChild(m_state.flashlight);
+    m_renderer.AddPersistentDataNode(m_state.flashlight);
+    m_state.flashlight->SetActive(false);
+    m_state.flashlight->SetLocalTransformation(playerLightTransform);
+    m_state.lantern->Colour() = Vector4(0.95f, 0.95f, 1.0f, 1.0f);
+    m_state.lantern->AmbientIntensity() = 0.01f;
+    // TODO
   }
 
   // ENVIRONMENT
@@ -279,13 +303,16 @@ void World::Build(SceneNode *root)
 
 void World::Update(float msec)
 {
+  // Update system monitor at 1Hz
   if (m_state.sysMonitorTimer.GetTimedMS(false) > 1000.0f)
     m_state.sysMonitor.Update(m_state.sysMonitorTimer.GetTimedMS());
 
+  // Update world time
   m_state.timeOfDay += msec * m_state.worldClockSpeed;
   if (m_state.timeOfDay > 1.0f)
     m_state.timeOfDay = 0.0f;
 
+  // Update sun and moon positions and light intensity
   Matrix4 sunMoonTrans = Matrix4::Rotation(360.0f * m_state.timeOfDay, Vector3(0.0f, 0.0f, 1.0f));
 
   m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) * Matrix4::Scale(25.0f));
@@ -293,5 +320,13 @@ void World::Update(float msec)
 
   m_state.moon->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, -m_state.worldBounds, 0.0f)) * Matrix4::Scale(10.0f));
   m_state.moon->Colour().w = max(0.1f, m_state.moon->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
+
+  // Toggle player lantern
+  if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_L))
+    m_state.lantern->ToggleActive();
+
+  // Toggle player flashlight
+  if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_F))
+    m_state.flashlight->ToggleActive();
 }
 }

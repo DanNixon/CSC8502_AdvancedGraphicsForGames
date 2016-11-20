@@ -30,6 +30,7 @@ public:
   }
 
   virtual void SetActive(bool active, bool recursive = false);
+  bool ToggleActive();
 
   inline bool IsOwner() const
   {

@@ -37,6 +37,12 @@ void SceneNode::SetActive(bool active, bool recursive)
   }
 }
 
+bool SceneNode::ToggleActive()
+{
+  SetActive(!m_active);
+  return m_active;
+}
+
 void SceneNode::GetStack(std::vector<SceneNode *> &stack)
 {
   SceneNode *n = this;

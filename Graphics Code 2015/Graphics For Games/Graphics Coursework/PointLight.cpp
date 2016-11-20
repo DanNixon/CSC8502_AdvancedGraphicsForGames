@@ -17,18 +17,6 @@ namespace GraphicsCoursework
 {
 }
 
-void PointLight::PreRender(RenderState &state)
-{
-  ShaderDataNode::PreRender(state);
-  state.scenePointLights.push_back(this);
-}
-
-void PointLight::PostRender(RenderState &state)
-{
-  ShaderDataNode::PostRender(state);
-  state.scenePointLights.pop_back();
-}
-
 void PointLight::ShaderBind(ShaderProgram *s)
 {
   ILight::ShaderBind(s);
@@ -38,7 +26,7 @@ void PointLight::ShaderBind(ShaderProgram *s)
 
 void PointLight::ShaderUnBind(ShaderProgram *s)
 {
-  ILight::ShaderBind(s);
+  ILight::ShaderUnBind(s);
 
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_RADIUS].c_str()), 0.0f);
 }

@@ -13,6 +13,7 @@ class Renderer;
 class SceneNode;
 class FramebufferNode;
 class PointLight;
+class SpotLight;
 
 struct WorldState
 {
@@ -24,6 +25,8 @@ struct WorldState
       , loadingNode(nullptr)
       , sun(nullptr)
       , moon(nullptr)
+      , lantern(nullptr)
+      , flashlight(nullptr)
   {
   }
 
@@ -42,6 +45,8 @@ struct WorldState
   SceneNode *loadingNode;
   PointLight *sun;
   PointLight *moon;
+  PointLight *lantern;
+  SpotLight *flashlight;
 };
 
 class World

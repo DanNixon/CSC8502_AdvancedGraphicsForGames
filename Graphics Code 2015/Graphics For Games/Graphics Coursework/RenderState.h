@@ -13,23 +13,24 @@ class ShaderProgram;
 class RenderableNode;
 class ShaderDataNode;
 class CameraNode;
-class PointLight;
-class SpotLight;
 
 struct RenderState
 {
   RenderState()
-      : camera(nullptr)
+      : numPointLights(0)
+      , numSpotLights(0)
+      , camera(nullptr)
       , shader(nullptr)
   {
   }
+
+  size_t numPointLights;
+  size_t numSpotLights;
 
   CameraNode *camera;
   Frustum cameraViewFrustum;
 
   ShaderProgram *shader;
-  std::vector<PointLight *> scenePointLights;
-  std::vector<SpotLight *> sceneSpotLights;
   std::vector<ShaderDataNode *> shaderDataNodeStack;
 
   std::vector<RenderableNode *> transparentNodes;

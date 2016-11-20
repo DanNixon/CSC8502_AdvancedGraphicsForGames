@@ -16,18 +16,6 @@ SpotLight::~SpotLight()
 {
 }
 
-void SpotLight::PreRender(RenderState &state)
-{
-  ILight::PreRender(state);
-  state.sceneSpotLights.push_back(this);
-}
-
-void SpotLight::PostRender(RenderState &state)
-{
-  ILight::PostRender(state);
-  state.sceneSpotLights.pop_back();
-}
-
 void SpotLight::ShaderBind(ShaderProgram *s)
 {
   ILight::ShaderBind(s);
@@ -40,7 +28,7 @@ void SpotLight::ShaderBind(ShaderProgram *s)
 
 void SpotLight::ShaderUnBind(ShaderProgram *s)
 {
-  ILight::ShaderBind(s);
+  ILight::ShaderUnBind(s);
 
   glUniform3fv(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_DIRECTION].c_str()), 1,
     (float *)&Matrix4());

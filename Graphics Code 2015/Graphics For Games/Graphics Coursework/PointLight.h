@@ -17,9 +17,6 @@ public:
     return m_radius;
   }
 
-  virtual void PreRender(RenderState &state);
-  virtual void PostRender(RenderState &state);
-
   virtual void ShaderBind(ShaderProgram *s);
   virtual void ShaderUnBind(ShaderProgram *s);
 
