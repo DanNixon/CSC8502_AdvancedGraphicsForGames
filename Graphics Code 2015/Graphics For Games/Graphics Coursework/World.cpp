@@ -161,7 +161,7 @@ void World::Build(SceneNode *root)
   // ENVIRONMENT
   {
     auto envShader = sceneBuffer->AddChild(new ShaderNode("envShader", new ShaderProgram(
-    { new VertexShader(SHADERDIR "PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "PerPixelFragment.glsl") })));
+    { new VertexShader(SHADERDIR "PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "coursework/PerPixelFragment.glsl") })));
     auto envTextures = envShader->AddChild(new TextureNode("envTextures", { { brickTexture, "diffuseTex", 1} }));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
@@ -189,7 +189,7 @@ void World::Build(SceneNode *root)
     auto terrainShader = terrainTexture->AddChild(
         new ShaderNode("terrainShader",
                        new ShaderProgram({new VertexShader(SHADERDIR "coursework/HeightmapVertex.glsl"),
-                                          new FragmentShader(SHADERDIR "PerPixelFragment.glsl"),
+                                          new FragmentShader(SHADERDIR "coursework/PerPixelFragment.glsl"),
                                           new TesselationControlShader(SHADERDIR "coursework/HeightmapTCS.glsl"),
                                           new TesselationEvaluationShader(SHADERDIR "coursework/HeightmapTES.glsl")})));
 
