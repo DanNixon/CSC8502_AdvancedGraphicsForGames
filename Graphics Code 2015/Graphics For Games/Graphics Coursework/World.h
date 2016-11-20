@@ -20,7 +20,7 @@ struct WorldState
 {
   WorldState()
       : screenBuffer(nullptr)
-      , worldBounds(1000.0f)
+      , worldBounds(5000.0f)
       , worldClockSpeed((1.0f / 1000.0f) / 60.0f) // 1 day = 60 seconds
       , timeOfDay(0.0f)
       , loadingNode(nullptr)

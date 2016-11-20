@@ -19,7 +19,11 @@ ShaderSyncNode::~ShaderSyncNode()
 
 void ShaderSyncNode::PreRender(RenderState &state)
 {
-  glUseProgram(state.shader->Program());
+  GLuint program = 0;
+  if (state.shader != nullptr)
+    program = state.shader->Program();
+
+  glUseProgram(program);
 
   for (auto it = state.shaderDataNodeStack.begin(); it != state.shaderDataNodeStack.end(); ++it)
   {
@@ -27,15 +31,15 @@ void ShaderSyncNode::PreRender(RenderState &state)
       (*it)->ShaderBind(state.shader);
   }
 
-  glUniform1i(glGetUniformLocation(state.shader->Program(), "numPointLights"), state.numPointLights);
-  glUniform1i(glGetUniformLocation(state.shader->Program(), "numSpotLights"), state.numSpotLights);
+  glUniform1i(glGetUniformLocation(program, "numPointLights"), state.numPointLights);
+  glUniform1i(glGetUniformLocation(program, "numSpotLights"), state.numSpotLights);
 
   if (state.camera != nullptr)
   {
     Matrix4 proj;
-    glGetUniformfv(state.shader->Program(), glGetUniformLocation(state.shader->Program(), "projMatrix"),
+    glGetUniformfv(program, glGetUniformLocation(state.shader->Program(), "projMatrix"),
                    (float *)&proj);
-    state.cameraViewFrustum = Frustum(proj * state.camera->ViewMatrix()); // proj matrix
+    state.cameraViewFrustum = Frustum(proj * state.camera->ViewMatrix());
   }
 }
 

@@ -27,6 +27,7 @@
 #include "Shaders.h"
 #include "SpotLight.h"
 #include "TextureNode.h"
+#include "FogNode.h"
 
 #define CW_SHADER_DIR SHADERDIR"coursework/"
 #define CW_TEXTURE_DIR TEXTUREDIR"coursework/"

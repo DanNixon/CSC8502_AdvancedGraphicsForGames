@@ -102,6 +102,9 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
+    <ClCompile Include="FogNode.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -214,6 +217,9 @@
       <Filter>Environment</Filter>
     </ClInclude>
     <ClInclude Include="PointLight.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="FogNode.h">
       <Filter>Environment</Filter>
     </ClInclude>
   </ItemGroup>
