@@ -14,8 +14,7 @@ public:
     UNIFORM_POSITION = 0,
     UNIFORM_COLOUR,
     UNIFORM_AMBIENT_INTENSITY,
-
-    UNIFORM_RADIUS,
+    UNIFORM_REACH,
 
     UNIFORM_DIRECTION,
     UNIFORM_CUTOFF,
@@ -34,14 +33,19 @@ public:
 
   virtual void SetIndex(size_t index);
 
+  inline Vector4 &Colour()
+  {
+    return m_colour;
+  }
+
   inline float &AmbientIntensity()
   {
     return m_ambientIntensity;
   }
 
-  inline Vector4 &Colour()
+  inline float &Reach()
   {
-    return m_colour;
+    return m_reach;
   }
 
   virtual void ShaderBind(ShaderProgram *s);
@@ -54,7 +58,8 @@ protected:
   size_t m_index;
   std::string m_shaderUniformNames[UNIFORM_COUNT];
 
-  float m_ambientIntensity;
   Vector4 m_colour;
+  float m_ambientIntensity;
+  float m_reach;
 };
 }

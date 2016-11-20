@@ -9,8 +9,9 @@ namespace GraphicsCoursework
 {
   ILight::ILight(const std::string &name)
     : ShaderDataNode(name)
-    , m_ambientIntensity(0.1f)
     , m_colour(1.0f, 1.0f, 1.0f, 1.0f)
+    , m_ambientIntensity(0.1f)
+    , m_reach(10.0f)
 {
 }
 
@@ -33,6 +34,8 @@ void ILight::ShaderBind(ShaderProgram *s)
 
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_AMBIENT_INTENSITY].c_str()),
               m_ambientIntensity);
+
+  glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_REACH].c_str()), m_reach);
 }
 
 void ILight::ShaderUnBind(ShaderProgram *s)
@@ -44,5 +47,7 @@ void ILight::ShaderUnBind(ShaderProgram *s)
                (float *)&Vector4(0.0f, 0.0f, 0.0f, 0.0f));
 
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_AMBIENT_INTENSITY].c_str()), 0.0f);
+
+  glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_REACH].c_str()), 0.0f);
 }
 }

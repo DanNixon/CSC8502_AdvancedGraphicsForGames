@@ -3,12 +3,10 @@
 const int MAX_POINT_LIGHTS = 3;
 const int MAX_SPOT_LIGHTS = 2;
 
-uniform sampler2D diffuseTex;
+uniform sampler2D waterTexture;
+uniform samplerCube cubeTex;
 
 uniform vec3 cameraPos;
-
-uniform float specularPower;
-uniform float specularIntensity;
 
 uniform int numPointLights;
 uniform int numSpotLights;
@@ -34,11 +32,11 @@ struct SpotLight
 };
 
 uniform PointLight pointLights[MAX_POINT_LIGHTS];                                          
-uniform SpotLight spotLights[MAX_SPOT_LIGHTS];                                             
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 in Vertex
 {
-  vec3 colour;
+  vec4 colour;
   vec2 texCoord;
   vec3 normal;
   vec3 worldPos;
@@ -48,26 +46,9 @@ out vec4 fragColour;
 
 vec3 processPointLight(vec4 diffuse, Light light)
 {
-	vec3 incident = normalize(light.position - IN.worldPos);
-  float lambert = max(0.0, dot(incident, IN.normal));
-
   float dist = length(light.position - IN.worldPos);
-  float atten = 1.0 - clamp(dist / light.reach, 0.0, 1.0);
-
-  vec3 viewDir = normalize(cameraPos - IN.worldPos);
-  vec3 halfDir = normalize(incident + viewDir);
-
-  float rFactor = max(0.0, dot(halfDir, IN.normal));
-  float sFactor = pow(rFactor, specularPower);
-
-	vec3 lColour = light.colour.rgb * light.colour.a;
-  vec3 diffuseColour = diffuse.rgb * lColour;
-  vec3 specColour = (lColour * sFactor) * specularIntensity;
-
-  vec3 colour = vec3((diffuseColour + specColour) * atten * lambert);
-  colour += diffuseColour * light.ambientIntensity;
-
-	return colour;
+  float atten = 1.0 - clamp(dist / light.reach, 0.2, 1.0);
+  return (light.colour * diffuse * atten).rgb;
 }
 
 vec3 processSpotLight(vec4 diffuse, SpotLight light)
@@ -85,15 +66,20 @@ vec3 processSpotLight(vec4 diffuse, SpotLight light)
 	return colour;
 }
 
-void main(void)
+void main()
 {
-  vec4 diffuse = texture(diffuseTex, IN.texCoord);
+  vec4 diffuse = texture(waterTexture, IN.texCoord) * IN.colour;
+  vec3 incident = normalize(IN.worldPos - cameraPos);
 
-  fragColour = vec4(0.0, 0.0, 0.0, diffuse.a);
+  vec3 lighting = vec3(0, 0, 0);
 	
-	for (int i = 0; i < numPointLights; i++)
-		fragColour.rgb += processPointLight(diffuse, pointLights[i].light);
+  for (int i = 0; i < numPointLights; i++)
+		lighting += processPointLight(diffuse, pointLights[i].light);
 	
   for (int i = 0; i < numSpotLights; i++)
-		fragColour.rgb += processSpotLight(diffuse, spotLights[i]);
+		lighting += processSpotLight(diffuse, spotLights[i]);
+
+  vec4 reflection = texture(cubeTex, reflect(incident, normalize(IN.normal)));
+
+  fragColour = vec4(lighting, 1.0) * (diffuse + reflection);
 }

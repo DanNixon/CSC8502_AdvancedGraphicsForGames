@@ -9,7 +9,6 @@ namespace GraphicsCoursework
 {
   PointLight::PointLight(const std::string &name)
     : ILight(name)
-    , m_radius(1.0f)
 {
 }
 
@@ -17,26 +16,11 @@ namespace GraphicsCoursework
 {
 }
 
-void PointLight::ShaderBind(ShaderProgram *s)
-{
-  ILight::ShaderBind(s);
-
-  glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_RADIUS].c_str()), m_radius);
-}
-
-void PointLight::ShaderUnBind(ShaderProgram *s)
-{
-  ILight::ShaderUnBind(s);
-
-  glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_RADIUS].c_str()), 0.0f);
-}
-
 void PointLight::SetUniformNames(const std::string & idx)
 {
   m_shaderUniformNames[UNIFORM_POSITION] = "pointLights[" + idx + "].light.position";
   m_shaderUniformNames[UNIFORM_COLOUR] = "pointLights[" + idx + "].light.colour";
   m_shaderUniformNames[UNIFORM_AMBIENT_INTENSITY] = "pointLights[" + idx + "].light.ambientIntensity";
-
-  m_shaderUniformNames[UNIFORM_RADIUS] = "pointLights[" + idx + "].radius";
+  m_shaderUniformNames[UNIFORM_REACH] = "pointLights[" + idx + "].light.reach";
 }
 }

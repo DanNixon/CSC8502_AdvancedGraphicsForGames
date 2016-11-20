@@ -118,8 +118,8 @@ void World::Build(SceneNode *root)
                                                      [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
 
     auto skyboxShader = skyboxGLcontrol->AddChild(
-        new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "SkyboxVertex.glsl"),
-                                                          new FragmentShader(SHADERDIR "SkyboxFragment.glsl")})));
+        new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/SkyboxVertex.glsl"),
+                                                          new FragmentShader(SHADERDIR "coursework/SkyboxFragment.glsl")})));
     auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", {{cubeMapTex, "skyboxTexture", 1}}));
     auto skyboxShaderSync = skyboxTexture->AddChild(new ShaderSyncNode("skyboxShaderSync"));
     auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
@@ -139,7 +139,7 @@ void World::Build(SceneNode *root)
     m_state.sun = new PointLight("sun");
     lightShaderSync->AddChild(m_state.sun);
     m_renderer.AddPersistentDataNode(m_state.sun);
-    m_state.sun->Radius() = m_state.worldBounds * 1.8f;
+    m_state.sun->Reach() = m_state.worldBounds * 1.8f;
     m_state.sun->AmbientIntensity() = 0.3f;
     m_state.sun->Colour() = sunColour;
 
@@ -150,7 +150,7 @@ void World::Build(SceneNode *root)
     m_state.moon = new PointLight("moon");
     lightShaderSync->AddChild(m_state.moon);
     m_renderer.AddPersistentDataNode(m_state.moon);
-    m_state.moon->Radius() = m_state.worldBounds * 1.2f;
+    m_state.moon->Reach() = m_state.worldBounds * 1.2f;
     m_state.moon->AmbientIntensity() = 0.3f;
     m_state.moon->Colour() = moonColour;
 
@@ -170,22 +170,21 @@ void World::Build(SceneNode *root)
     m_state.lantern->SetLocalTransformation(playerLightTransform);
     m_state.lantern->Colour() = Vector4(1.0f, 0.95f, 0.75f, 0.9f);
     m_state.lantern->AmbientIntensity() = 0.02f;
-    m_state.lantern->Radius() = 50.0f;
+    m_state.lantern->Reach() = 50.0f;
 
     m_state.flashlight = new SpotLight("playerFlashlight");
     playerCamera->AddChild(m_state.flashlight);
     m_renderer.AddPersistentDataNode(m_state.flashlight);
     m_state.flashlight->SetActive(false);
     m_state.flashlight->SetLocalTransformation(playerLightTransform);
-    m_state.lantern->Colour() = Vector4(0.95f, 0.95f, 1.0f, 1.0f);
-    m_state.lantern->AmbientIntensity() = 0.01f;
-    // TODO
+    m_state.flashlight->Colour() = Vector4(0.95f, 0.95f, 1.0f, 1.0f);
+    m_state.flashlight->Reach() = 30.0f;
   }
 
   // ENVIRONMENT
   {
     auto envShader = sceneBuffer->AddChild(new ShaderNode("envShader", new ShaderProgram(
-    { new VertexShader(SHADERDIR "PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "coursework/PerPixelFragment.glsl") })));
+    { new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "coursework/PerPixelFragment.glsl") })));
     auto envTextures = envShader->AddChild(new TextureNode("envTextures", { { brickTexture, "diffuseTex", 1} }));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
@@ -236,8 +235,8 @@ void World::Build(SceneNode *root)
     waterTex->SetRepeating(true);
 
     auto waterShader = sceneBuffer->AddChild(
-        new ShaderNode("waterShader", new ShaderProgram({new VertexShader(SHADERDIR "PerPixelVertex.glsl"),
-                                                         new FragmentShader(SHADERDIR "ReflectFragment.glsl")})));
+        new ShaderNode("waterShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
+                                                         new FragmentShader(SHADERDIR "coursework/ReflectFragment.glsl")})));
 
     auto waterTexture = waterShader->AddChild(
         new TextureNode("waterTexture", {{waterTex, "waterTexture", 1}, {cubeMapTex, "cubeTex", 2}}));
@@ -264,8 +263,8 @@ void World::Build(SceneNode *root)
                                [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
     auto shader = depthDisable->AddChild(
-        new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"),
-                                                    new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
+        new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/TexturedVertex.glsl"),
+                                                    new FragmentShader(SHADERDIR "coursework/ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
 
@@ -286,8 +285,8 @@ void World::Build(SceneNode *root)
   // POST PROCESSING PRESENTATION
   {
     auto shader = m_state.screenBuffer->AddChild(
-        new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "TexturedVertex.glsl"),
-                                                    new FragmentShader(SHADERDIR "ProcessFragment.glsl")})));
+        new ShaderNode("shader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/TexturedVertex.glsl"),
+                                                    new FragmentShader(SHADERDIR "coursework/ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
 
