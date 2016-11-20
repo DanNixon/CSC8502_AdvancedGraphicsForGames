@@ -5,11 +5,6 @@
 namespace GraphicsCoursework
 {
 /**
- * @brief Number of planes in a Frustum.
- */
-const size_t Frustum::NUM_PLANES = 6;
-
-/**
  * @brief Create a new empty frustum.
  */
 Frustum::Frustum()

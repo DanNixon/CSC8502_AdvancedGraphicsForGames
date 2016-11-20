@@ -79,7 +79,6 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GenericControlNode.cpp" />
     <ClCompile Include="HeightmapTexture.cpp" />
-    <ClCompile Include="HeightMapMesh.cpp" />
     <ClCompile Include="ISystemMonitor.cpp" />
     <ClCompile Include="ITexture.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -97,6 +96,7 @@
     <ClCompile Include="ShaderNode.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShaderSyncNode.cpp" />
+    <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="TextMesh.cpp" />
     <ClCompile Include="TextNode.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -115,7 +115,6 @@
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GenericControlNode.h" />
     <ClInclude Include="HeightmapTexture.h" />
-    <ClInclude Include="HeightMapMesh.h" />
     <ClInclude Include="ISystemMonitor.h" />
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="Light.h" />
@@ -136,6 +135,7 @@
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="ShaderSyncNode.h" />
     <ClInclude Include="DepthStencilTexture.h" />
+    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="TextMesh.h" />
     <ClInclude Include="TextNode.h" />
     <ClInclude Include="Texture.h" />

@@ -14,7 +14,10 @@ class RenderableNode;
 class Frustum
 {
 public:
-  static const size_t NUM_PLANES;
+  /**
+   * @brief Number of planes in a Frustum.
+   */
+  static const size_t NUM_PLANES = 6;
 
 public:
   Frustum();
