@@ -53,9 +53,6 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Environment</Filter>
-    </ClCompile>
     <ClCompile Include="ISystemMonitor.cpp">
       <Filter>Performance Monitoring</Filter>
     </ClCompile>
@@ -97,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="World.cpp" />
     <ClCompile Include="SpotLight.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="ILight.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,9 +164,6 @@
     <ClInclude Include="Renderer.h">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Environment</Filter>
-    </ClInclude>
     <ClInclude Include="TextNode.h">
       <Filter>Renderables</Filter>
     </ClInclude>
@@ -208,6 +208,12 @@
     </ClInclude>
     <ClInclude Include="World.h" />
     <ClInclude Include="SpotLight.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="ILight.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
       <Filter>Environment</Filter>
     </ClInclude>
   </ItemGroup>

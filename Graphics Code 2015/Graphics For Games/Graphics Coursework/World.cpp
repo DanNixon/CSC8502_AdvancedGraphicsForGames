@@ -13,7 +13,7 @@
 #include "FramebufferNode.h"
 #include "GenericControlNode.h"
 #include "HeightmapTexture.h"
-#include "Light.h"
+#include "PointLight.h"
 #include "MatrixNode.h"
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
@@ -135,7 +135,7 @@ void World::Build(SceneNode *root)
                                           new FragmentShader(SHADERDIR "coursework/PlanetLightSOurceFragment.glsl")})));
     auto lightShaderSync = lightRenderShader->AddChild(new ShaderSyncNode("lightShaderSync"));
 
-    m_state.sun = new Light("sun");
+    m_state.sun = new PointLight("sun");
     lightShaderSync->AddChild(m_state.sun);
     m_renderer.AddPersistentDataNode(m_state.sun);
     m_state.sun->Radius() = m_state.worldBounds * 1.8f;
@@ -146,7 +146,7 @@ void World::Build(SceneNode *root)
     m_state.sun->AddChild(sunMesh);
     sunMesh->GetMesh()->SetUniformColour(sunColour);
 
-    m_state.moon = new Light("moon");
+    m_state.moon = new PointLight("moon");
     lightShaderSync->AddChild(m_state.moon);
     m_renderer.AddPersistentDataNode(m_state.moon);
     m_state.moon->Radius() = m_state.worldBounds * 1.2f;

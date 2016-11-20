@@ -27,7 +27,8 @@ void ShaderSyncNode::PreRender(RenderState &state)
       (*it)->ShaderBind(state.shader);
   }
 
-  glUniform1i(glGetUniformLocation(state.shader->Program(), "numLights"), state.numLights);
+  glUniform1i(glGetUniformLocation(state.shader->Program(), "numPointLights"), state.scenePointLights.size());
+  glUniform1i(glGetUniformLocation(state.shader->Program(), "numSpotLights"), state.sceneSpotLights.size());
 
   if (state.camera != nullptr)
   {
@@ -42,7 +43,9 @@ void ShaderSyncNode::PostRender(RenderState &state)
   for (auto it = state.shaderDataNodeStack.rbegin(); it != state.shaderDataNodeStack.rend(); ++it)
     (*it)->ShaderUnBind(state.shader);
 
-  glUniform1i(glGetUniformLocation(state.shader->Program(), "numLights"), 0);
+  glUniform1i(glGetUniformLocation(state.shader->Program(), "numPointLights"), 0);
+  glUniform1i(glGetUniformLocation(state.shader->Program(), "numSpotLights"), 0);
+
   state.cameraViewFrustum.Reset();
 }
 }

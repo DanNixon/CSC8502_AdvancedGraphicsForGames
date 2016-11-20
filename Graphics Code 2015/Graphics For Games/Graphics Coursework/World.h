@@ -12,7 +12,7 @@ namespace GraphicsCoursework
 class Renderer;
 class SceneNode;
 class FramebufferNode;
-class Light;
+class PointLight;
 
 struct WorldState
 {
@@ -40,8 +40,8 @@ struct WorldState
   float timeOfDay;
 
   SceneNode *loadingNode;
-  Light *sun;
-  Light *moon;
+  PointLight *sun;
+  PointLight *moon;
 };
 
 class World

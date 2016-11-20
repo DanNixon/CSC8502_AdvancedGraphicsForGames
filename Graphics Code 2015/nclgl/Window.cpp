@@ -119,9 +119,7 @@ Window::Window(std::string title, int sizeX, int sizeY, bool fullScreen)
     mouse = new Mouse(windowHandle);
   }
 
-  // if(!timer) {
   timer = new GameTimer();
-  //}
   elapsedMS = timer->GetMS();
 
   Window::GetMouse()->SetAbsolutePositionBounds((unsigned int)size.x, (unsigned int)size.y);

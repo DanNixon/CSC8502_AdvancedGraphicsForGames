@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Light.h"
+#include "ILight.h"
 
 namespace GraphicsCoursework
 {
@@ -10,7 +10,7 @@ namespace GraphicsCoursework
  * @class SpotLight
  * @brief Specialisation of Light for shaped directional light sources.
  */
-class SpotLight : public Light
+class SpotLight : public ILight
 {
 public:
   SpotLight(const std::string &name);
@@ -24,5 +24,17 @@ public:
   {
     return -m_worldTransform.GetBackVector();
   }
+
+  virtual void PreRender(RenderState &state);
+  virtual void PostRender(RenderState &state);
+
+  virtual void ShaderBind(ShaderProgram *s);
+  virtual void ShaderUnBind(ShaderProgram *s);
+
+protected:
+  virtual void SetUniformNames(const std::string &idx);
+
+protected:
+  float m_cutoff;
 };
 }

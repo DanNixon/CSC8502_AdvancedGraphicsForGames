@@ -6,32 +6,33 @@
 
 namespace GraphicsCoursework
 {
-class Light : public ShaderDataNode
+class ILight : public ShaderDataNode
 {
 public:
   enum ShaderUniforms
   {
-    UNIFORM_POSITION,
-    UNIFORM_RADIUS,
+    UNIFORM_POSITION = 0,
     UNIFORM_COLOUR,
     UNIFORM_AMBIENT_INTENSITY,
+
+    UNIFORM_RADIUS,
+
+    UNIFORM_DIRECTION,
+    UNIFORM_CUTOFF,
 
     UNIFORM_COUNT
   };
 
 public:
-  Light(const std::string &name);
-  virtual ~Light();
+  ILight(const std::string &name);
+  virtual ~ILight();
 
-  inline std::string ShaderUniformName(ShaderUniforms uniform) const
+  inline size_t Index() const
   {
-    return m_shaderUniformNames[uniform];
+    return m_index;
   }
 
-  inline float &Radius()
-  {
-    return m_radius;
-  }
+  virtual void SetIndex(size_t index);
 
   inline float &AmbientIntensity()
   {
@@ -43,16 +44,16 @@ public:
     return m_colour;
   }
 
-  virtual void PreRender(RenderState &state);
-  virtual void PostRender(RenderState &state);
-
   virtual void ShaderBind(ShaderProgram *s);
   virtual void ShaderUnBind(ShaderProgram *s);
 
 protected:
+  virtual void SetUniformNames(const std::string &idx) = 0;
+
+protected:
+  size_t m_index;
   std::string m_shaderUniformNames[UNIFORM_COUNT];
 
-  float m_radius;
   float m_ambientIntensity;
   Vector4 m_colour;
 };
