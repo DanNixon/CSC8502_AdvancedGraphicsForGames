@@ -22,14 +22,8 @@ public:
   typedef std::function<void(ShaderProgram *)> ControlCallbackFunc;
 
 public:
-  GenericControlNode(const std::string &name, ControlCallbackFunc onBind =
-                                                  [](ShaderProgram *)
-                                              {
-                                              },
-                     ControlCallbackFunc onUnBind =
-                         [](ShaderProgram *)
-                     {
-                     });
+  GenericControlNode(const std::string &name, ControlCallbackFunc onBind = [](ShaderProgram *) {},
+                     ControlCallbackFunc onUnBind = [](ShaderProgram *) {});
   virtual ~GenericControlNode();
 
   /**

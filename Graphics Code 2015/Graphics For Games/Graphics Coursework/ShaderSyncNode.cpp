@@ -2,9 +2,9 @@
 
 #include "ShaderSyncNode.h"
 
+#include "CameraNode.h"
 #include "ShaderDataNode.h"
 #include "ShaderProgram.h"
-#include "CameraNode.h"
 
 namespace GraphicsCoursework
 {
@@ -33,8 +33,9 @@ void ShaderSyncNode::PreRender(RenderState &state)
   if (state.camera != nullptr)
   {
     Matrix4 proj;
-    glGetUniformfv(state.shader->Program(), glGetUniformLocation(state.shader->Program(), "projMatrix"), (float *)&proj);
-    state.cameraViewFrustum = Frustum(proj * state.camera->ViewMatrix());  //proj matrix
+    glGetUniformfv(state.shader->Program(), glGetUniformLocation(state.shader->Program(), "projMatrix"),
+                   (float *)&proj);
+    state.cameraViewFrustum = Frustum(proj * state.camera->ViewMatrix()); // proj matrix
   }
 }
 

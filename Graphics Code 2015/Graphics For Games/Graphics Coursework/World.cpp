@@ -13,11 +13,10 @@
 #include "FramebufferNode.h"
 #include "GenericControlNode.h"
 #include "HeightmapTexture.h"
-#include "PointLight.h"
-#include "SpotLight.h"
 #include "MatrixNode.h"
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
+#include "PointLight.h"
 #include "PositionableCamera.h"
 #include "RGBATexture.h"
 #include "Renderer.h"
@@ -26,6 +25,7 @@
 #include "ShaderProgram.h"
 #include "ShaderSyncNode.h"
 #include "Shaders.h"
+#include "SpotLight.h"
 #include "TextureNode.h"
 
 namespace GraphicsCoursework
@@ -88,7 +88,8 @@ void World::Build(SceneNode *root)
   root->AddChild(playerCameraSelect);
   playerCameraSelect->SetCamera(playerCamera);
 
-  auto globalTexMatrixIdentity = playerCameraSelect->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
+  auto globalTexMatrixIdentity =
+      playerCameraSelect->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
   auto proj1 = globalTexMatrixIdentity->AddChild(new MatrixNode(
       "proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
 
@@ -117,9 +118,9 @@ void World::Build(SceneNode *root)
         sceneBuffer->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
                                                      [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
 
-    auto skyboxShader = skyboxGLcontrol->AddChild(
-        new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/SkyboxVertex.glsl"),
-                                                          new FragmentShader(SHADERDIR "coursework/SkyboxFragment.glsl")})));
+    auto skyboxShader = skyboxGLcontrol->AddChild(new ShaderNode(
+        "skyboxShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/SkyboxVertex.glsl"),
+                                           new FragmentShader(SHADERDIR "coursework/SkyboxFragment.glsl")})));
     auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", {{cubeMapTex, "skyboxTexture", 1}}));
     auto skyboxShaderSync = skyboxTexture->AddChild(new ShaderSyncNode("skyboxShaderSync"));
     auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
@@ -183,9 +184,10 @@ void World::Build(SceneNode *root)
 
   // ENVIRONMENT
   {
-    auto envShader = sceneBuffer->AddChild(new ShaderNode("envShader", new ShaderProgram(
-    { new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"), new FragmentShader(SHADERDIR "coursework/PerPixelFragment.glsl") })));
-    auto envTextures = envShader->AddChild(new TextureNode("envTextures", { { brickTexture, "diffuseTex", 1} }));
+    auto envShader = sceneBuffer->AddChild(new ShaderNode(
+        "envShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
+                                        new FragmentShader(SHADERDIR "coursework/PerPixelFragment.glsl")})));
+    auto envTextures = envShader->AddChild(new TextureNode("envTextures", {{brickTexture, "diffuseTex", 1}}));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
     MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere());
@@ -206,8 +208,8 @@ void World::Build(SceneNode *root)
     HeightmapTexture *heightmapTexture = new HeightmapTexture(200, 200);
     heightmapTexture->SetFromFBM(&fbm);
 
-    auto terrainTexture = sceneBuffer->AddChild(
-        new TextureNode("terrainTexture", {{ barrenRedsTexture, "diffuseTex", 1}, {heightmapTexture, "heightmapTex", 2}}));
+    auto terrainTexture = sceneBuffer->AddChild(new TextureNode(
+        "terrainTexture", {{barrenRedsTexture, "diffuseTex", 1}, {heightmapTexture, "heightmapTex", 2}}));
 
     auto terrainShader = terrainTexture->AddChild(
         new ShaderNode("terrainShader",
@@ -225,7 +227,8 @@ void World::Build(SceneNode *root)
     terrainShaderSync->AddChild(terrainMesh);
     terrainMesh->GetMesh()->SetGLPatches();
     terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
-    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -30.0f, -8.0f)) * Matrix4::Scale(m_state.worldBounds));
+    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -30.0f, -8.0f)) *
+                                        Matrix4::Scale(m_state.worldBounds));
   }
 
   // WATER
@@ -234,9 +237,9 @@ void World::Build(SceneNode *root)
     waterTex->LoadFromFile(TEXTUREDIR "water_surface.jpg");
     waterTex->SetRepeating(true);
 
-    auto waterShader = sceneBuffer->AddChild(
-        new ShaderNode("waterShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
-                                                         new FragmentShader(SHADERDIR "coursework/ReflectFragment.glsl")})));
+    auto waterShader = sceneBuffer->AddChild(new ShaderNode(
+        "waterShader", new ShaderProgram({new VertexShader(SHADERDIR "coursework/PerPixelVertex.glsl"),
+                                          new FragmentShader(SHADERDIR "coursework/ReflectFragment.glsl")})));
 
     auto waterTexture = waterShader->AddChild(
         new TextureNode("waterTexture", {{waterTex, "waterTexture", 1}, {cubeMapTex, "cubeTex", 2}}));
@@ -314,11 +317,15 @@ void World::Update(float msec)
   // Update sun and moon positions and light intensity
   Matrix4 sunMoonTrans = Matrix4::Rotation(360.0f * m_state.timeOfDay, Vector3(0.0f, 0.0f, 1.0f));
 
-  m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) * Matrix4::Scale(25.0f));
-  m_state.sun->Colour().w = max(0.1f, m_state.sun->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
+  m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) *
+                                      Matrix4::Scale(25.0f));
+  m_state.sun->Colour().w =
+      max(0.1f, m_state.sun->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
 
-  m_state.moon->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, -m_state.worldBounds, 0.0f)) * Matrix4::Scale(10.0f));
-  m_state.moon->Colour().w = max(0.1f, m_state.moon->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
+  m_state.moon->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, -m_state.worldBounds, 0.0f)) *
+                                       Matrix4::Scale(10.0f));
+  m_state.moon->Colour().w =
+      max(0.1f, m_state.moon->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
 
   // Toggle player lantern
   if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_L))

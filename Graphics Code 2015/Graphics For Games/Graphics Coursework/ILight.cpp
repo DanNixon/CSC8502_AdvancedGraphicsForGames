@@ -7,7 +7,7 @@
 
 namespace GraphicsCoursework
 {
-  ILight::ILight(const std::string &name)
+ILight::ILight(const std::string &name)
     : ShaderDataNode(name)
     , m_colour(1.0f, 1.0f, 1.0f, 1.0f)
     , m_ambientIntensity(0.1f)
@@ -15,7 +15,7 @@ namespace GraphicsCoursework
 {
 }
 
-  ILight::~ILight()
+ILight::~ILight()
 {
 }
 

@@ -4,8 +4,8 @@
 
 #include <algorithm>
 
-#include "RenderableNode.h"
 #include "PointLight.h"
+#include "RenderableNode.h"
 #include "SpotLight.h"
 
 namespace GraphicsCoursework
@@ -32,11 +32,11 @@ void Renderer::AddPersistentDataNode(ShaderDataNode *node)
 {
   m_state.shaderDataNodeStack.push_back(node);
 
-  PointLight * pointLight = dynamic_cast<PointLight *>(node);
+  PointLight *pointLight = dynamic_cast<PointLight *>(node);
   if (pointLight != nullptr)
     pointLight->SetIndex(m_state.numPointLights++);
 
-  SpotLight * spotLight = dynamic_cast<SpotLight *>(node);
+  SpotLight *spotLight = dynamic_cast<SpotLight *>(node);
   if (spotLight != nullptr)
     spotLight->SetIndex(m_state.numSpotLights++);
 }

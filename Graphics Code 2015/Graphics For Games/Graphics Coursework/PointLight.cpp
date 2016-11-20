@@ -7,16 +7,16 @@
 
 namespace GraphicsCoursework
 {
-  PointLight::PointLight(const std::string &name)
+PointLight::PointLight(const std::string &name)
     : ILight(name)
 {
 }
 
-  PointLight::~PointLight()
+PointLight::~PointLight()
 {
 }
 
-void PointLight::SetUniformNames(const std::string & idx)
+void PointLight::SetUniformNames(const std::string &idx)
 {
   m_shaderUniformNames[UNIFORM_POSITION] = "pointLights[" + idx + "].light.position";
   m_shaderUniformNames[UNIFORM_COLOUR] = "pointLights[" + idx + "].light.colour";

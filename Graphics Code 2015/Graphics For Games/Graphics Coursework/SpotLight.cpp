@@ -22,8 +22,7 @@ void SpotLight::ShaderBind(ShaderProgram *s)
   ILight::ShaderBind(s);
 
   auto d = Direction();
-  glUniform3fv(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_DIRECTION].c_str()), 1,
-    (float *)&d);
+  glUniform3fv(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_DIRECTION].c_str()), 1, (float *)&d);
 
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_CUTOFF].c_str()), m_cutoff);
 }
@@ -33,12 +32,12 @@ void SpotLight::ShaderUnBind(ShaderProgram *s)
   ILight::ShaderUnBind(s);
 
   glUniform3fv(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_DIRECTION].c_str()), 1,
-    (float *)&Matrix4());
+               (float *)&Matrix4());
 
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_CUTOFF].c_str()), 0.0f);
 }
 
-void SpotLight::SetUniformNames(const std::string & idx)
+void SpotLight::SetUniformNames(const std::string &idx)
 {
   m_shaderUniformNames[UNIFORM_POSITION] = "spotLights[" + idx + "].light.position";
   m_shaderUniformNames[UNIFORM_COLOUR] = "spotLights[" + idx + "].light.colour";
