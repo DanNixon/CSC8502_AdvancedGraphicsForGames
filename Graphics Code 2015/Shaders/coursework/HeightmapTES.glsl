@@ -26,19 +26,24 @@ out Vertex
 
 const ivec3 off = ivec3(-1, 0, 1);
 
+float n(float low, float high, float v)
+{
+	return clamp(clamp(v - low, 0.0, 1.0) / (high - low), 0.0, 1.0);
+}
+
 void main()
 {
 	// Texture coordinate
 	vec2 tc_a = mix(IN[0].texCoord, IN[1].texCoord, gl_TessCoord.x);
   vec2 tc_b = mix(IN[2].texCoord, IN[3].texCoord, gl_TessCoord.x);
-  OUT.texCoord = mix(tc_a, tc_b, gl_TessCoord.y);
+  vec2 tempTexCoord = mix(tc_a, tc_b, gl_TessCoord.y);
 
 	// Normal
-	float height = texture(heightmapTex, OUT.texCoord).r;
-  float hL = textureOffset(heightmapTex, OUT.texCoord, off.xy).r;
-  float hR = textureOffset(heightmapTex, OUT.texCoord, off.zy).r;
-  float hD = textureOffset(heightmapTex, OUT.texCoord, off.yx).r;
-  float hU = textureOffset(heightmapTex, OUT.texCoord, off.yz).r;
+	float height = texture(heightmapTex, tempTexCoord).r;
+  float hL = textureOffset(heightmapTex, tempTexCoord, off.xy).r;
+  float hR = textureOffset(heightmapTex, tempTexCoord, off.zy).r;
+  float hD = textureOffset(heightmapTex, tempTexCoord, off.yx).r;
+  float hU = textureOffset(heightmapTex, tempTexCoord, off.yz).r;
 	
 	vec3 normal = vec3(hL - hR, 0.0, hD - hU) * 50.0; 
 	normal.y = 2.0;
@@ -51,7 +56,7 @@ void main()
 	vec3 pos = mix(pos_a, pos_b, gl_TessCoord.y);
 	
 	vec4 worldPos = modelMatrix * vec4(pos, 1.0);
-	worldPos.y += (0.5 - (height - 0.5)) * 50.0;
+	worldPos.y += mix(0.0, 50.0, n(0.4, 0.7, height));
 	
   OUT.worldPos = worldPos.xyz;
 	OUT.texCoord = (textureMatrix * vec4(tempTexCoord, 0.0, 1.0)).xy;

@@ -30,6 +30,7 @@
 
 #define CW_SHADER_DIR SHADERDIR"coursework/"
 #define CW_TEXTURE_DIR TEXTUREDIR"coursework/"
+#define CW_MESH_DIR MESHDIR"coursework/"
 
 namespace GraphicsCoursework
 {
@@ -123,7 +124,8 @@ void World::Build(SceneNode *root)
                                            new FragmentShader(CW_SHADER_DIR "SkyboxFragment.glsl")})));
     auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", {{cubeMapTex, "skyboxTexture", 1}}));
     auto skyboxShaderSync = skyboxTexture->AddChild(new ShaderSyncNode("skyboxShaderSync"));
-    auto skyboxQuadMesh = skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
+    RenderableNode * skyboxQuadMesh = (RenderableNode *) skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
+    skyboxQuadMesh->SetBoundingSphereRadius(-1.0f);
   }
 
   // LIGHTS
@@ -205,11 +207,12 @@ void World::Build(SceneNode *root)
     PerlinNoise noise;
     FractalBrownianMotion fbm(noise);
     fbm.NumOctaves() = 5;
-    fbm.Frequency() = 5.0f;
+    fbm.Frequency() = 6.0f;
     fbm.Lacunarity() = 20.0f;
+    fbm.Persistence() = 0.2f;
     fbm.ZValue() = 0.8f;
 
-    HeightmapTexture *heightmapTexture = new HeightmapTexture(200, 200);
+    HeightmapTexture *heightmapTexture = new HeightmapTexture(512, 512);
     heightmapTexture->SetFromFBM(&fbm);
     heightmapTexture->SetRepeating(true);
 
@@ -245,15 +248,16 @@ void World::Build(SceneNode *root)
     auto terrainControlNode = terrainShader->AddChild(
         new GenericControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
 
-    auto terrainTextureMatrix = terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(100.0f)));
+    auto terrainTextureMatrix = terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(10.0f)));
 
     auto terrainShaderSync = terrainTextureMatrix->AddChild(new ShaderSyncNode("terrainShaderSync"));
 
     MeshNode *terrainMesh = new MeshNode("terrainMesh", Mesh::GenerateQuad());
     terrainShaderSync->AddChild(terrainMesh);
     terrainMesh->GetMesh()->SetGLPatches();
+    terrainMesh->SetBoundingSphereRadius(-1.0f);
     terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
-    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -30.0f, -8.0f)) *
+    terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -15.0f, -8.0f)) *
                                         Matrix4::Scale(m_state.worldBounds));
   }
 
@@ -269,15 +273,15 @@ void World::Build(SceneNode *root)
 
     auto waterTexture = waterShader->AddChild(
         new TextureNode("waterTexture", {{waterTex, "waterTexture", 1}, {cubeMapTex, "cubeTex", 2}}));
-    auto waterTexMatrix = waterTexture->AddChild(
-        new MatrixNode("waterTexMatrix", "textureMatrix", Matrix4::Scale(10.0f) *
-                                                              Matrix4::Rotation(90.0f, Vector3(0.0f, 0.0f, 1.0f))));
+    m_state.waterTexMatrix = (MatrixNode *) waterTexture->AddChild(
+        new MatrixNode("waterTexMatrix", "textureMatrix"));
 
-    auto waterShaderSync = waterTexMatrix->AddChild(new ShaderSyncNode("waterShaderSync"));
+    auto waterShaderSync = m_state.waterTexMatrix->AddChild(new ShaderSyncNode("waterShaderSync"));
 
     RenderableNode *waterQuad =
         (RenderableNode *)waterShaderSync->AddChild(new MeshNode("waterQuad", Mesh::GenerateQuad()));
-    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -2.5f, 0.0f)) * Matrix4::Scale(1000.0f));
+    waterQuad->SetBoundingSphereRadius(-1.0f);
+    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 0.0f)) * Matrix4::Scale(1000.0f));
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     waterQuad->SpecularPower() = 2.0f;
   }
@@ -360,5 +364,8 @@ void World::Update(float msec)
   // Toggle player flashlight
   if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_F))
     m_state.flashlight->ToggleActive();
+
+  // Move water texture
+  m_state.waterTexMatrix->Matrix() = Matrix4::Scale(10.0f) * Matrix4::Translation(Vector3(0.0f, -0.1f * m_state.timeOfDay, 0.0f));
 }
 }

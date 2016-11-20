@@ -14,6 +14,7 @@ class SceneNode;
 class FramebufferNode;
 class PointLight;
 class SpotLight;
+class MatrixNode;
 
 struct WorldState
 {
@@ -27,6 +28,7 @@ struct WorldState
       , moon(nullptr)
       , lantern(nullptr)
       , flashlight(nullptr)
+      , waterTexMatrix(nullptr)
   {
   }
 
@@ -47,6 +49,7 @@ struct WorldState
   PointLight *moon;
   PointLight *lantern;
   SpotLight *flashlight;
+  MatrixNode * waterTexMatrix;
 };
 
 class World

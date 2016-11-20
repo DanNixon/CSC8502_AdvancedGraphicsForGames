@@ -32,7 +32,7 @@ void RenderableNode::RenderSingle(RenderState &state)
       (*it)->PreRender(state);
   }
 
-  if (state.cameraViewFrustum.ContainsSceneNode(this))
+  if (state.cameraViewFrustum.ContainsSceneNode(this) || m_boundingSphereRadius < 0.0f)
   {
     for (size_t i = 0; i < m_repeatedDraw; i++)
       Draw(state);
@@ -61,7 +61,7 @@ void RenderableNode::PreRender(RenderState &state)
 {
   if (!m_transparent)
   {
-    if (state.cameraViewFrustum.ContainsSceneNode(this))
+    if (state.cameraViewFrustum.ContainsSceneNode(this) || m_boundingSphereRadius < 0.0f)
     {
       for (size_t i = 0; i < m_repeatedDraw; i++)
         Draw(state);
