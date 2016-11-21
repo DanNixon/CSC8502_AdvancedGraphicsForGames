@@ -6,11 +6,16 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new text node.
+ * @param maxLength Maximum length of the string displayed by this node
+ * @param font Font used to render text
+ */
 TextMesh::TextMesh(size_t maxLength, Font *font)
     : m_font(font)
     , m_maxLength(maxLength)
-    , m_texelWidth(1.0f / font->XDim())
-    , m_texelHeight(1.0f / font->YDim())
+    , m_glyphWidth(1.0f / font->XDim())
+    , m_glyphHeight(1.0f / font->YDim())
 {
   m_type = GL_TRIANGLE_STRIP;
 
@@ -39,6 +44,10 @@ TextMesh::~TextMesh()
 {
 }
 
+/**
+ * @brief Sets the text displayed by this mesh.
+ * @param text String to display
+ */
 void TextMesh::SetText(const std::string &text)
 {
   /*
@@ -65,10 +74,10 @@ void TextMesh::SetText(const std::string &text)
 
     // Now we can simply use our worked out font character sizes
     // to generate the correct texture coordinates for each glyph...
-    m_textureCoords[(i * 4)] = Vector2(x * m_texelWidth, (y)*m_texelHeight);
-    m_textureCoords[(i * 4) + 1] = Vector2(x * m_texelWidth, (y + 1) * m_texelHeight);
-    m_textureCoords[(i * 4) + 2] = Vector2((x + 1) * m_texelWidth, (y)*m_texelHeight);
-    m_textureCoords[(i * 4) + 3] = Vector2((x + 1) * m_texelWidth, (y + 1) * m_texelHeight);
+    m_textureCoords[(i * 4)] = Vector2(x * m_glyphWidth, y * m_glyphHeight);
+    m_textureCoords[(i * 4) + 1] = Vector2(x * m_glyphWidth, (y + 1) * m_glyphHeight);
+    m_textureCoords[(i * 4) + 2] = Vector2((x + 1) * m_glyphWidth, y * m_glyphHeight);
+    m_textureCoords[(i * 4) + 3] = Vector2((x + 1) * m_glyphWidth, (y + 1) * m_glyphHeight);
   }
 
   glBindVertexArray(m_arrayObject);

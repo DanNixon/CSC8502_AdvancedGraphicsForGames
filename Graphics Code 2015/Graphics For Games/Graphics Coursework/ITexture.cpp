@@ -20,9 +20,9 @@ ITexture::~ITexture()
 }
 
 /**
- * @brief Loads a texture from a file using SOIL.
+ * @brief Loads a texture from a file.
  * @param filename File to load
- * @param flags Loading flags passed to SOIL
+ * @param flags Loading flags passed to loader
  * @return True if a valid GL texture was loaded
  */
 bool ITexture::LoadFromFile(const std::string &filename, unsigned int flags)
@@ -31,9 +31,9 @@ bool ITexture::LoadFromFile(const std::string &filename, unsigned int flags)
 }
 
 /**
- * @brief Loads a texture from a collection of files using SOIL.
+ * @brief Loads a texture from a collection of files.
  * @param filenames Vector of files to load
- * @param flags Loading flags passed to SOIL
+ * @param flags Loading flags passed to loader
  * @return True if a valid GL texture was loaded
  */
 bool ITexture::LoadFromFiles(const std::vector<std::string> &filenames, unsigned int flags)

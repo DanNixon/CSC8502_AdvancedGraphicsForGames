@@ -8,7 +8,7 @@ namespace GraphicsCoursework
 {
 /**
  * @class SpotLight
- * @brief Specialisation of Light for shaped directional light sources.
+ * @brief Specialisation of ILight for shaped directional light sources.
  */
 class SpotLight : public ILight
 {
@@ -25,11 +25,17 @@ public:
     return -m_worldTransform.GetBackVector();
   }
 
+  /**
+   * @copydoc ILight::NumDirections
+   */
   virtual size_t NumDirections() const
   {
     return 1;
   }
 
+  /**
+   * @copydoc ILight::CastDirections
+   */
   virtual void CastDirections(std::vector<Vector3> &directions) const
   {
     directions.push_back(Direction());
@@ -42,6 +48,6 @@ protected:
   virtual void SetUniformNames(const std::string &idx);
 
 protected:
-  float m_cutoff;
+  float m_cutoff; //!< Spot cutoff value
 };
 }

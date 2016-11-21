@@ -6,6 +6,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new spot light.
+ * @param name Node name
+ */
 SpotLight::SpotLight(const std::string &name)
     : ILight(name)
     , m_cutoff(0.8f)
@@ -17,6 +21,9 @@ SpotLight::~SpotLight()
 {
 }
 
+/**
+ * @copydoc ILight::ShaderBind
+ */
 void SpotLight::ShaderBind(ShaderProgram *s)
 {
   ILight::ShaderBind(s);
@@ -27,6 +34,9 @@ void SpotLight::ShaderBind(ShaderProgram *s)
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_CUTOFF].c_str()), m_cutoff);
 }
 
+/**
+ * @copydoc ILight::ShaderUnBind
+ */
 void SpotLight::ShaderUnBind(ShaderProgram *s)
 {
   ILight::ShaderUnBind(s);
@@ -37,6 +47,9 @@ void SpotLight::ShaderUnBind(ShaderProgram *s)
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_CUTOFF].c_str()), 0.0f);
 }
 
+/**
+ * @copydoc ILight::SetUniformNames
+ */
 void SpotLight::SetUniformNames(const std::string &idx)
 {
   m_shaderUniformNames[UNIFORM_POSITION] = "spotLights[" + idx + "].light.position";

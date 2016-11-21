@@ -6,6 +6,12 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class TransparentRenderingNode
+ * @brief Used to render all transparent nodes in the scene graph under this node.
+ *
+ * Allows finer control of the time at which transparent nodes are rendered.
+ */
 class TransparentRenderingNode : public SceneNode
 {
 public:

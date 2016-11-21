@@ -7,12 +7,16 @@
 #include <psapi.h>
 // clang-format on
 
-// http://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
-
 namespace GraphicsCoursework
 {
+/**
+ * @brief Multiplicative conversion from bytes to megabytes.
+ */
 const float BYTES_TO_MB = 1.0f / 1e6f;
 
+/**
+ * @brief Creates a new Windows system monitor.
+ */
 WindowsSystemMonitor::WindowsSystemMonitor()
 {
   SYSTEM_INFO sysInfo;
@@ -24,8 +28,8 @@ WindowsSystemMonitor::WindowsSystemMonitor()
   GetSystemTimeAsFileTime(&ftime);
   memcpy(&m_lastCPU, &ftime, sizeof(FILETIME));
 
-  m_self = GetCurrentProcess();
-  GetProcessTimes(m_self, &ftime, &ftime, &fsys, &fuser);
+  m_currentProcessHandle = GetCurrentProcess();
+  GetProcessTimes(m_currentProcessHandle, &ftime, &ftime, &fsys, &fuser);
   memcpy(&m_lastSystemCPU, &fsys, sizeof(FILETIME));
   memcpy(&m_lastUserCPU, &fuser, sizeof(FILETIME));
 }
@@ -34,11 +38,14 @@ WindowsSystemMonitor::~WindowsSystemMonitor()
 {
 }
 
+/**
+ * @copydoc ISystemMonitor::Update
+ */
 void WindowsSystemMonitor::Update(float dTimeMs)
 {
   ISystemMonitor::Update(dTimeMs);
 
-  // System wide memory
+  /* System wide memory */
   MEMORYSTATUSEX memInfo;
   memInfo.dwLength = sizeof(MEMORYSTATUSEX);
   GlobalMemoryStatusEx(&memInfo);
@@ -49,7 +56,7 @@ void WindowsSystemMonitor::Update(float dTimeMs)
   m_metrics[PHYSICAL_MEMORY_USED] = ((float)(memInfo.ullTotalPhys - memInfo.ullAvailPhys)) * BYTES_TO_MB;
   m_metrics[VIRTUAL_MEMORY_USED] = ((float)(memInfo.ullTotalPageFile - memInfo.ullAvailPageFile)) * BYTES_TO_MB;
 
-  // Process memory
+  /* Process memory */
   PROCESS_MEMORY_COUNTERS pmc;
   GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
 
@@ -59,14 +66,14 @@ void WindowsSystemMonitor::Update(float dTimeMs)
   m_metrics[VIRTUAL_MEMORY_SELF_USED] = ((float)pmc.PagefileUsage) * BYTES_TO_MB;
   m_metrics[VIRTUAL_MEMORY_SELF_USED_PEAK] = ((float)pmc.PeakPagefileUsage) * BYTES_TO_MB;
 
-  // CPU
+  /* CPU */
   FILETIME ftime, fsys, fuser;
   ULARGE_INTEGER now, sys, user;
 
   GetSystemTimeAsFileTime(&ftime);
   memcpy(&now, &ftime, sizeof(FILETIME));
 
-  GetProcessTimes(m_self, &ftime, &ftime, &fsys, &fuser);
+  GetProcessTimes(m_currentProcessHandle, &ftime, &ftime, &fsys, &fuser);
   memcpy(&sys, &fsys, sizeof(FILETIME));
   memcpy(&user, &fuser, sizeof(FILETIME));
 

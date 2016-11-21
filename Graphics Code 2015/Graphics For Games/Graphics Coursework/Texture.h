@@ -10,6 +10,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class Texture
+ * @brief Basic 2D texture loaded from a file using SOIL.
+ */
 class Texture : public ITexture
 {
 public:

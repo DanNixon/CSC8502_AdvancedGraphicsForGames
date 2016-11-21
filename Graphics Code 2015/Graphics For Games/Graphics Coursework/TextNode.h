@@ -8,6 +8,10 @@ namespace GraphicsCoursework
 {
 class Font;
 
+/**
+ * @class TextNode
+ * @brief Renderable node containing a TextMesh.
+ */
 class TextNode : public MeshNode
 {
 public:
