@@ -76,6 +76,11 @@ public:
     return m_worldTransform;
   }
 
+  /**
+   * @brief Gets the distence between this node and another.
+   * @param other Other node
+   * @return Distance between nodes
+   */
   inline float DistanceFrom(SceneNode *other) const
   {
     Vector3 dir = m_worldTransform.GetPositionVector() - other->m_worldTransform.GetPositionVector();
@@ -85,10 +90,18 @@ public:
   virtual void Update(float msec);
   virtual void Render(RenderState &state);
 
+  /**
+   * @brief Called when node is entered and before children are rendered.
+   * @param state Reference to current render state
+   */
   virtual void PreRender(RenderState &state)
   {
   }
 
+  /**
+   * @brief Called when children are rendered and before node is exited.
+   * @param state Reference to current render state
+   */
   virtual void PostRender(RenderState &state)
   {
   }
@@ -99,18 +112,19 @@ public:
 protected:
   friend class SubTreeNode;
 
-  const std::string m_name;
+  const std::string m_name; //!< Node name
 
-  Renderer *m_renderer;
-  SceneNode *m_parent;
+  Renderer *m_renderer; //!< Parent renderer
+  SceneNode *m_parent;  //!< Parent node
 
-  bool m_active;
-  bool m_owner;
+  bool m_active; //!< Flag indicating if this node is active
+  bool m_owner;  //!< Flag indicating that this node owns any held resources
 
-  Matrix4 m_localRotation;
-  Matrix4 m_localTransform;
-  Matrix4 m_worldTransform;
+  Matrix4 m_localRotation;  //!< Local rotation matrix
+  Matrix4 m_localTransform; //!< Local transformation matrix
 
-  std::vector<SceneNode *> m_children;
+  Matrix4 m_worldTransform; //!< Cached world transformation matrix
+
+  std::vector<SceneNode *> m_children; //!< Children of this node
 };
 }

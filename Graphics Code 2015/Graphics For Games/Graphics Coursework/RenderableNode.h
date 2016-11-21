@@ -6,6 +6,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class RenderableNode
+ * @brief Scene node that can be rendered in a scene.
+ */
 class RenderableNode : public SceneNode
 {
 public:
@@ -53,13 +57,14 @@ public:
   virtual void PreRender(RenderState &state);
 
 protected:
-  bool m_transparent;
-  size_t m_repeatedDraw;
+  bool m_transparent;    //!< Flag indicating if this node will be (partially) transparent
+  size_t m_repeatedDraw; //!< Number of times this node will be drawn
 
-  float m_cameraDistance;
-  float m_boundingSphereRadius;
+  float m_cameraDistance;       //!< Cached distance from the active camera
+  float m_boundingSphereRadius; //!< Radius of the bounding sphere used in view frustum culling (negative values disable
+                                //   check)
 
-  float m_specularPower;
-  float m_specularIntensity;
+  float m_specularPower;     //!< Specular power used in lighting calculations
+  float m_specularIntensity; //!< Specular intensity used in lighting calculations
 };
 }

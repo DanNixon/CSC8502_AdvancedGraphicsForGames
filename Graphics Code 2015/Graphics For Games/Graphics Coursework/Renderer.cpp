@@ -8,6 +8,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Create a new renderer.
+ * @param parent Parent window to operate within
+ */
 Renderer::Renderer(Window &parent)
     : OGLRenderer(parent)
     , m_sceneGraphRoot(new SceneNode("root", this))
@@ -26,6 +30,10 @@ Renderer::~Renderer()
   delete m_sceneGraphRoot;
 }
 
+/**
+ * @brief Adds a ShaderDataNode to the persistent render state that will reside on the bottom of the stack.
+ * @param node Persistent node
+ */
 void Renderer::AddPersistentDataNode(ShaderDataNode *node)
 {
   m_state.shaderDataNodeStack.push_back(node);
@@ -39,6 +47,11 @@ void Renderer::AddPersistentDataNode(ShaderDataNode *node)
     spotLight->SetIndex(m_state.numSpotLights++);
 }
 
+/**
+ * @brief Removes a persistent ShaderDataNode from the stack.
+ * @param node Node to remove
+ * @return True if removed successfully
+ */
 bool Renderer::RemovePersistentDataNode(ShaderDataNode *node)
 {
   auto it = std::find(m_state.shaderDataNodeStack.begin(), m_state.shaderDataNodeStack.end(), node);
@@ -49,14 +62,21 @@ bool Renderer::RemovePersistentDataNode(ShaderDataNode *node)
   return found;
 }
 
+/**
+ * @brief Renders the scene and swaps the front/back buffers.
+ */
 void Renderer::RenderScene()
 {
-  // Render graph
   m_sceneGraphRoot->Render(m_state);
-
   SwapBuffers();
 }
 
+/**
+ * @brief Outputs a Renderer to a stream.
+ * @param s Reference to output stream
+ * @param r Reference to Renderer to output
+ * @return Reference to output stream
+ */
 std::ostream &operator<<(std::ostream &s, const Renderer &r)
 {
   s << "Renderer scene graph:\n";

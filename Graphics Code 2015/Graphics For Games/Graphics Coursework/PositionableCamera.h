@@ -26,11 +26,19 @@ public:
   PositionableCamera(const std::string &name);
   virtual ~PositionableCamera();
 
+  /**
+   * @brief Gets or sets the speed of the camera for linear movement.
+   * @return Linear speed
+   */
   inline float &LinearSpeed()
   {
     return m_linearSpeed;
   }
 
+  /**
+   * @brief Gets or sets the speed of the camera for angular movement.
+   * @return Angular speed
+   */
   inline float &AngularSpeed()
   {
     return m_angularSpeed;

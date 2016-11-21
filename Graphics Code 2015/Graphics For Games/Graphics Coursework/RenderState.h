@@ -15,6 +15,11 @@ class ShaderDataNode;
 class CameraNode;
 class TransparentRenderingNode;
 
+/**
+ * @brief Stores data used when rendering.
+ *
+ * Passed to each node in the scene graph during traversal.
+ */
 struct RenderState
 {
   RenderState()
@@ -26,16 +31,17 @@ struct RenderState
   {
   }
 
-  size_t numPointLights;
-  size_t numSpotLights;
+  size_t numPointLights; //!< Number of point lights in the scene
+  size_t numSpotLights;  //!< Number of spot lights in the scene
 
-  CameraNode *camera;
-  Frustum cameraViewFrustum;
+  CameraNode *camera;        //!< Active camera (may be nullptr during rendering)
+  Frustum cameraViewFrustum; //!< Cached camera view frustum
 
-  ShaderProgram *shader;
-  std::vector<ShaderDataNode *> shaderDataNodeStack;
+  ShaderProgram *shader;                             //!< Current shader (should never be null after ShaderSyncNode)
+  std::vector<ShaderDataNode *> shaderDataNodeStack; //!< Stack of ShaderDataNode to be activated by ShaderSyncNode
 
-  std::vector<RenderableNode *> transparentNodes;
-  TransparentRenderingNode *transparentSync;
+  std::vector<RenderableNode *> transparentNodes; //!< List of transparent nodes
+  TransparentRenderingNode *
+      transparentSync; //!< Lowest TransparentRenderingNode (the one that will next process transparentNodes)
 };
 }

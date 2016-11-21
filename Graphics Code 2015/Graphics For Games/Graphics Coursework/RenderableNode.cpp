@@ -6,6 +6,11 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new renderable scene node.
+ * @param name Node name
+ * @param transparent Flag indicating if the mesh and texture combination will result in transparent fragments
+ */
 RenderableNode::RenderableNode(const std::string &name, bool transparent)
     : SceneNode(name)
     , m_transparent(transparent)
@@ -21,6 +26,12 @@ RenderableNode::~RenderableNode()
 {
 }
 
+/**
+ * @brief Renders this node outside of the scene graph.
+ * @param state Reference to render state
+ *
+ * Used for rendering transparent nodes in a TransparentRenderingNode after Z sorting.
+ */
 void RenderableNode::RenderSingle(RenderState &state)
 {
   std::vector<SceneNode *> stack;
@@ -45,6 +56,10 @@ void RenderableNode::RenderSingle(RenderState &state)
   }
 }
 
+/**
+ * @brief Draws this renderable.
+ * @param state Reference to render state
+ */
 void RenderableNode::Draw(RenderState &state)
 {
   GLuint program = state.shader->Program();
@@ -57,6 +72,9 @@ void RenderableNode::Draw(RenderState &state)
   glUniform1f(glGetUniformLocation(program, "specularIntensity"), m_specularIntensity);
 }
 
+/**
+ * @copydoc SceneNode::PreRender
+ */
 void RenderableNode::PreRender(RenderState &state)
 {
   if (!m_transparent)

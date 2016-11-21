@@ -8,6 +8,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new positionable camera node.
+ * @param name Node name
+ */
 PositionableCamera::PositionableCamera(const std::string &name)
     : CameraNode(name)
     , m_linearSpeed(1.0f)
@@ -21,6 +25,9 @@ PositionableCamera::~PositionableCamera()
 {
 }
 
+/**
+ * @copydoc CameraNode::Update
+ */
 void PositionableCamera::Update(float msec)
 {
   CameraNode::Update(msec);
