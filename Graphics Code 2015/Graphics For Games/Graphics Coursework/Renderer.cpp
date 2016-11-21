@@ -2,8 +2,6 @@
 
 #include "Renderer.h"
 
-#include <algorithm>
-
 #include "PointLight.h"
 #include "RenderableNode.h"
 #include "SpotLight.h"
@@ -55,16 +53,6 @@ void Renderer::RenderScene()
 {
   // Render graph
   m_sceneGraphRoot->Render(m_state);
-
-  // Sort transparent nodes
-  std::sort(m_state.transparentNodes.begin(), m_state.transparentNodes.end(),
-            [](RenderableNode *a, RenderableNode *b) { return a->CameraDistance() > b->CameraDistance(); });
-
-  // Render transparent nodes
-  for (auto it = m_state.transparentNodes.begin(); it != m_state.transparentNodes.end(); ++it)
-    (*it)->RenderSingle(m_state);
-
-  m_state.transparentNodes.clear();
 
   SwapBuffers();
 }

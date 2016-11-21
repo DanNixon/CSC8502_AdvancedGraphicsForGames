@@ -103,6 +103,7 @@
     <ClCompile Include="TextNode.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureNode.cpp" />
+    <ClCompile Include="TransparentRenderingNode.cpp" />
     <ClCompile Include="WindowsSystemMonitor.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -144,6 +145,7 @@
     <ClInclude Include="TextNode.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureNode.h" />
+    <ClInclude Include="TransparentRenderingNode.h" />
     <ClInclude Include="WindowsSystemMonitor.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

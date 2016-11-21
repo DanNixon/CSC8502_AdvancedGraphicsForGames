@@ -105,6 +105,9 @@
     <ClCompile Include="FogNode.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
+    <ClCompile Include="TransparentRenderingNode.cpp">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -221,6 +224,9 @@
     </ClInclude>
     <ClInclude Include="FogNode.h">
       <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="TransparentRenderingNode.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

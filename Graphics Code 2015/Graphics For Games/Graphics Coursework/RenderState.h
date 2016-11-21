@@ -13,6 +13,7 @@ class ShaderProgram;
 class RenderableNode;
 class ShaderDataNode;
 class CameraNode;
+class TransparentRenderingNode;
 
 struct RenderState
 {
@@ -21,6 +22,7 @@ struct RenderState
       , numSpotLights(0)
       , camera(nullptr)
       , shader(nullptr)
+      , transparentSync(nullptr)
   {
   }
 
@@ -34,5 +36,6 @@ struct RenderState
   std::vector<ShaderDataNode *> shaderDataNodeStack;
 
   std::vector<RenderableNode *> transparentNodes;
+  TransparentRenderingNode * transparentSync;
 };
 }

@@ -42,7 +42,7 @@ public:
     m_owner = owner;
   }
 
-  void GetStack(std::vector<SceneNode *> &stack);
+  void GetStack(std::vector<SceneNode *> &stack, SceneNode *until = nullptr);
 
   virtual SceneNode *AddChild(SceneNode *child);
   virtual bool RemoveChild(SceneNode *child);

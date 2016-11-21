@@ -28,6 +28,7 @@
 #include "SpotLight.h"
 #include "TextureNode.h"
 #include "FogNode.h"
+#include "TransparentRenderingNode.h"
 
 #define CW_SHADER_DIR SHADERDIR"coursework/"
 #define CW_TEXTURE_DIR TEXTUREDIR"coursework/"
@@ -78,7 +79,8 @@ void World::Build(SceneNode *root)
 {
   // Textures
   ITexture *brickTexture = new Texture();
-  brickTexture->LoadFromFile(CW_TEXTURE_DIR "brick.tga");
+  //brickTexture->LoadFromFile(CW_TEXTURE_DIR "brick.tga");
+  brickTexture->LoadFromFile(TEXTUREDIR "stainedglass.tga");
 
   // Main camera and view
   PositionableCamera *playerCamera = new PositionableCamera("playerCamera");
@@ -92,12 +94,13 @@ void World::Build(SceneNode *root)
 
   auto globalTexMatrixIdentity =
       playerCameraSelect->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
-  auto proj1 = globalTexMatrixIdentity->AddChild(new MatrixNode(
-      "proj1", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
+  auto projection = globalTexMatrixIdentity->AddChild(new MatrixNode(
+      "projection", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
 
   // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
-  proj1->AddChild(sceneBuffer);
+  projection->AddChild(sceneBuffer);
+  auto globalTransp = sceneBuffer->AddChild(new TransparentRenderingNode("globalTransp"));
 
   ITexture *bufferDepthTex = new DepthStencilTexture(m_state.screenDims.x, m_state.screenDims.y);
   ITexture *bufferColourTex1 = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
@@ -117,7 +120,7 @@ void World::Build(SceneNode *root)
   // SKYBOX
   {
     auto skyboxGLcontrol =
-        sceneBuffer->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
+      globalTransp->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
                                                      [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
 
     auto skyboxShader = skyboxGLcontrol->AddChild(new ShaderNode(
@@ -134,7 +137,7 @@ void World::Build(SceneNode *root)
     Vector4 sunColour(1.0f, 1.0f, 0.75f, 1.0f);
     Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
 
-    auto lightRenderShader = sceneBuffer->AddChild(
+    auto lightRenderShader = globalTransp->AddChild(
         new ShaderNode("lightRenderShader",
                        new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
                                           new FragmentShader(CW_SHADER_DIR "PlanetLightSourceFragment.glsl")})));
@@ -189,17 +192,21 @@ void World::Build(SceneNode *root)
 
   // ENVIRONMENT
   {
-    auto envShader = sceneBuffer->AddChild(new ShaderNode(
+    auto envShader = globalTransp->AddChild(new ShaderNode(
         "envShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
                                         new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl")})));
     auto envTextures = envShader->AddChild(new TextureNode("envTextures", {{brickTexture, "diffuseTex", 1}}));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
-    MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere());
+    MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere(), true);
     envShaderSync->AddChild(sphere1);
     sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
     sphere1->SpecularIntensity() = 0.5f;
     sphere1->SpecularPower() = 100.0f;
+
+    MeshNode *transp1 = new MeshNode("sphere1", Mesh::GenerateQuad(), true);
+    envShaderSync->AddChild(transp1);
+    transp1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 3.0f, -10.0f)));
   }
 
   // HEIGHTMAP
@@ -231,7 +238,7 @@ void World::Build(SceneNode *root)
     rockTex->SetRepeating(true);
 
     // Scene subtree
-    auto terrainTextures = sceneBuffer->AddChild(new TextureNode(
+    auto terrainTextures = globalTransp->AddChild(new TextureNode(
         "terrainTextures", {
           { heightmapTexture, "heightmapTex", 1 },
           { sandTex, "levelTex[0]", 2 },
@@ -268,7 +275,7 @@ void World::Build(SceneNode *root)
     waterTex->LoadFromFile(CW_TEXTURE_DIR "water_surface.jpg");
     waterTex->SetRepeating(true);
 
-    auto waterShader = sceneBuffer->AddChild(new ShaderNode(
+    auto waterShader = globalTransp->AddChild(new ShaderNode(
         "waterShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
                                           new FragmentShader(CW_SHADER_DIR "ReflectFragment.glsl")})));
 

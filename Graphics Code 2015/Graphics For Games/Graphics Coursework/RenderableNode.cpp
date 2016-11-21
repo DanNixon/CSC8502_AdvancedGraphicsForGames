@@ -24,9 +24,9 @@ RenderableNode::~RenderableNode()
 void RenderableNode::RenderSingle(RenderState &state)
 {
   std::vector<SceneNode *> stack;
-  m_parent->GetStack(stack);
+  m_parent->GetStack(stack, (SceneNode *) state.transparentSync);
 
-  for (auto it = stack.begin(); it != stack.end(); ++it)
+  for (auto it = stack.rbegin(); it != stack.rend(); ++it)
   {
     if ((*it)->IsActive())
       (*it)->PreRender(state);
@@ -38,7 +38,7 @@ void RenderableNode::RenderSingle(RenderState &state)
       Draw(state);
   }
 
-  for (auto it = stack.rbegin(); it != stack.rend(); ++it)
+  for (auto it = stack.begin(); it != stack.end(); ++it)
   {
     if ((*it)->IsActive())
       (*it)->PostRender(state);
