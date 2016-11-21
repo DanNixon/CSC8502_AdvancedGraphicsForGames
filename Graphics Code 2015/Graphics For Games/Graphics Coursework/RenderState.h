@@ -36,6 +36,6 @@ struct RenderState
   std::vector<ShaderDataNode *> shaderDataNodeStack;
 
   std::vector<RenderableNode *> transparentNodes;
-  TransparentRenderingNode * transparentSync;
+  TransparentRenderingNode *transparentSync;
 };
 }

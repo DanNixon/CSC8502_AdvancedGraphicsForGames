@@ -49,7 +49,7 @@ struct WorldState
   PointLight *moon;
   PointLight *lantern;
   SpotLight *flashlight;
-  MatrixNode * waterTexMatrix;
+  MatrixNode *waterTexMatrix;
 };
 
 class World

@@ -24,7 +24,7 @@ RenderableNode::~RenderableNode()
 void RenderableNode::RenderSingle(RenderState &state)
 {
   std::vector<SceneNode *> stack;
-  m_parent->GetStack(stack, (SceneNode *) state.transparentSync);
+  m_parent->GetStack(stack, (SceneNode *)state.transparentSync);
 
   for (auto it = stack.rbegin(); it != stack.rend(); ++it)
   {

@@ -20,7 +20,7 @@ CameraNode::~CameraNode()
 {
 }
 
-void CameraNode::LockOrientationTo(SceneNode * node)
+void CameraNode::LockOrientationTo(SceneNode *node)
 {
   m_orientationLock = node;
 }

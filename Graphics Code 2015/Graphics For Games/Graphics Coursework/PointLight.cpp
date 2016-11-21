@@ -16,7 +16,7 @@ PointLight::~PointLight()
 {
 }
 
-void PointLight::CastDirections(std::vector<Vector3>& directions) const
+void PointLight::CastDirections(std::vector<Vector3> &directions) const
 {
   directions.push_back(Vector3(1.0f, 0.0f, 0.0f));
   directions.push_back(Vector3(-1.0f, 0.0f, 0.0f));

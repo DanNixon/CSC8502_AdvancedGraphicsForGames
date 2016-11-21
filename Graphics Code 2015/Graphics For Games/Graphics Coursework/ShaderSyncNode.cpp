@@ -37,8 +37,7 @@ void ShaderSyncNode::PreRender(RenderState &state)
   if (state.camera != nullptr)
   {
     Matrix4 proj;
-    glGetUniformfv(program, glGetUniformLocation(state.shader->Program(), "projMatrix"),
-                   (float *)&proj);
+    glGetUniformfv(program, glGetUniformLocation(state.shader->Program(), "projMatrix"), (float *)&proj);
     state.cameraViewFrustum = Frustum(proj * state.camera->ViewMatrix());
   }
 }

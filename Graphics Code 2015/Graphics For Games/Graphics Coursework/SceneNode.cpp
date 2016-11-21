@@ -43,7 +43,7 @@ bool SceneNode::ToggleActive()
   return m_active;
 }
 
-void SceneNode::GetStack(std::vector<SceneNode *> &stack, SceneNode * until)
+void SceneNode::GetStack(std::vector<SceneNode *> &stack, SceneNode *until)
 {
   SceneNode *n = this;
   while (n != nullptr && n != until)

@@ -26,13 +26,13 @@
 #include "ShaderSyncNode.h"
 #include "Shaders.h"
 #include "SpotLight.h"
+#include "SubTreeNode.h"
 #include "TextureNode.h"
 #include "TransparentRenderingNode.h"
-#include "SubTreeNode.h"
 
-#define CW_SHADER_DIR SHADERDIR"coursework/"
-#define CW_TEXTURE_DIR TEXTUREDIR"coursework/"
-#define CW_MESH_DIR MESHDIR"coursework/"
+#define CW_SHADER_DIR SHADERDIR "coursework/"
+#define CW_TEXTURE_DIR TEXTUREDIR "coursework/"
+#define CW_MESH_DIR MESHDIR "coursework/"
 
 namespace GraphicsCoursework
 {
@@ -79,7 +79,7 @@ void World::Build(SceneNode *root)
 {
   // Textures
   ITexture *brickTexture = new Texture();
-  //brickTexture->LoadFromFile(CW_TEXTURE_DIR "brick.tga");
+  // brickTexture->LoadFromFile(CW_TEXTURE_DIR "brick.tga");
   brickTexture->LoadFromFile(TEXTUREDIR "stainedglass.tga");
 
   // Main camera and view
@@ -94,13 +94,14 @@ void World::Build(SceneNode *root)
 
   auto globalTexMatrixIdentity =
       playerCameraSelect->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
-  auto projection = globalTexMatrixIdentity->AddChild(new MatrixNode(
-      "projection", "projMatrix", Matrix4::Perspective(1.0f, 10000.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
+  auto projection = globalTexMatrixIdentity->AddChild(
+      new MatrixNode("projection", "projMatrix",
+                     Matrix4::Perspective(1.0f, 10000.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
 
   // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
   projection->AddChild(sceneBuffer);
-  auto globalFog = sceneBuffer->AddChild(new GenericControlNode("globalFog", [](ShaderProgram * s) {
+  auto globalFog = sceneBuffer->AddChild(new GenericControlNode("globalFog", [](ShaderProgram *s) {
     glUniform3f(glGetUniformLocation(s->Program(), "fogBaseColour"), 0.4f, 0.4f, 0.55f);
     glUniform1f(glGetUniformLocation(s->Program(), "fogExp"), 0.0005f);
     glUniform1f(glGetUniformLocation(s->Program(), "fogAtten"), 0.4f);
@@ -116,28 +117,26 @@ void World::Build(SceneNode *root)
   sceneBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTex1);
 
   ITexture *cubeMapTex = new CubeMapTexture();
-  cubeMapTex->LoadFromFiles({
-    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_px.jpg",
-    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mx.jpg",
-    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_py.jpg",
-    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_my.jpg",
-    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_pz.jpg",
-    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mz.jpg"
-  });
-  //cubeMapTex->SetRepeating(true);
+  cubeMapTex->LoadFromFiles(
+      {CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_px.jpg", CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mx.jpg",
+       CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_py.jpg", CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_my.jpg",
+       CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_pz.jpg",
+       CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mz.jpg"});
+  // cubeMapTex->SetRepeating(true);
 
   // SKYBOX
   {
     auto skyboxGLcontrol =
-      globalTransp->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
-                                                     [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
+        globalTransp->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
+                                                      [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
 
-    auto skyboxShader = skyboxGLcontrol->AddChild(new ShaderNode(
-        "skyboxShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "SkyboxVertex.glsl"),
-                                           new FragmentShader(CW_SHADER_DIR "SkyboxFragment.glsl")})));
+    auto skyboxShader = skyboxGLcontrol->AddChild(
+        new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "SkyboxVertex.glsl"),
+                                                          new FragmentShader(CW_SHADER_DIR "SkyboxFragment.glsl")})));
     auto skyboxTexture = skyboxShader->AddChild(new TextureNode("skyboxTexture", {{cubeMapTex, "skyboxTexture", 1}}));
     auto skyboxShaderSync = skyboxTexture->AddChild(new ShaderSyncNode("skyboxShaderSync"));
-    RenderableNode * skyboxQuadMesh = (RenderableNode *) skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
+    RenderableNode *skyboxQuadMesh =
+        (RenderableNode *)skyboxShaderSync->AddChild(new MeshNode("skyboxQuadMesh", Mesh::GenerateQuad()));
     skyboxQuadMesh->SetBoundingSphereRadius(-1.0f);
   }
 
@@ -146,10 +145,9 @@ void World::Build(SceneNode *root)
     Vector4 sunColour(1.0f, 1.0f, 0.75f, 1.0f);
     Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
 
-    auto lightRenderShader = globalTransp->AddChild(
-        new ShaderNode("lightRenderShader",
-                       new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
-                                          new FragmentShader(CW_SHADER_DIR "PlanetLightSourceFragment.glsl")})));
+    auto lightRenderShader = globalTransp->AddChild(new ShaderNode(
+        "lightRenderShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+                                                new FragmentShader(CW_SHADER_DIR "PlanetLightSourceFragment.glsl")})));
     auto lightShaderSync = lightRenderShader->AddChild(new ShaderSyncNode("lightShaderSync"));
 
     m_state.sun = new PointLight("sun");
@@ -214,43 +212,43 @@ void World::Build(SceneNode *root)
     heightmapTexture->SetFromFBM(&fbm);
     heightmapTexture->SetRepeating(true);
 
-    ITexture * heightmapMultTex = new Texture();
+    ITexture *heightmapMultTex = new Texture();
     heightmapMultTex->LoadFromFile(CW_TEXTURE_DIR "radial_grad.tga");
 
     // Textures
-    ITexture * sandTex = new Texture();
+    ITexture *sandTex = new Texture();
     sandTex->LoadFromFile(CW_TEXTURE_DIR "sand.jpg");
     sandTex->SetRepeating(true);
 
-    ITexture * grassTex = new Texture();
+    ITexture *grassTex = new Texture();
     grassTex->LoadFromFile(CW_TEXTURE_DIR "grass.jpg");
     grassTex->SetRepeating(true);
 
-    ITexture * rockTex = new Texture();
+    ITexture *rockTex = new Texture();
     rockTex->LoadFromFile(CW_TEXTURE_DIR "rock.jpg");
     rockTex->SetRepeating(true);
 
     // Scene subtree
-    auto terrainTextures = globalTransp->AddChild(new TextureNode(
-        "terrainTextures", {
-          { heightmapTexture, "heightmapTex", 1 },
-          { heightmapMultTex, "heightmapMultTex", 2 },
-          { sandTex, "levelTex[0]", 3 },
-          { grassTex, "levelTex[1]", 4 },
-          { rockTex, "levelTex[2]", 5 },
-        }));
+    auto terrainTextures =
+        globalTransp->AddChild(new TextureNode("terrainTextures", {
+                                                                      {heightmapTexture, "heightmapTex", 1},
+                                                                      {heightmapMultTex, "heightmapMultTex", 2},
+                                                                      {sandTex, "levelTex[0]", 3},
+                                                                      {grassTex, "levelTex[1]", 4},
+                                                                      {rockTex, "levelTex[2]", 5},
+                                                                  }));
 
-    auto terrainShader = terrainTextures->AddChild(
-        new ShaderNode("terrainShader",
-                       new ShaderProgram({new VertexShader(CW_SHADER_DIR "HeightmapVertex.glsl"),
-                                          new FragmentShader(CW_SHADER_DIR "HeightmapFragment.glsl"),
-                                          new TesselationControlShader(CW_SHADER_DIR "HeightmapTCS.glsl"),
-                                          new TesselationEvaluationShader(CW_SHADER_DIR "HeightmapTES.glsl")})));
+    auto terrainShader = terrainTextures->AddChild(new ShaderNode(
+        "terrainShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "HeightmapVertex.glsl"),
+                                            new FragmentShader(CW_SHADER_DIR "HeightmapFragment.glsl"),
+                                            new TesselationControlShader(CW_SHADER_DIR "HeightmapTCS.glsl"),
+                                            new TesselationEvaluationShader(CW_SHADER_DIR "HeightmapTES.glsl")})));
 
     auto terrainControlNode = terrainShader->AddChild(
         new GenericControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
 
-    auto terrainTextureMatrix = terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(100.0f)));
+    auto terrainTextureMatrix =
+        terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(100.0f)));
 
     auto terrainShaderSync = terrainTextureMatrix->AddChild(new ShaderSyncNode("terrainShaderSync"));
 
@@ -268,7 +266,7 @@ void World::Build(SceneNode *root)
 
   {
     // Portal camera
-    CameraNode * portalCamera = new CameraNode("portalCamera");
+    CameraNode *portalCamera = new CameraNode("portalCamera");
     root->AddChild(portalCamera);
     portalCamera->LockOrientationTo(playerCamera);
     portalCamera->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 50.0f, 0.0f)));
@@ -296,12 +294,12 @@ void World::Build(SceneNode *root)
 
   // ENVIRONMENT
   {
-    auto envShader = globalTransp->AddChild(new ShaderNode(
-      "envShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
-        new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl") })));
+    auto envShader = globalTransp->AddChild(
+        new ShaderNode("envShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+                                                       new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl")})));
     envShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
-    auto envTextures = envShader->AddChild(new TextureNode("envTextures", { { portalBufferColourTex, "diffuseTex", 1 } }));
+    auto envTextures = envShader->AddChild(new TextureNode("envTextures", {{portalBufferColourTex, "diffuseTex", 1}}));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
     MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere(), true);
@@ -321,14 +319,13 @@ void World::Build(SceneNode *root)
     waterTex->LoadFromFile(CW_TEXTURE_DIR "water_surface.jpg");
     waterTex->SetRepeating(true);
 
-    auto waterShader = globalTransp->AddChild(new ShaderNode(
-        "waterShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
-                                          new FragmentShader(CW_SHADER_DIR "ReflectFragment.glsl")})));
+    auto waterShader = globalTransp->AddChild(
+        new ShaderNode("waterShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+                                                         new FragmentShader(CW_SHADER_DIR "ReflectFragment.glsl")})));
 
     auto waterTexture = waterShader->AddChild(
         new TextureNode("waterTexture", {{waterTex, "waterTexture", 1}, {cubeMapTex, "cubeTex", 2}}));
-    m_state.waterTexMatrix = (MatrixNode *) waterTexture->AddChild(
-        new MatrixNode("waterTexMatrix", "textureMatrix"));
+    m_state.waterTexMatrix = (MatrixNode *)waterTexture->AddChild(new MatrixNode("waterTexMatrix", "textureMatrix"));
 
     auto waterShaderSync = m_state.waterTexMatrix->AddChild(new ShaderSyncNode("waterShaderSync"));
 
@@ -420,6 +417,7 @@ void World::Update(float msec)
     m_state.flashlight->ToggleActive();
 
   // Move water texture
-  m_state.waterTexMatrix->Matrix() = Matrix4::Scale(10.0f) * Matrix4::Translation(Vector3(0.0f, -0.1f * m_state.timeOfDay, 0.0f));
+  m_state.waterTexMatrix->Matrix() =
+      Matrix4::Scale(10.0f) * Matrix4::Translation(Vector3(0.0f, -0.1f * m_state.timeOfDay, 0.0f));
 }
 }
