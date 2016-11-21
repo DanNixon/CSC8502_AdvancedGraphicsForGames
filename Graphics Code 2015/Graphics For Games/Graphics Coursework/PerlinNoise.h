@@ -4,11 +4,15 @@
 
 #include <vector>
 
-// From: https://github.com/sol-prog/Perlin_Noise
-// Based on: http://mrl.nyu.edu/~perlin/noise/ (copyright 2002 Ken Perlin)
-
 namespace GraphicsCoursework
 {
+/**
+ * @class PerlinNoise
+ * @brief 3D Perlin Noise generator.
+ *
+ * Adapted from: https://github.com/sol-prog/Perlin_Noise
+ * Based on: http://mrl.nyu.edu/~perlin/noise/ (copyright 2002 Ken Perlin)
+ */
 class PerlinNoise
 {
 public:

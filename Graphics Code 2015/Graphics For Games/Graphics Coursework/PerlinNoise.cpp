@@ -8,6 +8,9 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Reference permutation vector.
+ */
 const std::vector<int> PerlinNoise::REFERENCE_PERMUTATION = {
     151, 160, 137, 91,  90,  15,  131, 13,  201, 95,  96,  53,  194, 233, 7,   225, 140, 36,  103, 30,  69,  142,
     8,   99,  37,  240, 21,  10,  23,  190, 6,   148, 247, 120, 234, 75,  0,   26,  197, 62,  94,  252, 219, 203,
@@ -27,10 +30,10 @@ const std::vector<int> PerlinNoise::REFERENCE_PERMUTATION = {
  */
 PerlinNoise::PerlinNoise()
 {
-  // Initialize the permutation vector with the reference values
+  /* Initialize the permutation vector with the reference values */
   m_permutation.insert(m_permutation.end(), REFERENCE_PERMUTATION.cbegin(), REFERENCE_PERMUTATION.cend());
 
-  // Duplicate the permutation vector
+  /* Duplicate the permutation vector */
   m_permutation.insert(m_permutation.end(), REFERENCE_PERMUTATION.cbegin(), REFERENCE_PERMUTATION.cend());
 }
 
@@ -42,16 +45,16 @@ PerlinNoise::PerlinNoise(unsigned int seed)
 {
   m_permutation.resize(256);
 
-  // Fill p with values from 0 to 255
+  /* Fill p with values from 0 to 255 */
   std::iota(m_permutation.begin(), m_permutation.end(), 0);
 
-  // Initialize a random engine with seed
+  /* Initialize a random engine with seed */
   std::default_random_engine engine(seed);
 
-  // Suffle using the above random engine
+  /* Suffle using the above random engine */
   std::shuffle(m_permutation.begin(), m_permutation.end(), engine);
 
-  // Duplicate the permutation vector
+  /* Duplicate the permutation vector */
   m_permutation.insert(m_permutation.end(), m_permutation.begin(), m_permutation.end());
 }
 
@@ -59,24 +62,31 @@ PerlinNoise::~PerlinNoise()
 {
 }
 
+/**
+ * @brief Get noise value for a given 3D coordinate.
+ * @param x X coordinate
+ * @param y Y coordinate
+ * @param z Z coordinate
+ * @return Noise value
+ */
 float PerlinNoise::Noise(float x, float y, float z) const
 {
-  // Find the unit cube that contains the point
+  /* Find the unit cube that contains the point */
   int X = (int)floor(x) & 255;
   int Y = (int)floor(y) & 255;
   int Z = (int)floor(z) & 255;
 
-  // Find relative x, y,z of point in cube
+  /* Find relative x, y,z of point in cube */
   x -= floor(x);
   y -= floor(y);
   z -= floor(z);
 
-  // Compute fade curves for each of x, y, z
+  /* Compute fade curves for each of x, y, z */
   float u = Fade(x);
   float v = Fade(y);
   float w = Fade(z);
 
-  // Hash coordinates of the 8 cube corners
+  /* Hash coordinates of the 8 cube corners */
   int A = m_permutation[X] + Y;
   int AA = m_permutation[A] + Z;
   int AB = m_permutation[A + 1] + Z;
@@ -84,7 +94,7 @@ float PerlinNoise::Noise(float x, float y, float z) const
   int BA = m_permutation[B] + Z;
   int BB = m_permutation[B + 1] + Z;
 
-  // Add blended results from 8 corners of cube
+  /* Add blended results from 8 corners of cube */
   float res = Lerp(
       w, Lerp(v, Lerp(u, Grad(m_permutation[AA], x, y, z), Grad(m_permutation[BA], x - 1, y, z)),
               Lerp(u, Grad(m_permutation[AB], x, y - 1, z), Grad(m_permutation[BB], x - 1, y - 1, z))),
@@ -98,6 +108,13 @@ float PerlinNoise::Fade(float t) const
   return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
+/**
+ * @brief Linearly interpolate between two points.
+ * @param t Interpolation point
+ * @param a Lower bound
+ * @param b Upper bound
+ * @return Interpolated value
+ */
 float PerlinNoise::Lerp(float t, float a, float b) const
 {
   return a + t * (b - a);
@@ -106,7 +123,7 @@ float PerlinNoise::Lerp(float t, float a, float b) const
 float PerlinNoise::Grad(int hash, float x, float y, float z) const
 {
   int h = hash & 15;
-  // Convert lower 4 bits of hash into 12 gradient directions
+  /* Convert lower 4 bits of hash into 12 gradient directions */
   float u = h < 8 ? x : y, v = h < 4 ? y : h == 12 || h == 14 ? x : z;
   return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 }

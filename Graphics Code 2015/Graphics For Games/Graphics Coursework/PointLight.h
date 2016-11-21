@@ -6,12 +6,19 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class PointLight
+ * @brief Light that casts light evenly in all directions.
+ */
 class PointLight : public ILight
 {
 public:
   PointLight(const std::string &name);
   virtual ~PointLight();
 
+  /**
+   * @copydoc ILight::NumDirections
+   */
   virtual size_t NumDirections() const
   {
     return 6;

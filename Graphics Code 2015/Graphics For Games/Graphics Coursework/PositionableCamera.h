@@ -8,6 +8,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class PositionableCamera
+ * @brief Camera that can be positioned with the mouse and WASD.
+ */
 class PositionableCamera : public CameraNode
 {
 public:
@@ -35,10 +39,10 @@ public:
   virtual void Update(float msec);
 
 protected:
-  float m_linearSpeed;
-  float m_angularSpeed;
+  float m_linearSpeed;  //!< Speed multiplier for linear motion
+  float m_angularSpeed; //!< Speed multiplier for angular motion
 
-  float m_yawAngle;
-  float m_pitchAngle;
+  float m_yawAngle;   //!< Yaw angle of the camera in degrees
+  float m_pitchAngle; //!< Pitch angle of the camera in degrees
 };
 }

@@ -71,13 +71,28 @@ public:
     return m_reach;
   }
 
+  /**
+   * @brief Gets the number of directions this light is cast in.
+   * @return Number of directions
+   *
+   * Should be equal to the number of render passes it would take to correctly shadow this light.
+   */
   virtual size_t NumDirections() const = 0;
+
+  /**
+   * @brief Gets all directions this light casts light in.
+   * @param directions Reference to output container
+   */
   virtual void CastDirections(std::vector<Vector3> &directions) const = 0;
 
   virtual void ShaderBind(ShaderProgram *s);
   virtual void ShaderUnBind(ShaderProgram *s);
 
 protected:
+  /**
+   * @brief Builds the uniform name cache for this light.
+   * @param idx Index of this light in shader uniform array
+   */
   virtual void SetUniformNames(const std::string &idx) = 0;
 
 protected:
