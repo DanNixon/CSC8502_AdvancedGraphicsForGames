@@ -16,6 +16,13 @@ public:
   CameraNode(const std::string &name);
   virtual ~CameraNode();
 
+  virtual void LockOrientationTo(SceneNode * node);
+
   Matrix4 ViewMatrix() const;
+
+  virtual void Update(float msec);
+
+protected:
+  SceneNode * m_orientationLock;
 };
 }

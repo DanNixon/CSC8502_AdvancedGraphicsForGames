@@ -98,6 +98,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShaderSyncNode.cpp" />
     <ClCompile Include="SpotLight.cpp" />
+    <ClCompile Include="SubTreeNode.cpp" />
     <ClCompile Include="TextMesh.cpp" />
     <ClCompile Include="TextNode.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="ShaderSyncNode.h" />
     <ClInclude Include="DepthStencilTexture.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="SubTreeNode.h" />
     <ClInclude Include="TextMesh.h" />
     <ClInclude Include="TextNode.h" />
     <ClInclude Include="Texture.h" />

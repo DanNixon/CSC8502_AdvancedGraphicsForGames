@@ -16,6 +16,16 @@ PointLight::~PointLight()
 {
 }
 
+void PointLight::CastDirections(std::vector<Vector3>& directions) const
+{
+  directions.push_back(Vector3(1.0f, 0.0f, 0.0f));
+  directions.push_back(Vector3(-1.0f, 0.0f, 0.0f));
+  directions.push_back(Vector3(0.0f, 1.0f, 0.0f));
+  directions.push_back(Vector3(0.0f, -1.0f, 0.0f));
+  directions.push_back(Vector3(0.0f, 0.0f, 1.0f));
+  directions.push_back(Vector3(0.0f, 0.0f, -1.0f));
+}
+
 void PointLight::SetUniformNames(const std::string &idx)
 {
   m_shaderUniformNames[UNIFORM_POSITION] = "pointLights[" + idx + "].light.position";

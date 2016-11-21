@@ -25,6 +25,16 @@ public:
     return -m_worldTransform.GetBackVector();
   }
 
+  virtual size_t NumDirections() const
+  {
+    return 1;
+  }
+
+  virtual void CastDirections(std::vector<Vector3> &directions) const
+  {
+    directions.push_back(Direction());
+  }
+
   virtual void ShaderBind(ShaderProgram *s);
   virtual void ShaderUnBind(ShaderProgram *s);
 

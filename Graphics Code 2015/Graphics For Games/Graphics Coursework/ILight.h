@@ -48,6 +48,9 @@ public:
     return m_reach;
   }
 
+  virtual size_t NumDirections() const = 0;
+  virtual void CastDirections(std::vector<Vector3> &directions) const = 0;
+
   virtual void ShaderBind(ShaderProgram *s);
   virtual void ShaderUnBind(ShaderProgram *s);
 

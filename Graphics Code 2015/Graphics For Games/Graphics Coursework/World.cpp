@@ -28,6 +28,7 @@
 #include "SpotLight.h"
 #include "TextureNode.h"
 #include "TransparentRenderingNode.h"
+#include "SubTreeNode.h"
 
 #define CW_SHADER_DIR SHADERDIR"coursework/"
 #define CW_TEXTURE_DIR TEXTUREDIR"coursework/"
@@ -99,12 +100,12 @@ void World::Build(SceneNode *root)
   // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
   projection->AddChild(sceneBuffer);
-  auto gobalFog = sceneBuffer->AddChild(new GenericControlNode("globalFog", [](ShaderProgram * s) {
+  auto globalFog = sceneBuffer->AddChild(new GenericControlNode("globalFog", [](ShaderProgram * s) {
     glUniform3f(glGetUniformLocation(s->Program(), "fogBaseColour"), 0.4f, 0.4f, 0.55f);
     glUniform1f(glGetUniformLocation(s->Program(), "fogExp"), 0.001f);
     glUniform1f(glGetUniformLocation(s->Program(), "fogAtten"), 0.6f);
   }));
-  auto globalTransp = gobalFog->AddChild(new TransparentRenderingNode("globalTransp"));
+  auto globalTransp = globalFog->AddChild(new TransparentRenderingNode("globalTransp"));
 
   ITexture *bufferDepthTex = new DepthStencilTexture(m_state.screenDims.x, m_state.screenDims.y);
   ITexture *bufferColourTex1 = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
@@ -194,25 +195,6 @@ void World::Build(SceneNode *root)
     m_state.flashlight->Reach() = 30.0f;
   }
 
-  // ENVIRONMENT
-  {
-    auto envShader = globalTransp->AddChild(new ShaderNode(
-        "envShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
-                                        new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl")})));
-    auto envTextures = envShader->AddChild(new TextureNode("envTextures", {{brickTexture, "diffuseTex", 1}}));
-    auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
-
-    MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere(), true);
-    envShaderSync->AddChild(sphere1);
-    sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
-    sphere1->SpecularIntensity() = 0.5f;
-    sphere1->SpecularPower() = 100.0f;
-
-    MeshNode *transp1 = new MeshNode("sphere1", Mesh::GenerateQuad(), true);
-    envShaderSync->AddChild(transp1);
-    transp1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 3.0f, -10.0f)));
-  }
-
   // HEIGHTMAP
   {
     // Height generation
@@ -271,6 +253,56 @@ void World::Build(SceneNode *root)
     terrainMesh->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     terrainMesh->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -15.0f, -8.0f)) *
                                         Matrix4::Scale(m_state.worldBounds));
+  }
+
+  // PORTAL
+  ITexture *portalBufferColourTex = nullptr;
+
+  {
+    // Portal camera
+    CameraNode * portalCamera = new CameraNode("portalCamera");
+    root->AddChild(portalCamera);
+    portalCamera->LockOrientationTo(playerCamera);
+    portalCamera->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 50.0f, 0.0f)));
+
+    // Portal FBO
+    FramebufferNode *portalBuffer = new FramebufferNode("portalBuffer");
+    projection->AddChild(portalBuffer);
+
+    ITexture *portalBufferDepthTex = new DepthStencilTexture(m_state.screenDims.x, m_state.screenDims.y);
+    portalBufferColourTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
+
+    portalBuffer->BindTexture(GL_DEPTH_ATTACHMENT, portalBufferDepthTex);
+    portalBuffer->BindTexture(GL_STENCIL_ATTACHMENT, portalBufferDepthTex);
+    portalBuffer->BindTexture(GL_COLOR_ATTACHMENT0, portalBufferColourTex);
+
+    CameraSelectorNode *portalCameraSelect = new CameraSelectorNode("portalCameraSelect");
+    portalBuffer->AddChild(portalCameraSelect);
+    portalCameraSelect->SetCamera(portalCamera);
+
+    portalCameraSelect->AddChild(new SubTreeNode("portalSubtree", globalFog));
+
+    // Portal quad
+    // TOOD
+  }
+
+  // ENVIRONMENT
+  {
+    auto envShader = globalTransp->AddChild(new ShaderNode(
+      "envShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+        new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl") })));
+    auto envTextures = envShader->AddChild(new TextureNode("envTextures", { { portalBufferColourTex, "diffuseTex", 1 } }));
+    auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
+
+    MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere(), true);
+    envShaderSync->AddChild(sphere1);
+    sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
+    sphere1->SpecularIntensity() = 0.5f;
+    sphere1->SpecularPower() = 100.0f;
+
+    MeshNode *transp1 = new MeshNode("sphere1", Mesh::GenerateQuad(), true);
+    envShaderSync->AddChild(transp1);
+    transp1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 3.0f, -10.0f)));
   }
 
   // WATER

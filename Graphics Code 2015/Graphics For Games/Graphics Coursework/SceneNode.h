@@ -97,6 +97,8 @@ public:
   friend std::ostream &operator<<(std::ostream &s, const SceneNode &n);
 
 protected:
+  friend class SubTreeNode;
+
   const std::string m_name;
 
   Renderer *m_renderer;

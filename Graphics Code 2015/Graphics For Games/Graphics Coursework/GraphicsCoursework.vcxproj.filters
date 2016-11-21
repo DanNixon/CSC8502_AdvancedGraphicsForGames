@@ -105,6 +105,9 @@
     <ClCompile Include="TransparentRenderingNode.cpp">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="SubTreeNode.cpp">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -220,6 +223,9 @@
       <Filter>Environment</Filter>
     </ClInclude>
     <ClInclude Include="TransparentRenderingNode.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="SubTreeNode.h">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
   </ItemGroup>
