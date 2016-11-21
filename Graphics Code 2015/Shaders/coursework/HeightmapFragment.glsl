@@ -100,7 +100,7 @@ vec3 processSpotLight(vec4 diffuse, SpotLight light)
 	return colour;
 }
 
-const float levelTH[] = {0.0, 0.5, 0.55, 0.58, 0.6, 1.0};
+const float levelTH[] = {0.0, 0.5, 0.55, 0.6, 0.66, 1.0};
 
 void main(void)
 {

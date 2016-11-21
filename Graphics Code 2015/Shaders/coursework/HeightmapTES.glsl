@@ -3,6 +3,7 @@
 layout (quads, ccw) in;
 
 uniform sampler2D heightmapTex;
+uniform sampler2D heightmapMultTex;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -39,16 +40,12 @@ void main()
   vec2 tempTexCoord = mix(tc_a, tc_b, gl_TessCoord.y);
 
 	// Normal
-	float height = texture(heightmapTex, tempTexCoord).r;
-  float hL = textureOffset(heightmapTex, tempTexCoord, off.xy).r;
-  float hR = textureOffset(heightmapTex, tempTexCoord, off.zy).r;
-  float hD = textureOffset(heightmapTex, tempTexCoord, off.yx).r;
-  float hU = textureOffset(heightmapTex, tempTexCoord, off.yz).r;
-	
-	vec3 normal = vec3(hL - hR, 0.0, hD - hU) * 50.0; 
-	normal.y = 2.0;
-	
-	OUT.bump = vec4(normalize(normal), height);
+	// TOOD
+
+  float height = texture(heightmapTex, tempTexCoord).r;
+  height += (1.0 - texture(heightmapMultTex, tempTexCoord).r) * 0.5;
+
+	OUT.bump = vec4(0.0, 1.0, 0.0, height);
 
 	// Position
 	vec3 pos_a = mix(gl_in[0].gl_Position.xyz, gl_in[1].gl_Position.xyz, gl_TessCoord.x);
@@ -56,7 +53,7 @@ void main()
 	vec3 pos = mix(pos_a, pos_b, gl_TessCoord.y);
 	
 	vec4 worldPos = modelMatrix * vec4(pos, 1.0);
-	worldPos.y += mix(0.0, 50.0, n(0.4, 0.7, height));
+  worldPos.y += mix(0.0, 50.0, n(0.4, 0.7, height));
 	
   OUT.worldPos = worldPos.xyz;
 	OUT.texCoord = (textureMatrix * vec4(tempTexCoord, 0.0, 1.0)).xy;

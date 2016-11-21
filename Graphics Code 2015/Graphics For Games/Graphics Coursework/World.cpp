@@ -102,8 +102,8 @@ void World::Build(SceneNode *root)
   projection->AddChild(sceneBuffer);
   auto globalFog = sceneBuffer->AddChild(new GenericControlNode("globalFog", [](ShaderProgram * s) {
     glUniform3f(glGetUniformLocation(s->Program(), "fogBaseColour"), 0.4f, 0.4f, 0.55f);
-    glUniform1f(glGetUniformLocation(s->Program(), "fogExp"), 0.001f);
-    glUniform1f(glGetUniformLocation(s->Program(), "fogAtten"), 0.6f);
+    glUniform1f(glGetUniformLocation(s->Program(), "fogExp"), 0.0005f);
+    glUniform1f(glGetUniformLocation(s->Program(), "fogAtten"), 0.4f);
   }));
   auto globalTransp = globalFog->AddChild(new TransparentRenderingNode("globalTransp"));
 
@@ -117,10 +117,14 @@ void World::Build(SceneNode *root)
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles({
-    CW_TEXTURE_DIR "sb_west.jpg", CW_TEXTURE_DIR "sb_east.jpg", CW_TEXTURE_DIR "sb_up.jpg",
-    CW_TEXTURE_DIR "sb_down.jpg", CW_TEXTURE_DIR "sb_south.jpg", CW_TEXTURE_DIR "sb_north.jpg",
+    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_px.jpg",
+    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mx.jpg",
+    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_py.jpg",
+    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_my.jpg",
+    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_pz.jpg",
+    CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mz.jpg"
   });
-  cubeMapTex->SetRepeating(true);
+  //cubeMapTex->SetRepeating(true);
 
   // SKYBOX
   {
@@ -210,6 +214,9 @@ void World::Build(SceneNode *root)
     heightmapTexture->SetFromFBM(&fbm);
     heightmapTexture->SetRepeating(true);
 
+    ITexture * heightmapMultTex = new Texture();
+    heightmapMultTex->LoadFromFile(CW_TEXTURE_DIR "radial_grad.tga");
+
     // Textures
     ITexture * sandTex = new Texture();
     sandTex->LoadFromFile(CW_TEXTURE_DIR "sand.jpg");
@@ -227,9 +234,10 @@ void World::Build(SceneNode *root)
     auto terrainTextures = globalTransp->AddChild(new TextureNode(
         "terrainTextures", {
           { heightmapTexture, "heightmapTex", 1 },
-          { sandTex, "levelTex[0]", 2 },
-          { grassTex, "levelTex[1]", 3 },
-          { rockTex, "levelTex[2]", 4 },
+          { heightmapMultTex, "heightmapMultTex", 2 },
+          { sandTex, "levelTex[0]", 3 },
+          { grassTex, "levelTex[1]", 4 },
+          { rockTex, "levelTex[2]", 5 },
         }));
 
     auto terrainShader = terrainTextures->AddChild(
@@ -242,7 +250,7 @@ void World::Build(SceneNode *root)
     auto terrainControlNode = terrainShader->AddChild(
         new GenericControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
 
-    auto terrainTextureMatrix = terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(10.0f)));
+    auto terrainTextureMatrix = terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(100.0f)));
 
     auto terrainShaderSync = terrainTextureMatrix->AddChild(new ShaderSyncNode("terrainShaderSync"));
 
@@ -291,6 +299,8 @@ void World::Build(SceneNode *root)
     auto envShader = globalTransp->AddChild(new ShaderNode(
       "envShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
         new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl") })));
+    envShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
+
     auto envTextures = envShader->AddChild(new TextureNode("envTextures", { { portalBufferColourTex, "diffuseTex", 1 } }));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
