@@ -85,7 +85,7 @@ void World::Build(SceneNode *root)
   // Main camera and view
   PositionableCamera *playerCamera = new PositionableCamera("playerCamera");
   root->AddChild(playerCamera);
-  playerCamera->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 1.0f, -8.0f)));
+  playerCamera->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 20.0f, -8.0f)));
   playerCamera->LinearSpeed() = 0.01f;
 
   CameraSelectorNode *playerCameraSelect = new CameraSelectorNode("playerCameraSelect");
@@ -402,12 +402,12 @@ void World::Update(float msec)
   Matrix4 sunMoonTrans = Matrix4::Rotation(360.0f * m_state.timeOfDay, Vector3(0.0f, 0.0f, 1.0f));
 
   m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) *
-                                      Matrix4::Scale(25.0f));
+                                      Matrix4::Scale(250.0f));
   m_state.sun->Colour().w =
       max(0.1f, m_state.sun->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
 
   m_state.moon->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, -m_state.worldBounds, 0.0f)) *
-                                       Matrix4::Scale(10.0f));
+                                       Matrix4::Scale(80.0f));
   m_state.moon->Colour().w =
       max(0.1f, m_state.moon->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
 
