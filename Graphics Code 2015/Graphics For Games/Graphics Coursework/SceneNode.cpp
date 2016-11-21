@@ -7,6 +7,11 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new scene node.
+ * @param name Node name
+ * @param renderer Parent renderer (only set when Renderer adds root node)
+ */
 SceneNode::SceneNode(const std::string &name, Renderer *renderer)
     : m_name(name)
     , m_renderer(renderer)
@@ -87,7 +92,10 @@ bool SceneNode::RemoveChild(const std::string &name)
 {
   bool retVal = false;
 
-  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode *n) { return n->Name() == name; });
+  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode *n)
+                         {
+                           return n->Name() == name;
+                         });
 
   if (it != m_children.end())
     retVal = RemoveChild(*it);
@@ -97,7 +105,10 @@ bool SceneNode::RemoveChild(const std::string &name)
 
 SceneNode *SceneNode::Child(const std::string &name)
 {
-  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode *n) { return n->Name() == name; });
+  auto it = std::find_if(m_children.begin(), m_children.end(), [name](SceneNode *n)
+                         {
+                           return n->Name() == name;
+                         });
   return (it == m_children.end() ? nullptr : *it);
 }
 

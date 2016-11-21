@@ -13,6 +13,10 @@ namespace GraphicsCoursework
 class ShaderProgram;
 class Renderer;
 
+/**
+ * @class SceneNode
+ * @brief Base class for nodes in the scene graph.
+ */
 class SceneNode
 {
 public:
