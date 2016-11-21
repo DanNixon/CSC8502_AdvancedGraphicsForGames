@@ -27,7 +27,6 @@
 #include "Shaders.h"
 #include "SpotLight.h"
 #include "TextureNode.h"
-#include "FogNode.h"
 #include "TransparentRenderingNode.h"
 
 #define CW_SHADER_DIR SHADERDIR"coursework/"
@@ -100,7 +99,12 @@ void World::Build(SceneNode *root)
   // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
   projection->AddChild(sceneBuffer);
-  auto globalTransp = sceneBuffer->AddChild(new TransparentRenderingNode("globalTransp"));
+  auto gobalFog = sceneBuffer->AddChild(new GenericControlNode("globalFog", [](ShaderProgram * s) {
+    glUniform3f(glGetUniformLocation(s->Program(), "fogBaseColour"), 0.4f, 0.4f, 0.55f);
+    glUniform1f(glGetUniformLocation(s->Program(), "fogExp"), 0.001f);
+    glUniform1f(glGetUniformLocation(s->Program(), "fogAtten"), 0.6f);
+  }));
+  auto globalTransp = gobalFog->AddChild(new TransparentRenderingNode("globalTransp"));
 
   ITexture *bufferDepthTex = new DepthStencilTexture(m_state.screenDims.x, m_state.screenDims.y);
   ITexture *bufferColourTex1 = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);

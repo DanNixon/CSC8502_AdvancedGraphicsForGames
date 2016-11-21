@@ -69,7 +69,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FogNode.cpp" />
     <ClCompile Include="GeneratedTexture.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="CameraSelectorNode.cpp" />
@@ -108,7 +107,6 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FogNode.h" />
     <ClInclude Include="GeneratedTexture.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraSelectorNode.h" />

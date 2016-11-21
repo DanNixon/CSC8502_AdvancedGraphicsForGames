@@ -34,6 +34,10 @@ struct SpotLight
 uniform PointLight pointLights[MAX_POINT_LIGHTS];                                          
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
+uniform vec3 fogBaseColour;
+uniform float fogExp;
+uniform float fogAtten;
+
 in Vertex
 {
   vec4 colour;
@@ -44,11 +48,20 @@ in Vertex
 
 out vec4 fragColour;
 
+vec3 applyFog(vec3 rgb, vec3 rayDir, Light light, float f)
+{
+  float fogAmount = 1.0 - exp( -length(rayDir) * fogExp );
+  float sunAmount = max(dot( rayDir, light.position - IN.worldPos ), 0.0);
+  vec3 fogColour = mix(fogBaseColour, light.colour.rgb * light.colour.a, f);
+	return mix(rgb, fogColour, fogAmount * fogAtten);
+}
+
 vec3 processPointLight(vec4 diffuse, Light light)
 {
   float dist = length(light.position - IN.worldPos);
   float atten = 1.0 - clamp(dist / light.reach, 0.2, 1.0);
-  return (light.colour * diffuse * atten).rgb;
+  vec3 colour = (light.colour * diffuse * atten).rgb;
+	return applyFog(colour, IN.worldPos - cameraPos, light, atten);
 }
 
 vec3 processSpotLight(vec4 diffuse, SpotLight light)
