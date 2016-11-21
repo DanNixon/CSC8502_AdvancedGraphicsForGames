@@ -8,6 +8,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class ITexture
+ * @brief Class containing basic data for a GL texture.
+ */
 class ITexture
 {
 public:
@@ -17,16 +21,28 @@ public:
   virtual bool LoadFromFile(const std::string &filename, unsigned int flags = 0);
   virtual bool LoadFromFiles(const std::vector<std::string> &filenames, unsigned int flags = 0);
 
+  /**
+   * @brief Tests if this texture is a valid GL texture.
+   * @return True if this container is associated with a GL texture
+   */
   inline bool Valid() const
   {
     return m_textureID != 0;
   }
 
+  /**
+   * @brief Returns the texture type.
+   * @return Texture type
+   */
   inline GLuint Type() const
   {
     return m_type;
   }
 
+  /**
+   * @brief Returns the GL texture ID.
+   * @return Texture number
+   */
   inline GLuint GetTextureID()
   {
     return m_textureID;
@@ -41,7 +57,7 @@ public:
   void UnBindFromShader(GLuint program, const std::string &uniformName, GLuint idx);
 
 protected:
-  GLuint m_type;
-  GLuint m_textureID;
+  GLuint m_type;      //!< OpenGL texture type
+  GLuint m_textureID; //!< OpenGL texture handle
 };
 }

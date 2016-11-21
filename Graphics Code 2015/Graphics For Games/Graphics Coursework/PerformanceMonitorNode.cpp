@@ -10,6 +10,12 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new performance monitor node.
+ * @param name Node name
+ * @param font Pointer to font to render with
+ * @param monitor Pointer to system monitor that provides performance data
+ */
 PerformanceMonitorNode::PerformanceMonitorNode(const std::string &name, Font *font, ISystemMonitor *monitor)
     : TextNode(name, font, 64)
     , m_monitor(monitor)
@@ -20,6 +26,9 @@ PerformanceMonitorNode::~PerformanceMonitorNode()
 {
 }
 
+/**
+ * @copydoc TextNode::Update
+ */
 void PerformanceMonitorNode::Update(float msec)
 {
   TextNode::Update(msec);

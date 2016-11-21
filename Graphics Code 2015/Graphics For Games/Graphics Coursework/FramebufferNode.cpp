@@ -50,12 +50,18 @@ void FramebufferNode::BindTexture(GLuint target, ITexture *texture)
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+/**
+ * @copydoc SceneNode::PreRender
+ */
 void FramebufferNode::PreRender(RenderState &state)
 {
   glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 }
 
+/**
+ * @copydoc SceneNode::PostRender
+ */
 void FramebufferNode::PostRender(RenderState &state)
 {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);

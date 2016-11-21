@@ -6,6 +6,11 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new heightmap texture.
+ * @param width Width in texels
+ * @param height Height in texels
+ */
 HeightmapTexture::HeightmapTexture(GLsizei width, GLsizei height)
     : GeneratedTexture(width, height)
     , m_yData(new float[width * height])
@@ -19,6 +24,10 @@ HeightmapTexture::~HeightmapTexture()
   delete[] m_yData;
 }
 
+/**
+ * @brief Sets the height values from a configured Fractal Brownian motion generator.
+ * @param fbm Reference to FBM generator
+ */
 void HeightmapTexture::SetFromFBM(FractalBrownianMotion *fbm)
 {
   fbm->FractalArrayThreaded(m_yData, m_width, m_height);

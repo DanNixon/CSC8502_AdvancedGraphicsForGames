@@ -40,23 +40,35 @@ void CameraSelectorNode::SetCamera(const std::string &cameraName)
   SetActive(m_active);
 }
 
+/**
+ * @copydoc ShaderDataNode::SetActive
+ */
 void CameraSelectorNode::SetActive(bool active)
 {
   m_active = active && m_camera != nullptr;
 }
 
+/**
+ * @copydoc ShaderDataNode::PreRender
+ */
 void CameraSelectorNode::PreRender(RenderState &state)
 {
   ShaderDataNode::PreRender(state);
   state.camera = m_camera;
 }
 
+/**
+ * @copydoc ShaderDataNode::PostRender
+ */
 void CameraSelectorNode::PostRender(RenderState &state)
 {
   ShaderDataNode::PostRender(state);
   state.camera = nullptr;
 }
 
+/**
+ * @copydoc ShaderDataNode::ShaderBind
+ */
 void CameraSelectorNode::ShaderBind(ShaderProgram *s)
 {
   glUniformMatrix4fv(glGetUniformLocation(s->Program(), "viewMatrix"), 1, false, (float *)&m_camera->ViewMatrix());

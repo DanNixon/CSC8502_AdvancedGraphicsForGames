@@ -20,6 +20,12 @@ CameraNode::~CameraNode()
 {
 }
 
+/**
+ * @brief Locks this camera to the same orientation as another node.
+ * @param node Node to match
+ *
+ * Position of this camera is updated on calling Update().
+ */
 void CameraNode::LockOrientationTo(SceneNode *node)
 {
   m_orientationLock = node;
@@ -34,6 +40,9 @@ Matrix4 CameraNode::ViewMatrix() const
   return m_localRotation.GetTransposedRotation() * Matrix4::Translation(-m_worldTransform.GetPositionVector());
 }
 
+/**
+ * @copydoc SceneNode::Update
+ */
 void CameraNode::Update(float msec)
 {
   SceneNode::Update(msec);

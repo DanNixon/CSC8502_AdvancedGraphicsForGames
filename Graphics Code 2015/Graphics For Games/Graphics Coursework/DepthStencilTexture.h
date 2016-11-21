@@ -8,11 +8,16 @@ namespace GraphicsCoursework
 {
 /**
  * @class DepthStencilTexture
- * @brief Holds a texture that stores depth data.
+ * @brief Holds a texture that stores depth or stencil data from a framebuffer.
  */
 class DepthStencilTexture : public GeneratedTexture
 {
 public:
+  /**
+   * @brief Creates a new texture for binding to depth or stencil buffers of an FBO.
+   * @param width Width in texels
+   * @param height Height in texels
+   */
   DepthStencilTexture(float width, float height)
       : GeneratedTexture((GLsizei)width, (GLsizei)height)
   {

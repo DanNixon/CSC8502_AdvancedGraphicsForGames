@@ -16,6 +16,17 @@ CubeMapTexture::~CubeMapTexture()
 {
 }
 
+/**
+ * @copydoc ITexture::LoadFromFiles
+ *
+ * Filename order is:
+ *  - Positive X (east)
+ *  - Negative X (west)
+ *  - Positive Y (up)
+ *  - Negative Y (down)
+ *  - Positive Z (back)
+ *  - Negative Z (front)
+ */
 bool CubeMapTexture::LoadFromFiles(const std::vector<std::string> &filenames, unsigned int flags)
 {
   if (filenames.size() != 6)

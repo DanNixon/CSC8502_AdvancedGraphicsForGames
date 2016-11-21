@@ -8,6 +8,10 @@ namespace GraphicsCoursework
 {
 class ISystemMonitor;
 
+/**
+ * @class PerformanceMonitorNode
+ * @brief Renderable scene node that shows data from an ISystemMonitor.
+ */
 class PerformanceMonitorNode : public TextNode
 {
 public:
@@ -17,6 +21,6 @@ public:
   virtual void Update(float msec);
 
 protected:
-  ISystemMonitor *m_monitor;
+  ISystemMonitor *m_monitor; //!< System monitor that provides data for this node
 };
 }

@@ -6,9 +6,16 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class ILight
+ * @brief Base class containing common functionality for working with lights in a scene.
+ */
 class ILight : public ShaderDataNode
 {
 public:
+  /**
+   * @brief Enumeration of shader uniforms used for all types of light.
+   */
   enum ShaderUniforms
   {
     UNIFORM_POSITION = 0,
@@ -26,6 +33,10 @@ public:
   ILight(const std::string &name);
   virtual ~ILight();
 
+  /**
+   * @brief Gets the index of this light in the lights array.
+   * @return Light index
+   */
   inline size_t Index() const
   {
     return m_index;
@@ -33,16 +44,28 @@ public:
 
   virtual void SetIndex(size_t index);
 
+  /**
+   * @brief Gets or sets the colour of this light.
+   * @return Light colour
+   */
   inline Vector4 &Colour()
   {
     return m_colour;
   }
 
+  /**
+   * @brief Gets or sets the intensity of ambient light contribution from this light.
+   * @return Ambient light intensity
+   */
   inline float &AmbientIntensity()
   {
     return m_ambientIntensity;
   }
 
+  /**
+   * @brief Gets or sets the maximum distance this light can reach.
+   * @return Reach
+   */
   inline float &Reach()
   {
     return m_reach;
@@ -58,11 +81,11 @@ protected:
   virtual void SetUniformNames(const std::string &idx) = 0;
 
 protected:
-  size_t m_index;
-  std::string m_shaderUniformNames[UNIFORM_COUNT];
+  size_t m_index;                                  //!< Index of this light in the shader light uniform array
+  std::string m_shaderUniformNames[UNIFORM_COUNT]; //!< Cache of uniform names
 
-  Vector4 m_colour;
-  float m_ambientIntensity;
-  float m_reach;
+  Vector4 m_colour;         //!< Light colour
+  float m_ambientIntensity; //!< Contribution of this light to ambient light
+  float m_reach;            //!< Distance this light can travel/reach
 };
 }

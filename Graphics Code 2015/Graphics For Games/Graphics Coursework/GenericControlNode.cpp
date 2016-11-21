@@ -24,11 +24,17 @@ GenericControlNode::~GenericControlNode()
 {
 }
 
+/**
+ * @copydoc ShaderDataNode::ShaderBind
+ */
 void GenericControlNode::ShaderBind(ShaderProgram *s)
 {
   m_onBind(s);
 }
 
+/**
+ * @copydoc ShaderDataNode::ShaderUnBind
+ */
 void GenericControlNode::ShaderUnBind(ShaderProgram *s)
 {
   m_onUnBind(s);

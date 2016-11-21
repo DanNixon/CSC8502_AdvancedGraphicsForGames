@@ -6,8 +6,8 @@ namespace GraphicsCoursework
 {
 /**
  * @brief Creates a new texture.
- * @param width Width of the texture
- * @param height Height of the texture
+ * @param width Width of the texture (in texels)
+ * @param height Height of the texture (in texels)
  */
 GeneratedTexture::GeneratedTexture(GLsizei width, GLsizei height)
     : ITexture(GL_TEXTURE_2D)

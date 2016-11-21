@@ -7,6 +7,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new light.
+ * @param name Node name
+ */
 ILight::ILight(const std::string &name)
     : ShaderDataNode(name)
     , m_colour(1.0f, 1.0f, 1.0f, 1.0f)
@@ -19,12 +23,19 @@ ILight::~ILight()
 {
 }
 
+/**
+ * @brief Sets the index of this light in the shader uniform array.
+ * @param index New light index
+ */
 void ILight::SetIndex(size_t index)
 {
   m_index = index;
   SetUniformNames(std::to_string(m_index));
 }
 
+/**
+ * @copydoc ShaderDataNode::ShaderBind
+ */
 void ILight::ShaderBind(ShaderProgram *s)
 {
   glUniform3fv(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_POSITION].c_str()), 1,
@@ -38,6 +49,9 @@ void ILight::ShaderBind(ShaderProgram *s)
   glUniform1f(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_REACH].c_str()), m_reach);
 }
 
+/**
+ * @copydoc ShaderDataNode::ShaderUnBind
+ */
 void ILight::ShaderUnBind(ShaderProgram *s)
 {
   glUniform3fv(glGetUniformLocation(s->Program(), m_shaderUniformNames[UNIFORM_POSITION].c_str()), 1,

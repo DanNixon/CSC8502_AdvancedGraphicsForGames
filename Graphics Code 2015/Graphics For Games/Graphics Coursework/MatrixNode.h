@@ -8,12 +8,22 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @class MatrixNode
+ * @brief Scene node used to set a mat4 uniform in the active shader.
+ *
+ * Useful for projection, texture, view, etc. matrices.
+ */
 class MatrixNode : public ShaderDataNode
 {
 public:
   MatrixNode(const std::string &name, const std::string &uniformName, const Matrix4 &matrix = Matrix4());
   virtual ~MatrixNode();
 
+  /**
+   * @brief Gets or sets the matrix that will be assigned to the uniform.
+   * @return Reference to matrix
+   */
   inline Matrix4 &Matrix()
   {
     return m_matrix;
@@ -23,7 +33,7 @@ public:
   virtual void ShaderUnBind(ShaderProgram *s);
 
 protected:
-  const std::string m_uniformName;
-  Matrix4 m_matrix;
+  const std::string m_uniformName; //!< Name of the uniform the matrix will be assigned to
+  Matrix4 m_matrix;                //!< Matrix values
 };
 }

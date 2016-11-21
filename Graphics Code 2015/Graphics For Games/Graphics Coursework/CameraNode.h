@@ -23,6 +23,6 @@ public:
   virtual void Update(float msec);
 
 protected:
-  SceneNode *m_orientationLock;
+  SceneNode *m_orientationLock; //!< SceneNode to match orientation of
 };
 }
