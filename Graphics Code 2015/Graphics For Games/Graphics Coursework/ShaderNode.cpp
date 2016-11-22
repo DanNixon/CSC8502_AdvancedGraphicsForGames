@@ -17,7 +17,7 @@ ShaderNode::ShaderNode(const std::string &name, ShaderProgram *program)
 ShaderNode::~ShaderNode()
 {
   if (m_owner)
-    delete[] m_program;
+    delete m_program;
 }
 
 void ShaderNode::SetActive(bool active)

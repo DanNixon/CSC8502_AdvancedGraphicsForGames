@@ -18,6 +18,7 @@ SubTreeNode::SubTreeNode(const std::string &name, SceneNode *subtree)
 
 SubTreeNode::~SubTreeNode()
 {
+  m_children.clear();
 }
 
 /**
