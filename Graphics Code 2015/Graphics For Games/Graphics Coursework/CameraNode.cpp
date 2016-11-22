@@ -26,9 +26,10 @@ CameraNode::~CameraNode()
  *
  * Position of this camera is updated on calling Update().
  */
-void CameraNode::LockOrientationTo(SceneNode *node)
+void CameraNode::LockOrientationTo(SceneNode *node, const Matrix4 &transform)
 {
   m_orientationLock = node;
+  m_orientationLockTransform = transform;
 }
 
 /**
@@ -48,6 +49,6 @@ void CameraNode::Update(float msec)
   SceneNode::Update(msec);
 
   if (m_orientationLock != nullptr)
-    m_localRotation = m_orientationLock->GetLocalRotation();
+    m_localRotation = m_orientationLock->GetLocalRotation() * m_orientationLockTransform;
 }
 }
