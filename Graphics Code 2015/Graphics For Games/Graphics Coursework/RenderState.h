@@ -27,6 +27,7 @@ struct RenderState
       , numSpotLights(0)
       , camera(nullptr)
       , shader(nullptr)
+      , processPass(false)
       , transparentSync(nullptr)
   {
   }
@@ -39,6 +40,8 @@ struct RenderState
 
   ShaderProgram *shader;                             //!< Current shader (should never be null after ShaderSyncNode)
   std::vector<ShaderDataNode *> shaderDataNodeStack; //!< Stack of ShaderDataNode to be activated by ShaderSyncNode
+
+  bool processPass;
 
   std::vector<RenderableNode *> transparentNodes; //!< List of transparent nodes
   TransparentRenderingNode *

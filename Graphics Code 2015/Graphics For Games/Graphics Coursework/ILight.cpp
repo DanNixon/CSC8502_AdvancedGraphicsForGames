@@ -5,6 +5,8 @@
 #include "Renderer.h"
 #include "ShaderProgram.h"
 #include "ShadowTexture.h"
+#include "FramebufferNode.h"
+#include "SubtreeNode.h"
 
 namespace GraphicsCoursework
 {
@@ -17,6 +19,7 @@ ILight::ILight(const std::string &name)
     , m_colour(1.0f, 1.0f, 1.0f, 1.0f)
     , m_ambientIntensity(0.1f)
     , m_reach(10.0f)
+    , m_shadowSceneRoot(nullptr)
 {
 }
 
@@ -24,16 +27,24 @@ ILight::~ILight()
 {
   for (auto it = m_shadowTextures.begin(); it != m_shadowTextures.end(); ++it)
     delete *it;
+
+  if (m_shadowSceneRoot != nullptr)
+    delete m_shadowSceneRoot;
 }
 
 /**
  * @brief Creates the textures required to do shadow mapping for this light.
  * @param shadowTexDim Dimensions of the shadow texture
+ * @param shadowSceneRoot Root node of the subtree of the scene graph that has shadows cast upon it by this light
  */
-void ILight::InitShadows(GLuint shadowTexDim)
+void ILight::InitShadows(GLuint shadowTexDim, SceneNode * shadowSceneRoot)
 {
   for (size_t i = 0; i < NumDirections(); i++)
     m_shadowTextures.push_back(new ShadowTexture(shadowTexDim));
+
+  m_shadowSceneRoot = new FramebufferNode(m_name + "_ShadowFramebuffer");
+
+  m_shadowSceneRoot->AddChild(new SubTreeNode(m_name + "_ShadowSubtree", shadowSceneRoot));
 }
 
 /**
@@ -44,6 +55,26 @@ void ILight::SetIndex(size_t index)
 {
   m_index = index;
   SetUniformNames(std::to_string(m_index));
+}
+
+void ILight::DoShadowRender()
+{
+  RenderState state;
+  state.processPass = true;
+
+  for (size_t i = 0; i < NumDirections(); i++)
+  {
+    m_shadowSceneRoot->BindTexture(GL_DEPTH_ATTACHMENT, m_shadowTextures[i]);
+    m_shadowSceneRoot->Render(state);
+  }
+}
+
+void ILight::PreRender(RenderState & state)
+{
+  ShaderDataNode::PreRender(state);
+
+  if (m_shadowSceneRoot != nullptr)
+    DoShadowRender();
 }
 
 /**

@@ -121,6 +121,14 @@ Matrix4 Matrix4::BuildViewMatrix(const Vector3 &from, const Vector3 &lookingAt, 
   return m * r;
 }
 
+Matrix4 Matrix4::Bias()
+{
+  Matrix4 m;
+  m.SetScalingVector(Vector3(0.5f, 0.5f, 0.5f));
+  m.SetPositionVector(Vector3(0.5f, 0.5f, 0.5f));
+  return m;
+}
+
 Matrix4 Matrix4::Rotation(float degrees, const Vector3 &inaxis)
 {
   Matrix4 m;

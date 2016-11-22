@@ -7,6 +7,7 @@
 namespace GraphicsCoursework
 {
 class ShadowTexture;
+class FramebufferNode;
 
 /**
  * @class ILight
@@ -35,7 +36,7 @@ public:
   ILight(const std::string &name);
   virtual ~ILight();
 
-  void InitShadows(GLuint shadowTexDim);
+  void InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot);
 
   /**
    * @brief Gets the index of this light in the lights array.
@@ -89,6 +90,10 @@ public:
    */
   virtual void CastDirections(std::vector<Vector3> &directions) const = 0;
 
+  void DoShadowRender();
+
+  virtual void PreRender(RenderState &state);
+
   virtual void ShaderBind(ShaderProgram *s);
   virtual void ShaderUnBind(ShaderProgram *s);
 
@@ -108,5 +113,6 @@ protected:
   float m_reach;            //!< Distance this light can travel/reach
 
   std::vector<ShadowTexture *> m_shadowTextures; //!< Textures used in shadow mapping render passes
+  FramebufferNode * m_shadowSceneRoot; //!< Root node of the shadow rendering scene
 };
 }
