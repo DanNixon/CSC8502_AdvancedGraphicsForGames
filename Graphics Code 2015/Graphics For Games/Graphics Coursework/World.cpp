@@ -375,7 +375,7 @@ void World::Build(SceneNode *root)
 
   // PARTICLES
   {
-    auto particleShader = globalTransp->AddChild(new ShaderNode(
+    auto particleShader = sceneBuffer->AddChild(new ShaderNode(
         "particleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
                                              new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl")})));
 
@@ -395,7 +395,7 @@ void World::Build(SceneNode *root)
     RenderableNode *particleRenderable =
         (RenderableNode *)particleShaderSync->AddChild(new MeshNode("particleRenderable", particleMesh, true));
     particleRenderable->SetBoundingSphereRadius(-1.0f);
-    particleRenderable->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 20.0f, -10.0f)));
+    particleRenderable->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
   }
 
   // POST PROCESSING
