@@ -1,5 +1,11 @@
+/** @file */
+
 #include "Mesh.h"
 
+/**
+ * @brief Generates a simple triangle mesh.
+ * @return Generated mesh
+ */
 Mesh *Mesh::GenerateTriangle()
 {
   Mesh *m = new Mesh();
@@ -31,6 +37,10 @@ Mesh *Mesh::GenerateTriangle()
   return m;
 }
 
+/**
+ * @brief Generates a simple quad mesh.
+ * @return Generated mesh
+ */
 Mesh *Mesh::GenerateQuad()
 {
   Mesh *m = new Mesh();
@@ -65,6 +75,11 @@ Mesh *Mesh::GenerateQuad()
   return m;
 }
 
+/**
+ * @brief Generates a simple spherical mesh.
+ * @param resolution Number of slices in each axis
+ * @return Generated mesh
+ */
 Mesh *Mesh::GenerateSphere(size_t resolution)
 {
   Mesh *m = new Mesh();
@@ -112,6 +127,9 @@ Mesh *Mesh::GenerateSphere(size_t resolution)
   return m;
 }
 
+/**
+ * @brief Creates a new empty mesh.
+ */
 Mesh::Mesh()
     : m_type(GL_TRIANGLES)
     , m_numVertices(0)
@@ -154,6 +172,9 @@ Mesh::~Mesh()
     delete[] m_indices;
 }
 
+/**
+ * @brief Draws the mesh.
+ */
 void Mesh::Draw()
 {
   if (m_texture != 0)
@@ -172,21 +193,20 @@ void Mesh::Draw()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void *Mesh::GetBuffer(Buffer b, GLenum mode)
-{
-  return glMapBuffer(m_bufferObjects[b], mode);
-}
-
-bool Mesh::ReturnBuffer(Buffer b)
-{
-  return glUnmapBuffer(m_bufferObjects[b]) == GL_TRUE;
-}
-
+/**
+ * @brief Sets the type to GL_PATCHES.
+ *
+ * For use when tessellating a mesh.
+ */
 void Mesh::SetGLPatches()
 {
   m_type = GL_PATCHES;
 }
 
+/**
+ * @brief Sets a uniform colour across all vertices.
+ * @param colour Colour
+ */
 void Mesh::SetUniformColour(const Vector4 &colour)
 {
   if (m_colours == nullptr)
@@ -195,13 +215,16 @@ void Mesh::SetUniformColour(const Vector4 &colour)
   for (size_t i = 0; i < m_numVertices; i++)
     m_colours[i] = colour;
 
-  // Rebuffer colours
+  /* Rebuffer colours */
   glBindVertexArray(m_arrayObject);
   DeleteBuffer(COLOUR_BUFFER);
   BufferData(COLOUR_BUFFER, 4, m_colours);
   glBindVertexArray(0);
 }
 
+/**
+ * @brief Generates normal vectors form vertices.
+ */
 void Mesh::GenerateNormals()
 {
   if (m_normals == nullptr)
@@ -247,11 +270,14 @@ void Mesh::GenerateNormals()
     }
   }
 
-  // Normalise all normals
+  /* Normalise all normals */
   for (GLuint i = 0; i < m_numVertices; ++i)
     m_normals[i].Normalise();
 }
 
+/**
+ * @brief Generates tangent vectors form vertices.
+ */
 void Mesh::GenerateTangents()
 {
   if (m_tangents == nullptr)
@@ -308,6 +334,9 @@ Vector3 Mesh::GenerateTangent(const Vector3 &a, const Vector3 &b, const Vector3 
   return axis * factor;
 }
 
+/**
+ * @brief Updates all GL buffers for this mesh.
+ */
 void Mesh::BufferAllData()
 {
   glBindVertexArray(m_arrayObject);
@@ -336,11 +365,21 @@ void Mesh::BufferAllData()
   glBindVertexArray(0);
 }
 
+/**
+ * @brief Deletes a given GL buffer.
+ * @param b Buffer to delete
+ */
 void Mesh::DeleteBuffer(Buffer b)
 {
   glDeleteBuffers(1, &m_bufferObjects[b]);
 }
 
+/**
+ * @brief Creates a given GL buffer given it's data.
+ * @param b Buffer to create
+ * @param width Data width
+ * @param data Pointer to data
+ */
 void Mesh::BufferData(Buffer b, GLuint width, void *data)
 {
   glGenBuffers(1, &m_bufferObjects[b]);

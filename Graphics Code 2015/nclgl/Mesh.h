@@ -1,8 +1,14 @@
+/** @file */
+
 #pragma once
 
 #include "Buffer.h"
 #include "OGLRenderer.h"
 
+/**
+ * @class Mesh
+ * @brief Holds data for a simple renderable mesh.
+ */
 class Mesh
 {
 public:
@@ -14,24 +20,42 @@ public:
   Mesh();
   virtual ~Mesh();
 
+  /**
+   * @brief Gets the number of vertices in this mesh.
+   * @return Vertex count
+   */
   inline size_t NumVertices() const
   {
     return m_numVertices;
   }
 
-  virtual void Draw();
+  /**
+   * @brief Gets the number of indices in this mesh.
+   * @return Index count
+   */
+  inline size_t NumIndices() const
+  {
+    return m_numIndices;
+  }
 
-  virtual void *GetBuffer(Buffer b, GLenum mode);
-  virtual bool ReturnBuffer(Buffer b);
+  virtual void Draw();
 
   void SetGLPatches();
   void SetUniformColour(const Vector4 &colour);
 
+  /**
+   * @brief Gets the texture used with this mesh.
+   * @return GL texture handle
+   */
   inline GLuint GetTexture()
   {
     return m_texture;
   }
 
+  /**
+   * @brief Sets the texture used with this mesh.
+   * @param t GL texture handle
+   */
   inline void SetTexture(GLuint t)
   {
     m_texture = t;
@@ -50,19 +74,19 @@ protected:
   void DeleteBuffer(Buffer b);
 
 protected:
-  GLuint m_arrayObject;
-  GLuint m_bufferObjects[MAX_BUFFER];
+  GLuint m_arrayObject;               //!< GL array object handle
+  GLuint m_bufferObjects[MAX_BUFFER]; //!< Handles for each GL buffer
 
-  GLuint m_type;
-  GLuint m_numVertices;
-  GLuint m_numIndices;
+  GLuint m_type;        //!< Draw type
+  GLuint m_numVertices; //!< Number of vertices
+  GLuint m_numIndices;  //!< Number of indices
 
-  GLuint m_texture;
+  GLuint m_texture; //!< Associated texture
 
-  Vector3 *m_vertices;
-  Vector4 *m_colours;
-  Vector2 *m_textureCoords;
-  Vector3 *m_normals;
-  Vector3 *m_tangents;
-  unsigned int *m_indices;
+  Vector3 *m_vertices;      //!< Pointer to vertex data
+  Vector4 *m_colours;       //!< Pointer to colour data
+  Vector2 *m_textureCoords; //!< Pointer to texture coordinate data
+  Vector3 *m_normals;       //!< Pointer to normal vector data
+  Vector3 *m_tangents;      //!< Pointer to tangent vector data
+  unsigned int *m_indices;  //!< Pointer to index data
 };

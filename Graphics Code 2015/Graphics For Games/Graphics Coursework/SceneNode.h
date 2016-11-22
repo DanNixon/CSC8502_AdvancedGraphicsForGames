@@ -23,11 +23,19 @@ public:
   SceneNode(const std::string &name, Renderer *renderer = nullptr);
   virtual ~SceneNode();
 
+  /**
+   * @brief Gets the name of this node
+   * @return Node name
+   */
   inline std::string Name() const
   {
     return m_name;
   }
 
+  /**
+   * @brief Returns the value of the active flag for this node.
+   * @return True if this node is active
+   */
   inline bool IsActive() const
   {
     return m_active;
@@ -36,11 +44,19 @@ public:
   virtual void SetActive(bool active, bool recursive = false);
   bool ToggleActive();
 
+  /**
+   * @brief Gets the value of the resource ownership flag for this node.
+   * @return Ownership flag value
+   */
   inline bool IsOwner() const
   {
     return m_owner;
   }
 
+  /**
+   * @brief Sets the resource ownership flag for this node.
+   * @param owner Ownership flag value
+   */
   virtual void SetIsOwner(bool owner)
   {
     m_owner = owner;
@@ -55,26 +71,46 @@ public:
   SceneNode *Child(const std::string &name);
   SceneNode *FindFirstChildByName(const std::string &name);
 
+  /**
+   * @brief Sets the local rotation matrix applied to this node.
+   * @param r Local rotation matrix
+   */
   virtual void SetLocalRotation(const Matrix4 &r)
   {
     m_localRotation = r;
   }
 
+  /**
+   * @brief Gets the local rotation matrix applied to this node.
+   * @return Local rotation matrix
+   */
   inline Matrix4 GetLocalRotation() const
   {
     return m_localRotation;
   }
 
+  /**
+   * @brief Sets the local transformation matrix applied to this node.
+   * @param t Local transformation matrix
+   */
   virtual void SetLocalTransformation(const Matrix4 &t)
   {
     m_localTransform = t;
   }
 
+  /**
+   * @brief Gets the local transformation matrix applied to this node.
+   * @return Local transformation matrix
+   */
   inline Matrix4 GetLocalTransformation() const
   {
     return m_localTransform;
   }
 
+  /**
+   * @brief Gets the cached world transformation matrix.
+   * @return World transformation matrix
+   */
   inline Matrix4 GetWorldTransformation() const
   {
     return m_worldTransform;
