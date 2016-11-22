@@ -162,8 +162,8 @@ void World::Build(SceneNode *root)
 
   // LIGHTS
   {
-    Vector4 sunColour(1.0f, 1.0f, 0.75f, 1.0f);
-    Vector4 moonColour(0.5f, 0.6f, 1.0f, 1.0f);
+    Vector4 sunColour(1.0f, 0.9f, 0.6f, 1.0f);
+    Vector4 moonColour(0.6f, 0.7f, 1.0f, 1.0f);
 
     auto lightRenderShader = globalTransp->AddChild(new ShaderNode(
         "lightRenderShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
@@ -310,19 +310,19 @@ void World::Build(SceneNode *root)
     portalCameraSelect->SetCamera(portalCamera);
 
     portalCameraSelect->AddChild(new SubTreeNode("portalSubtree", globalFog));
-
-    // Portal quad
-    // TOOD
   }
 
   // ENVIRONMENT
   {
     auto envShader = globalTransp->AddChild(
         new ShaderNode("envShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
-                                                       new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl")})));
+                                                       new FragmentShader(CW_SHADER_DIR "PortalFragment.glsl")})));
     envShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
-    auto envTextures = envShader->AddChild(new TextureNode("envTextures", {{portalBufferColourTex, "diffuseTex", 1}}));
+    ITexture * brokenGlassTex = new Texture();
+    brokenGlassTex->LoadFromFile(CW_TEXTURE_DIR "brokenglass.jpg");
+
+    auto envTextures = envShader->AddChild(new TextureNode("envTextures", { {portalBufferColourTex, "portalViewTex", 1}, { brokenGlassTex , "brokenGlassTex", 2} }));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
     MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere());
