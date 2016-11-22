@@ -8,7 +8,7 @@ namespace GraphicsCoursework
 {
 /**
  * @class CameraNode
- * @brief Scenen node containing a basic camera.
+ * @brief Scene node containing a basic camera.
  */
 class CameraNode : public SceneNode
 {
@@ -17,6 +17,8 @@ public:
   virtual ~CameraNode();
 
   virtual void LockOrientationTo(SceneNode *node, const Matrix4 &transform = Matrix4());
+  virtual void LookAt(SceneNode * thing);
+  virtual void LookInDirection(const Vector3& direction);
 
   Matrix4 ViewMatrix() const;
 

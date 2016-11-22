@@ -32,6 +32,16 @@ void CameraNode::LockOrientationTo(SceneNode *node, const Matrix4 &transform)
   m_orientationLockTransform = transform;
 }
 
+void CameraNode::LookAt(SceneNode * thing)
+{
+  LookInDirection(m_worldTransform.GetPositionVector() - thing->GetWorldTransformation().GetPositionVector());
+}
+
+void CameraNode::LookInDirection(const Vector3 & direction)
+{
+  // TODO
+}
+
 /**
  * @brief Gets the camera's view matrix.
  * @return View matrix

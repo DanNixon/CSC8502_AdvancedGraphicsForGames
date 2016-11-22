@@ -2,6 +2,7 @@
 
 #include "ILight.h"
 
+#include "CameraNode.h"
 #include "FramebufferNode.h"
 #include "Renderer.h"
 #include "ShaderProgram.h"
@@ -44,7 +45,10 @@ void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot)
 
   m_shadowSceneRoot = new FramebufferNode(m_name + "_ShadowFramebuffer");
 
-  m_shadowSceneRoot->AddChild(new SubTreeNode(m_name + "_ShadowSubtree", shadowSceneRoot));
+  m_shadowCamera = new CameraNode(m_name + "_ShadowCamera");
+  m_shadowSceneRoot->AddChild(m_shadowCamera);
+
+  m_shadowCamera->AddChild(new SubTreeNode(m_name + "_ShadowSubtree", shadowSceneRoot));
 }
 
 /**
@@ -62,9 +66,13 @@ void ILight::DoShadowRender()
   RenderState state;
   state.processPass = true;
 
+  std::vector<Vector3> directions;
+  CastDirections(directions);
+
   for (size_t i = 0; i < NumDirections(); i++)
   {
     m_shadowSceneRoot->BindTexture(GL_DEPTH_ATTACHMENT, m_shadowTextures[i]);
+    m_shadowCamera->LookInDirection(directions[i]);
     m_shadowSceneRoot->Render(state);
   }
 }
