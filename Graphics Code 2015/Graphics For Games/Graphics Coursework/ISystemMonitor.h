@@ -67,8 +67,8 @@ public:
   friend std::ostream &operator<<(std::ostream &stream, const ISystemMonitor &o);
 
 protected:
-  bool m_haveNewData; //!< Flag indicating new data can be retrieved
+  bool m_haveNewData;            //!< Flag indicating new data can be retrieved
   float m_metrics[METRIC_COUNT]; //!< Array of measured values
-  size_t m_frameCount; //!< Number of frames rendered in this averaging window
+  size_t m_frameCount;           //!< Number of frames rendered in this averaging window
 };
 }

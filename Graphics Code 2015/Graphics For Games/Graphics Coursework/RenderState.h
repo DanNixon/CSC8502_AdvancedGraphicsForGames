@@ -44,7 +44,7 @@ struct RenderState
   bool processPass;
 
   std::vector<RenderableNode *> transparentNodes; //!< List of transparent nodes
-  TransparentRenderingNode *
-      transparentSync; //!< Lowest TransparentRenderingNode (the one that will next process transparentNodes)
+  TransparentRenderingNode
+      *transparentSync; //!< Lowest TransparentRenderingNode (the one that will next process transparentNodes)
 };
 }

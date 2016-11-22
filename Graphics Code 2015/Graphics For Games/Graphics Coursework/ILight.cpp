@@ -2,10 +2,10 @@
 
 #include "ILight.h"
 
+#include "FramebufferNode.h"
 #include "Renderer.h"
 #include "ShaderProgram.h"
 #include "ShadowTexture.h"
-#include "FramebufferNode.h"
 #include "SubtreeNode.h"
 
 namespace GraphicsCoursework
@@ -37,7 +37,7 @@ ILight::~ILight()
  * @param shadowTexDim Dimensions of the shadow texture
  * @param shadowSceneRoot Root node of the subtree of the scene graph that has shadows cast upon it by this light
  */
-void ILight::InitShadows(GLuint shadowTexDim, SceneNode * shadowSceneRoot)
+void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot)
 {
   for (size_t i = 0; i < NumDirections(); i++)
     m_shadowTextures.push_back(new ShadowTexture(shadowTexDim));
@@ -69,7 +69,7 @@ void ILight::DoShadowRender()
   }
 }
 
-void ILight::PreRender(RenderState & state)
+void ILight::PreRender(RenderState &state)
 {
   ShaderDataNode::PreRender(state);
 

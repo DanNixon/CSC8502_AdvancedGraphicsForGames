@@ -88,20 +88,20 @@ Window::Window(std::string title, int sizeX, int sizeY, bool fullScreen)
     }
   }
 
-  windowHandle =
-      CreateWindowEx(fullScreen ? WS_EX_TOPMOST : NULL,
-                     WINDOWCLASS,   // name of the window class
-                     title.c_str(), // title of the window
-                     fullScreen ? WS_POPUP | WS_VISIBLE : WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE | WS_SYSMENU |
-                                                              WS_MAXIMIZEBOX | WS_MINIMIZEBOX, // window style
-                     (int)position.x, // x-position of the window
-                     (int)position.y, // y-position of the window
-                     (int)size.x,     // width of the window
-                     (int)size.y,     // height of the window
-                     NULL,            // No parent window!
-                     NULL,            // No Menus!
-                     hInstance,       // application handle
-                     NULL);           // No multiple windows!
+  windowHandle = CreateWindowEx(fullScreen ? WS_EX_TOPMOST : NULL,
+                                WINDOWCLASS,   // name of the window class
+                                title.c_str(), // title of the window
+                                fullScreen ? WS_POPUP | WS_VISIBLE
+                                           : WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE | WS_SYSMENU | WS_MAXIMIZEBOX |
+                                                 WS_MINIMIZEBOX, // window style
+                                (int)position.x,                 // x-position of the window
+                                (int)position.y,                 // y-position of the window
+                                (int)size.x,                     // width of the window
+                                (int)size.y,                     // height of the window
+                                NULL,                            // No parent window!
+                                NULL,                            // No Menus!
+                                hInstance,                       // application handle
+                                NULL);                           // No multiple windows!
 
   if (!windowHandle)
   {

@@ -13,6 +13,7 @@
 #include "FramebufferNode.h"
 #include "GenericControlNode.h"
 #include "HeightmapTexture.h"
+#include "IParticleSystem.h"
 #include "MatrixNode.h"
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
@@ -29,7 +30,6 @@
 #include "SubTreeNode.h"
 #include "TextureNode.h"
 #include "TransparentRenderingNode.h"
-#include "IParticleSystem.h"
 
 #define CW_SHADER_DIR SHADERDIR "coursework/"
 #define CW_TEXTURE_DIR TEXTUREDIR "coursework/"
@@ -115,13 +115,11 @@ void World::Build(SceneNode *root)
   // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
   projection->AddChild(sceneBuffer);
-  auto globalFog = sceneBuffer->AddChild(
-      new GenericControlNode("globalFog", [](ShaderProgram *s)
-                             {
-                               glUniform3f(glGetUniformLocation(s->Program(), "fogBaseColour"), 0.4f, 0.4f, 0.55f);
-                               glUniform1f(glGetUniformLocation(s->Program(), "fogExp"), 0.0005f);
-                               glUniform1f(glGetUniformLocation(s->Program(), "fogAtten"), 0.4f);
-                             }));
+  auto globalFog = sceneBuffer->AddChild(new GenericControlNode("globalFog", [](ShaderProgram *s) {
+    glUniform3f(glGetUniformLocation(s->Program(), "fogBaseColour"), 0.4f, 0.4f, 0.55f);
+    glUniform1f(glGetUniformLocation(s->Program(), "fogExp"), 0.0005f);
+    glUniform1f(glGetUniformLocation(s->Program(), "fogAtten"), 0.4f);
+  }));
   auto globalTransp = globalFog->AddChild(new TransparentRenderingNode("globalTransp"));
 
   ITexture *bufferDepthTex = new DepthStencilTexture(m_state.screenDims.x, m_state.screenDims.y);
@@ -141,15 +139,9 @@ void World::Build(SceneNode *root)
 
   // SKYBOX
   {
-    auto skyboxGLcontrol = globalTransp->AddChild(new GenericControlNode("skyboxGLcontrol",
-                                                                         [](ShaderProgram *)
-                                                                         {
-                                                                           glDepthMask(GL_FALSE);
-                                                                         },
-                                                                         [](ShaderProgram *)
-                                                                         {
-                                                                           glDepthMask(GL_TRUE);
-                                                                         }));
+    auto skyboxGLcontrol =
+        globalTransp->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
+                                                      [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
 
     auto skyboxShader = skyboxGLcontrol->AddChild(
         new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "SkyboxVertex.glsl"),
@@ -253,11 +245,11 @@ void World::Build(SceneNode *root)
     // Scene subtree
     auto terrainTextures =
         globalTransp->AddChild(new TextureNode("terrainTextures", {
-                                                                   {heightmapTexture, "heightmapTex", 1},
-                                                                   {heightmapMultTex, "heightmapMultTex", 2},
-                                                                   {sandTex, "levelTex[0]", 3},
-                                                                   {grassTex, "levelTex[1]", 4},
-                                                                   {rockTex, "levelTex[2]", 5},
+                                                                      {heightmapTexture, "heightmapTex", 1},
+                                                                      {heightmapMultTex, "heightmapMultTex", 2},
+                                                                      {sandTex, "levelTex[0]", 3},
+                                                                      {grassTex, "levelTex[1]", 4},
+                                                                      {rockTex, "levelTex[2]", 5},
                                                                   }));
 
     auto terrainShader = terrainTextures->AddChild(new ShaderNode(
@@ -266,10 +258,8 @@ void World::Build(SceneNode *root)
                                             new TesselationControlShader(CW_SHADER_DIR "HeightmapTCS.glsl"),
                                             new TesselationEvaluationShader(CW_SHADER_DIR "HeightmapTES.glsl")})));
 
-    auto terrainControlNode = terrainShader->AddChild(new GenericControlNode("terrainControlNode", [](ShaderProgram *)
-                                                                             {
-                                                                               glPatchParameteri(GL_PATCH_VERTICES, 4);
-                                                                             }));
+    auto terrainControlNode = terrainShader->AddChild(
+        new GenericControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
 
     auto terrainTextureMatrix =
         terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(100.0f)));
@@ -320,10 +310,11 @@ void World::Build(SceneNode *root)
                                                        new FragmentShader(CW_SHADER_DIR "PortalFragment.glsl")})));
     envShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
-    ITexture * brokenGlassTex = new Texture();
+    ITexture *brokenGlassTex = new Texture();
     brokenGlassTex->LoadFromFile(CW_TEXTURE_DIR "brokenglass.jpg");
 
-    auto envTextures = envShader->AddChild(new TextureNode("envTextures", { {portalBufferColourTex, "portalViewTex", 1}, { brokenGlassTex , "brokenGlassTex", 2} }));
+    auto envTextures = envShader->AddChild(new TextureNode(
+        "envTextures", {{portalBufferColourTex, "portalViewTex", 1}, {brokenGlassTex, "brokenGlassTex", 2}}));
     auto envShaderSync = envTextures->AddChild(new ShaderSyncNode("envShaderSync"));
 
     MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere());
@@ -363,26 +354,25 @@ void World::Build(SceneNode *root)
 
   // PARTICLES
   {
-    auto particleShader = globalTransp->AddChild(
-      new ShaderNode("particleShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
-        new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl") })));
+    auto particleShader = globalTransp->AddChild(new ShaderNode(
+        "particleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                             new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl")})));
 
-    auto particleTexture = particleShader->AddChild(
-      new TextureNode("particleTexture", {}));
+    auto particleTexture = particleShader->AddChild(new TextureNode("particleTexture", {}));
 
     auto particleShaderSync = particleTexture->AddChild(new ShaderSyncNode("particleShaderSync"));
 
-    IParticleSystem * particleMesh = new IParticleSystem(3, true);
+    IParticleSystem *particleMesh = new IParticleSystem(3, true);
 
     // TODO
     particleMesh->SetParticlePosition(0, Vector3(0, 0, 0));
     particleMesh->SetParticlePosition(1, Vector3(10, 0, 0));
     particleMesh->SetParticlePosition(2, Vector3(10, 10, 0));
-    //particleMesh->SetParticlePosition(3, Vector3(0, 1, 0));
+    // particleMesh->SetParticlePosition(3, Vector3(0, 1, 0));
     particleMesh->Update(0.0f);
 
     RenderableNode *particleRenderable =
-      (RenderableNode *)particleShaderSync->AddChild(new MeshNode("particleRenderable", particleMesh, true));
+        (RenderableNode *)particleShaderSync->AddChild(new MeshNode("particleRenderable", particleMesh, true));
     particleRenderable->SetBoundingSphereRadius(-1.0f);
     particleRenderable->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 20.0f, -10.0f)));
   }
@@ -392,15 +382,9 @@ void World::Build(SceneNode *root)
     FramebufferNode *processBuffer = new FramebufferNode("processBuffer");
     root->AddChild(processBuffer);
 
-    auto depthDisable = processBuffer->AddChild(new GenericControlNode("depthDisable",
-                                                                       [](ShaderProgram *)
-                                                                       {
-                                                                         glDisable(GL_DEPTH_TEST);
-                                                                       },
-                                                                       [](ShaderProgram *)
-                                                                       {
-                                                                         glEnable(GL_DEPTH_TEST);
-                                                                       }));
+    auto depthDisable = processBuffer->AddChild(
+        new GenericControlNode("depthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
+                               [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
     auto shader = depthDisable->AddChild(
         new ShaderNode("shader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
@@ -412,12 +396,9 @@ void World::Build(SceneNode *root)
         new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    auto control1 = view->AddChild(new GenericControlNode("control1", [bufferColourTex2](ShaderProgram *s)
-                                                          {
-                                                            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                                                                   GL_TEXTURE_2D,
-                                                                                   bufferColourTex2->GetTextureID(), 0);
-                                                          }));
+    auto control1 = view->AddChild(new GenericControlNode("control1", [bufferColourTex2](ShaderProgram *s) {
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bufferColourTex2->GetTextureID(), 0);
+    }));
 
     auto texture1 = control1->AddChild(new TextureNode("texture1", {{bufferColourTex1, "diffuseTex", 1}}));
     auto sync1 = texture1->AddChild(new ShaderSyncNode("sync1"));

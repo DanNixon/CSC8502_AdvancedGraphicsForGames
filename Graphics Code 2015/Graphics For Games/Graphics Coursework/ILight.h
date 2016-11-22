@@ -113,6 +113,6 @@ protected:
   float m_reach;            //!< Distance this light can travel/reach
 
   std::vector<ShadowTexture *> m_shadowTextures; //!< Textures used in shadow mapping render passes
-  FramebufferNode * m_shadowSceneRoot; //!< Root node of the shadow rendering scene
+  FramebufferNode *m_shadowSceneRoot;            //!< Root node of the shadow rendering scene
 };
 }
