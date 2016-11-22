@@ -18,7 +18,7 @@ public:
 
   virtual void LockOrientationTo(SceneNode *node, const Matrix4 &transform = Matrix4());
   virtual void LookAt(SceneNode * thing);
-  virtual void LookInDirection(const Vector3& direction);
+  virtual void LookInDirection(const Vector3& direction, const Vector3 &up = Vector3(0.0f, 1.0f, 0.0f));
 
   Matrix4 ViewMatrix() const;
 

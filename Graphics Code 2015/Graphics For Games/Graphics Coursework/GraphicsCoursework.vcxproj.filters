@@ -237,6 +237,7 @@
     <ClInclude Include="IParticleSystem.h">
       <Filter>Environment</Filter>
     </ClInclude>
+    <ClInclude Include="directories.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Performance Monitoring">

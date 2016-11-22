@@ -22,7 +22,8 @@ ShaderDataNode::~ShaderDataNode()
  */
 void ShaderDataNode::PreRender(RenderState &state)
 {
-  state.shaderDataNodeStack.push_back(this);
+  if (ProcessingPassCheck(state))
+    state.shaderDataNodeStack.push_back(this);
 }
 
 /**
@@ -30,6 +31,7 @@ void ShaderDataNode::PreRender(RenderState &state)
  */
 void ShaderDataNode::PostRender(RenderState &state)
 {
-  state.shaderDataNodeStack.pop_back();
+  if (ProcessingPassCheck(state))
+    state.shaderDataNodeStack.pop_back();
 }
 }

@@ -27,12 +27,16 @@ void ShaderNode::SetActive(bool active)
 
 void ShaderNode::PreRender(RenderState &state)
 {
-  m_previousProgram = state.shader;
-  state.shader = m_program;
+  if (ProcessingPassCheck(state))
+  {
+    m_previousProgram = state.shader;
+    state.shader = m_program;
+  }
 }
 
 void ShaderNode::PostRender(RenderState &state)
 {
-  state.shader = m_previousProgram;
+  if (ProcessingPassCheck(state))
+    state.shader = m_previousProgram;
 }
 }

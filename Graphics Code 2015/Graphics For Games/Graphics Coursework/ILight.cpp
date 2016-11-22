@@ -8,6 +8,11 @@
 #include "ShaderProgram.h"
 #include "ShadowTexture.h"
 #include "SubtreeNode.h"
+#include "ShaderNode.h"
+#include "Shaders.h"
+#include "CameraSelectorNode.h"
+#include "GenericControlNode.h"
+#include "directories.h"
 
 namespace GraphicsCoursework
 {
@@ -38,17 +43,40 @@ ILight::~ILight()
  * @param shadowTexDim Dimensions of the shadow texture
  * @param shadowSceneRoot Root node of the subtree of the scene graph that has shadows cast upon it by this light
  */
-void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot)
+void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const Vector2 &screenDims)
 {
   for (size_t i = 0; i < NumDirections(); i++)
     m_shadowTextures.push_back(new ShadowTexture(shadowTexDim));
 
   m_shadowSceneRoot = new FramebufferNode(m_name + "_ShadowFramebuffer");
+  m_shadowSceneRoot->SetIsProcessingNode(true);
 
   m_shadowCamera = new CameraNode(m_name + "_ShadowCamera");
+  m_shadowCamera->SetIsProcessingNode(true);
   m_shadowSceneRoot->AddChild(m_shadowCamera);
 
-  m_shadowCamera->AddChild(new SubTreeNode(m_name + "_ShadowSubtree", shadowSceneRoot));
+  auto shadowShader = m_shadowCamera->AddChild(new ShaderNode(m_name + "_ShadowShader", new ShaderProgram({
+      new VertexShader(CW_SHADER_DIR "ShadowVertex.glsl"),
+      new FragmentShader(CW_SHADER_DIR "ShadowFragment.glsl")
+    })));
+  shadowShader->SetIsProcessingNode(true);
+
+  CameraSelectorNode * shadowCameraSelect  = new CameraSelectorNode(m_name + "_ShadowCameraSelect");
+  shadowCameraSelect->SetIsProcessingNode(true);
+  shadowCameraSelect->SetCamera(m_shadowCamera);
+  shadowShader->AddChild(shadowCameraSelect);
+
+  auto shadowControlNode = shadowCameraSelect->AddChild(new GenericControlNode(m_name + "_ShadowControl", [shadowTexDim](ShaderProgram *s) {
+    glViewport(0, 0, shadowTexDim, shadowTexDim);
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+  }, [&screenDims](ShaderProgram * s) {
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glViewport(0, 0, (GLsizei)screenDims.x, (GLsizei)screenDims.y);
+  }));
+  shadowControlNode->SetIsProcessingNode(true);
+
+  auto shadowSubtree = shadowControlNode->AddChild(new SubTreeNode(m_name + "_ShadowSubtree", shadowSceneRoot));
+  shadowSubtree->SetIsProcessingNode(true);
 }
 
 /**

@@ -44,6 +44,16 @@ public:
   virtual void SetActive(bool active, bool recursive = false);
   bool ToggleActive();
 
+  inline bool IsProcessingNode() const
+  {
+    return m_processingNode;
+  }
+
+  virtual void SetIsProcessingNode(bool processingNode)
+  {
+    m_processingNode = processingNode;
+  }
+
   /**
    * @brief Gets the value of the resource ownership flag for this node.
    * @return Ownership flag value
@@ -150,6 +160,12 @@ public:
   friend std::ostream &operator<<(std::ostream &s, const SceneNode &n);
 
 protected:
+  inline bool ProcessingPassCheck(RenderState & state)
+  {
+    return m_processingNode == state.processPass;
+  }
+
+protected:
   friend class SubTreeNode;
 
   const std::string m_name; //!< Node name
@@ -158,6 +174,7 @@ protected:
   SceneNode *m_parent;  //!< Parent node
 
   bool m_active; //!< Flag indicating if this node is active
+  bool m_processingNode; //!< Flag indicating that this node is executed in processing stages only
   bool m_owner;  //!< Flag indicating that this node owns any held resources
 
   Matrix4 m_localRotation;  //!< Local rotation matrix

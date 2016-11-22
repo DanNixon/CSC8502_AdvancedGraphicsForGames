@@ -4,6 +4,8 @@
 
 #include "ShaderDataNode.h"
 
+#include <../nclgl/Vector2.h>
+
 namespace GraphicsCoursework
 {
 class ShadowTexture;
@@ -36,7 +38,7 @@ public:
   ILight(const std::string &name);
   virtual ~ILight();
 
-  void InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot);
+  void InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const Vector2 &screenDims);
 
   /**
    * @brief Gets the index of this light in the lights array.

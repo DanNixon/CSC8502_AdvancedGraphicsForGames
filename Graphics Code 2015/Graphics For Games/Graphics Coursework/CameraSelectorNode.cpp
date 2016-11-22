@@ -54,7 +54,9 @@ void CameraSelectorNode::SetActive(bool active)
 void CameraSelectorNode::PreRender(RenderState &state)
 {
   ShaderDataNode::PreRender(state);
-  state.camera = m_camera;
+
+  if (ProcessingPassCheck(state))
+    state.camera = m_camera;
 }
 
 /**
@@ -63,7 +65,9 @@ void CameraSelectorNode::PreRender(RenderState &state)
 void CameraSelectorNode::PostRender(RenderState &state)
 {
   ShaderDataNode::PostRender(state);
-  state.camera = nullptr;
+
+  if (ProcessingPassCheck(state))
+    state.camera = nullptr;
 }
 
 /**
