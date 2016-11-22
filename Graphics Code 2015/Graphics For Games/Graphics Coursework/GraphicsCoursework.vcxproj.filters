@@ -228,6 +228,9 @@
     <ClInclude Include="SubTreeNode.h">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowTexture.h">
+      <Filter>Texture Managment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Performance Monitoring">

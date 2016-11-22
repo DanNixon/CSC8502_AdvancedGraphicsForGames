@@ -4,6 +4,7 @@
 
 #include "Renderer.h"
 #include "ShaderProgram.h"
+#include "ShadowTexture.h"
 
 namespace GraphicsCoursework
 {
@@ -21,6 +22,18 @@ ILight::ILight(const std::string &name)
 
 ILight::~ILight()
 {
+  for (auto it = m_shadowTextures.begin(); it != m_shadowTextures.end(); ++it)
+    delete *it;
+}
+
+/**
+ * @brief Creates the textures required to do shadow mapping for this light.
+ * @param shadowTexDim Dimensions of the shadow texture
+ */
+void ILight::InitShadows(GLuint shadowTexDim)
+{
+  for (size_t i = 0; i < NumDirections(); i++)
+    m_shadowTextures.push_back(new ShadowTexture(shadowTexDim));
 }
 
 /**

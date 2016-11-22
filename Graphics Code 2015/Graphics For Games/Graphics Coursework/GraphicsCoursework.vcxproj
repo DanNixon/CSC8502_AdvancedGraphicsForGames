@@ -139,6 +139,7 @@
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="ShaderSyncNode.h" />
     <ClInclude Include="DepthStencilTexture.h" />
+    <ClInclude Include="ShadowTexture.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="SubTreeNode.h" />
     <ClInclude Include="TextMesh.h" />

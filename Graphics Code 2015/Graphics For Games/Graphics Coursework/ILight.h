@@ -6,6 +6,8 @@
 
 namespace GraphicsCoursework
 {
+class ShadowTexture;
+
 /**
  * @class ILight
  * @brief Base class containing common functionality for working with lights in a scene.
@@ -32,6 +34,8 @@ public:
 public:
   ILight(const std::string &name);
   virtual ~ILight();
+
+  void InitShadows(GLuint shadowTexDim);
 
   /**
    * @brief Gets the index of this light in the lights array.
@@ -102,5 +106,7 @@ protected:
   Vector4 m_colour;         //!< Light colour
   float m_ambientIntensity; //!< Contribution of this light to ambient light
   float m_reach;            //!< Distance this light can travel/reach
+
+  std::vector<ShadowTexture *> m_shadowTextures; //!< Textures used in shadow mapping render passes
 };
 }
