@@ -49,5 +49,5 @@ HeightMap::HeightMap(std::string name)
     }
   }
 
-  BufferData();
+  BufferAllData();
 }

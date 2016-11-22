@@ -108,6 +108,9 @@
     <ClCompile Include="SubTreeNode.cpp">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="IParticleSystem.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -230,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="ShadowTexture.h">
       <Filter>Texture Managment</Filter>
+    </ClInclude>
+    <ClInclude Include="IParticleSystem.h">
+      <Filter>Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -68,7 +68,7 @@ TextMesh::TextMesh(const std::string &text, const Font &font)
     m_textureCoords[(i * 4) + 3] = Vector2((x + 1) * texelWidth, (y + 1) * texelHeight);
   }
   // Lastly, we buffer the data, just like a 'normal' mesh!
-  BufferData();
+  BufferAllData();
 }
 
 /*

@@ -37,7 +37,7 @@ TextMesh::TextMesh(size_t maxLength, Font *font)
     m_textureCoords[(i * 4) + 3] = Vector2();
   }
 
-  BufferData();
+  BufferAllData();
 }
 
 TextMesh::~TextMesh()
@@ -82,7 +82,7 @@ void TextMesh::SetText(const std::string &text)
 
   glBindVertexArray(m_arrayObject);
   glDeleteBuffers(1, &m_bufferObjects[TEXTURE_BUFFER]);
-  RegisterBuffer(TEXTURE_BUFFER, 2, m_textureCoords);
+  BufferData(TEXTURE_BUFFER, 2, m_textureCoords);
   glBindVertexArray(0);
 }
 }

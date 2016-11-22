@@ -44,8 +44,10 @@ protected:
   Vector3 GenerateTangent(const Vector3 &a, const Vector3 &b, const Vector3 &c, const Vector2 &ta, const Vector2 &tb,
                           const Vector2 &tc);
 
-  void BufferData();
-  void RegisterBuffer(Buffer b, GLuint width, void *data);
+  void BufferAllData();
+
+  void BufferData(Buffer b, GLuint width, void *data);
+  void DeleteBuffer(Buffer b);
 
 protected:
   GLuint m_arrayObject;

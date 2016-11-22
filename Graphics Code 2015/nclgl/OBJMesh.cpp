@@ -277,7 +277,7 @@ bool OBJMesh::LoadOBJMesh(std::string filename)
       m->GenerateTangents();
 #endif
 
-      m->BufferData();
+      m->BufferAllData();
 
       if (i != 0)
       {

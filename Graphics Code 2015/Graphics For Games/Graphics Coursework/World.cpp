@@ -29,6 +29,7 @@
 #include "SubTreeNode.h"
 #include "TextureNode.h"
 #include "TransparentRenderingNode.h"
+#include "IParticleSystem.h"
 
 #define CW_SHADER_DIR SHADERDIR "coursework/"
 #define CW_TEXTURE_DIR TEXTUREDIR "coursework/"
@@ -358,6 +359,32 @@ void World::Build(SceneNode *root)
     waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 0.0f)) * Matrix4::Scale(1000.0f));
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     waterQuad->SpecularPower() = 2.0f;
+  }
+
+  // PARTICLES
+  {
+    auto particleShader = globalTransp->AddChild(
+      new ShaderNode("particleShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+        new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl") })));
+
+    auto particleTexture = particleShader->AddChild(
+      new TextureNode("particleTexture", {}));
+
+    auto particleShaderSync = particleTexture->AddChild(new ShaderSyncNode("particleShaderSync"));
+
+    IParticleSystem * particleMesh = new IParticleSystem(3, true);
+
+    // TODO
+    particleMesh->SetParticlePosition(0, Vector3(0, 0, 0));
+    particleMesh->SetParticlePosition(1, Vector3(10, 0, 0));
+    particleMesh->SetParticlePosition(2, Vector3(10, 10, 0));
+    //particleMesh->SetParticlePosition(3, Vector3(0, 1, 0));
+    particleMesh->Update(0.0f);
+
+    RenderableNode *particleRenderable =
+      (RenderableNode *)particleShaderSync->AddChild(new MeshNode("particleRenderable", particleMesh, true));
+    particleRenderable->SetBoundingSphereRadius(-1.0f);
+    particleRenderable->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 20.0f, -10.0f)));
   }
 
   // POST PROCESSING

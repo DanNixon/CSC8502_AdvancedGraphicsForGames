@@ -26,7 +26,7 @@ Mesh *Mesh::GenerateTriangle()
   m->m_textureCoords[1] = Vector2(1.0f, 1.0f);
   m->m_textureCoords[2] = Vector2(0.0f, 1.0f);
 
-  m->BufferData();
+  m->BufferAllData();
 
   return m;
 }
@@ -60,7 +60,7 @@ Mesh *Mesh::GenerateQuad()
     m->m_colours[i] = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
   }
 
-  m->BufferData();
+  m->BufferAllData();
 
   return m;
 }
@@ -107,7 +107,7 @@ Mesh *Mesh::GenerateSphere(size_t resolution)
   for (GLuint i = 0; i < m->m_numVertices; ++i)
     m->m_normals[i].Normalise();
 
-  m->BufferData();
+  m->BufferAllData();
 
   return m;
 }
@@ -197,8 +197,8 @@ void Mesh::SetUniformColour(const Vector4 &colour)
 
   // Rebuffer colours
   glBindVertexArray(m_arrayObject);
-  glDeleteBuffers(1, &m_bufferObjects[COLOUR_BUFFER]);
-  RegisterBuffer(COLOUR_BUFFER, 4, m_colours);
+  DeleteBuffer(COLOUR_BUFFER);
+  BufferData(COLOUR_BUFFER, 4, m_colours);
   glBindVertexArray(0);
 }
 
@@ -308,23 +308,23 @@ Vector3 Mesh::GenerateTangent(const Vector3 &a, const Vector3 &b, const Vector3 
   return axis * factor;
 }
 
-void Mesh::BufferData()
+void Mesh::BufferAllData()
 {
   glBindVertexArray(m_arrayObject);
 
-  RegisterBuffer(VERTEX_BUFFER, 3, m_vertices);
+  BufferData(VERTEX_BUFFER, 3, m_vertices);
 
   if (m_textureCoords != nullptr)
-    RegisterBuffer(TEXTURE_BUFFER, 2, m_textureCoords);
+    BufferData(TEXTURE_BUFFER, 2, m_textureCoords);
 
   if (m_colours != nullptr)
-    RegisterBuffer(COLOUR_BUFFER, 4, m_colours);
+    BufferData(COLOUR_BUFFER, 4, m_colours);
 
   if (m_normals != nullptr)
-    RegisterBuffer(NORMAL_BUFFER, 3, m_normals);
+    BufferData(NORMAL_BUFFER, 3, m_normals);
 
   if (m_tangents != nullptr)
-    RegisterBuffer(TANGENT_BUFFER, 3, m_tangents);
+    BufferData(TANGENT_BUFFER, 3, m_tangents);
 
   if (m_indices != nullptr)
   {
@@ -336,7 +336,12 @@ void Mesh::BufferData()
   glBindVertexArray(0);
 }
 
-void Mesh::RegisterBuffer(Buffer b, GLuint width, void *data)
+void Mesh::DeleteBuffer(Buffer b)
+{
+  glDeleteBuffers(1, &m_bufferObjects[b]);
+}
+
+void Mesh::BufferData(Buffer b, GLuint width, void *data)
 {
   glGenBuffers(1, &m_bufferObjects[b]);
   glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[b]);

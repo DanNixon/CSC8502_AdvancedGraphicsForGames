@@ -63,7 +63,7 @@ higher the mark awarded for that feature.
   space ship model)
 - [ ] Weather effects (rain, snow, fog, wind, lightning)
 - [ ] Volcano or geyser eruption
-- [ ] A portal effect
+- [x] A portal effect
 - [ ] Lens-flare
 - [ ] A light that casts shadows appropriately (ie from the light’s position in all
   directions)

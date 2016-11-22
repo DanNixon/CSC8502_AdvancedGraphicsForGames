@@ -80,6 +80,7 @@
     <ClCompile Include="GenericControlNode.cpp" />
     <ClCompile Include="HeightmapTexture.cpp" />
     <ClCompile Include="ILight.cpp" />
+    <ClCompile Include="IParticleSystem.cpp" />
     <ClCompile Include="ISystemMonitor.cpp" />
     <ClCompile Include="ITexture.cpp" />
     <ClCompile Include="main.cpp" />
@@ -119,6 +120,7 @@
     <ClInclude Include="GenericControlNode.h" />
     <ClInclude Include="HeightmapTexture.h" />
     <ClInclude Include="ILight.h" />
+    <ClInclude Include="IParticleSystem.h" />
     <ClInclude Include="ISystemMonitor.h" />
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="MatrixNode.h" />
