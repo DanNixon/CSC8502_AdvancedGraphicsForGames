@@ -39,16 +39,6 @@ public:
     m_particleLifetime = life;
   }
 
-  inline float GetParticleSize()
-  {
-    return m_particleSize;
-  }
-
-  virtual void SetParticleSize(float size)
-  {
-    m_particleSize = size;
-  }
-
   inline float GetParticleVariance()
   {
     return m_particleVariance;
@@ -99,7 +89,6 @@ protected:
 protected:
   float m_particleRate;
   float m_particleLifetime;
-  float m_particleSize;
   float m_particleVariance;
   float m_particleSpeed;
   int m_numLaunchParticles;

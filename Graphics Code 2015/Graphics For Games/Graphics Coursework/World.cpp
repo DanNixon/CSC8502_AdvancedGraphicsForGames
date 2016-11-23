@@ -31,6 +31,7 @@
 #include "TextureNode.h"
 #include "TransparentRenderingNode.h"
 #include "directories.h"
+#include "ParticleSystemNode.h"
 
 namespace GraphicsCoursework
 {
@@ -388,22 +389,25 @@ void World::Build(SceneNode *root)
     auto particleTextures =
         particleShader->AddChild(new TextureNode("particleTextures", {{brickTexture, "diffuseTex", 1}}));
 
+    auto particle1 = new IParticleSystem();
+
     auto particleControl = particleTextures->AddChild(
         new GenericControlNode("particleControl",
-                               [](ShaderProgram *) {
+                               [](ShaderProgram *s) {
                                  glEnable(GL_BLEND);
                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 1.0f);
                                },
-                               [](ShaderProgram *) { glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); }));
+                               [](ShaderProgram *s) {
+                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                               }));
 
     auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("particleShaderSync"));
 
-    m_state.particle1 = new IParticleSystem();
-
-    MeshNode *p = new MeshNode("particleRenderable", m_state.particle1);
+    ParticleSystemNode *p = new ParticleSystemNode("particleRenderable", particle1);
     particleShaderSync->AddChild(p);
     p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -10.0f)));
-    p->SetBoundingSphereRadius(-1.0f);
   }
 
   // POST PROCESSING
@@ -492,8 +496,5 @@ void World::Update(float msec)
   // Move water texture
   m_state.waterTexMatrix->Matrix() =
       Matrix4::Scale(10.0f) * Matrix4::Translation(Vector3(0.0f, -0.1f * m_state.timeOfDay, 0.0f));
-
-  // Update particle systems
-  m_state.particle1->Update(msec);
 }
 }

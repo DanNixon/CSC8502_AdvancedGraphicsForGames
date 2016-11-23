@@ -109,7 +109,10 @@
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClCompile>
     <ClCompile Include="IParticleSystem.cpp">
-      <Filter>Environment</Filter>
+      <Filter>Renderables</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemNode.cpp">
+      <Filter>Renderables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -234,10 +237,13 @@
     <ClInclude Include="ShadowTexture.h">
       <Filter>Texture Managment</Filter>
     </ClInclude>
-    <ClInclude Include="IParticleSystem.h">
-      <Filter>Environment</Filter>
-    </ClInclude>
     <ClInclude Include="directories.h" />
+    <ClInclude Include="IParticleSystem.h">
+      <Filter>Renderables</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemNode.h">
+      <Filter>Renderables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Performance Monitoring">

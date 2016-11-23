@@ -86,6 +86,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MatrixNode.cpp" />
     <ClCompile Include="MeshNode.cpp" />
+    <ClCompile Include="ParticleSystemNode.cpp" />
     <ClCompile Include="PerformanceMonitorNode.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="PointLight.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="MatrixNode.h" />
     <ClInclude Include="MeshNode.h" />
+    <ClInclude Include="ParticleSystemNode.h" />
     <ClInclude Include="PerformanceMonitorNode.h" />
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="PointLight.h" />
