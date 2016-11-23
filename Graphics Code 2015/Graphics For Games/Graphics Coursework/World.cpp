@@ -555,11 +555,9 @@ void World::Build(SceneNode *root)
         new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    auto control = view->AddChild(new GenericControlNodeSingle("processingControl", [this](RenderState &s) {
-      glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-      glUniform1i(glGetUniformLocation(s.shader->Program(), "shake"), 1);
-      glUniform1f(glGetUniformLocation(s.shader->Program(), "time"), this->m_state.timeOfDay * 16.0f);
+    auto control = view->AddChild(new GenericControlNode("processingControl", [this](ShaderProgram *s) {
+      glUniform1i(glGetUniformLocation(s->Program(), "shake"), 1);
+      glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 16.0f);
     }));
 
     auto texture = control->AddChild(new TextureNode("processingTexture", {{bufferColourTex, "diffuseTex", 1}}));

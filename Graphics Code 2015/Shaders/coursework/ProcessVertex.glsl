@@ -5,7 +5,7 @@ uniform mat4 viewMatrix;
 uniform mat4 projMatrix;
 uniform mat4 textureMatrix;
 
-uniform bool shake;
+uniform int shake;
 uniform float time;
 
 in vec3 position;
@@ -26,7 +26,7 @@ void main()
   OUT.colour = colour;
   OUT.texCoord = (textureMatrix * vec4(texCoord, 0.0, 1.0)).xy;
 	
-	if (shake)
+	if (shake == 1)
   {
     float strength = 0.1;
     gl_Position.x += cos(time * 10) * strength;        
