@@ -60,6 +60,8 @@ void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const 
                                                    new FragmentShader(CW_SHADER_DIR "ShadowFragment.glsl")})));
   shadowShader->SetProcessMode(PM_PROCESS_PASS);
 
+  shadowcol = new RGBATexture(shadowTexDim, shadowTexDim);
+
   CameraSelectorNode *shadowCameraSelect = new CameraSelectorNode(m_name + "_ShadowCameraSelect");
   shadowCameraSelect->SetProcessMode(PM_PROCESS_PASS);
   shadowCameraSelect->SetCamera(m_shadowCamera);
@@ -68,13 +70,13 @@ void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const 
   auto shadowControlNode = shadowCameraSelect->AddChild(
       new GenericControlNode(m_name + "_ShadowControl",
                              [shadowTexDim](ShaderProgram *s) {
-                               glDrawBuffer(GL_NONE);
+                               //glDrawBuffer(GL_NONE);
                                glClear(GL_DEPTH_BUFFER_BIT);
                                glViewport(0, 0, shadowTexDim, shadowTexDim);
-                               glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+                               //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
                              },
                              [&screenDims](ShaderProgram *s) {
-                               glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                               //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
                                glViewport(0, 0, (GLsizei)screenDims.x, (GLsizei)screenDims.y);
                              }));
   shadowControlNode->SetProcessMode(PM_PROCESS_PASS);
@@ -104,6 +106,7 @@ void ILight::DoShadowRender()
   for (size_t i = 0; i < NumDirections(); i++)
   {
     m_shadowSceneRoot->BindTexture(GL_DEPTH_ATTACHMENT, m_shadowTextures[i]);
+    m_shadowSceneRoot->BindTexture(GL_COLOR_ATTACHMENT0, shadowcol);
     m_shadowCamera->LookInDirection(directions[i]);
     m_shadowSceneRoot->Render(state);
   }

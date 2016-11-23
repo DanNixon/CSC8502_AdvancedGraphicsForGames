@@ -6,6 +6,8 @@
 
 #include <../nclgl/Vector2.h>
 
+#include "RGBATexture.h"
+
 namespace GraphicsCoursework
 {
 class ShadowTexture;
@@ -117,5 +119,7 @@ protected:
   std::vector<ShadowTexture *> m_shadowTextures; //!< Textures used in shadow mapping render passes
   FramebufferNode *m_shadowSceneRoot;            //!< Root node of the shadow rendering scene
   CameraNode *m_shadowCamera;                    //!< Camera used to render the shadow depth map
+
+  RGBATexture *shadowcol;
 };
 }

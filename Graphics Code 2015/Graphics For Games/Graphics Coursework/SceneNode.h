@@ -170,7 +170,8 @@ public:
 protected:
   inline bool ProcessingPassCheck(RenderState & state)
   {
-    return (m_processMode == PM_PROCESS_PASS) == state.processPass || (m_processMode == PM_DONT_CARE);
+    bool retVal = (m_processMode == PM_PROCESS_PASS) == state.processPass || (m_processMode == PM_DONT_CARE);
+    return retVal;
   }
 
 protected:
