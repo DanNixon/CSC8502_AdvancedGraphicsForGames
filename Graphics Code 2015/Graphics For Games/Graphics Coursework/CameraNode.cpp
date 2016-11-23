@@ -36,7 +36,7 @@ void CameraNode::LockOrientationTo(SceneNode *node, const Matrix4 &transform)
  * @brief Points the camera towards another scene node.
  * @param thing Scene node to look at
  */
-void CameraNode::LookAt(SceneNode * thing)
+void CameraNode::LookAt(SceneNode *thing)
 {
   LookInDirection(m_worldTransform.GetPositionVector() - thing->GetWorldTransformation().GetPositionVector());
 }
@@ -46,7 +46,7 @@ void CameraNode::LookAt(SceneNode * thing)
  * @param direction Direction to point camera in
  * @param up Up vector
  */
-void CameraNode::LookInDirection(const Vector3 & direction, const Vector3 &up)
+void CameraNode::LookInDirection(const Vector3 &direction, const Vector3 &up)
 {
   Vector3 xaxis = Vector3::Cross(up, direction);
   xaxis.Normalise();

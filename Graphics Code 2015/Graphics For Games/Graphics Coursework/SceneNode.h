@@ -168,7 +168,7 @@ public:
   friend std::ostream &operator<<(std::ostream &s, const SceneNode &n);
 
 protected:
-  inline bool ProcessingPassCheck(RenderState & state)
+  inline bool ProcessingPassCheck(RenderState &state)
   {
     bool retVal = (m_processMode == PM_PROCESS_PASS) == state.processPass || (m_processMode == PM_DONT_CARE);
     return retVal;
@@ -182,9 +182,9 @@ protected:
   Renderer *m_renderer; //!< Parent renderer
   SceneNode *m_parent;  //!< Parent node
 
-  bool m_active; //!< Flag indicating if this node is active
+  bool m_active;                //!< Flag indicating if this node is active
   ProcessingMode m_processMode; //!< Flag defining when this node is execuited
-  bool m_owner;  //!< Flag indicating that this node owns any held resources
+  bool m_owner;                 //!< Flag indicating that this node owns any held resources
 
   Matrix4 m_localRotation;  //!< Local rotation matrix
   Matrix4 m_localTransform; //!< Local transformation matrix

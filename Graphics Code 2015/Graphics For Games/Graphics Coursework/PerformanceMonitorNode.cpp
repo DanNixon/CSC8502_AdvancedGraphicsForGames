@@ -42,8 +42,7 @@ void PerformanceMonitorNode::Update(float msec)
       std::stringstream ss;
 
       ss << std::fixed << std::setprecision(1)
-         << "FPS: " << m_monitor->Metric(ISystemMonitor::AVERAGE_FRAMES_PER_SECOND) << ", "
-         << "CPU: " << m_monitor->Metric(ISystemMonitor::CPU_SELF_USAGE) << ", " << std::setprecision(2)
+         << "FPS: " << m_monitor->Metric(ISystemMonitor::AVERAGE_FRAMES_PER_SECOND) << ", " << std::setprecision(2)
          << "pMem: " << m_monitor->Metric(ISystemMonitor::PHYSICAL_MEMORY_SELF_USED) << "MB, "
          << "vMem: " << m_monitor->Metric(ISystemMonitor::VIRTUAL_MEMORY_SELF_USED) << "MB";
 
