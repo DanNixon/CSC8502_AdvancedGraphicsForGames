@@ -39,4 +39,15 @@ void SubTreeNode::PostRender(RenderState &state)
   m_children[0]->m_parent = m_oldParent;
   m_oldParent = nullptr;
 }
+
+/**
+ * @copydoc SceneNode::PrettyPrint
+ */
+void SubTreeNode::PrettyPrint(std::ostream &s, size_t level) const
+{
+  SceneNode *subtreeRoot = m_children[0];
+
+  s << " " << std::string(level, ' ') << " - " << (*this)
+    << " (subtree root = " << (subtreeRoot == nullptr ? "null" : subtreeRoot->Name()) << ")\n";
+}
 }

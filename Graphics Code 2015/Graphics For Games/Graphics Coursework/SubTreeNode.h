@@ -22,6 +22,8 @@ public:
   virtual void PreRender(RenderState &state);
   virtual void PostRender(RenderState &state);
 
+  virtual void PrettyPrint(std::ostream &s, size_t level = 0) const;
+
 protected:
   SceneNode *m_oldParent; //!< Old parent of the subtree root node
 };
