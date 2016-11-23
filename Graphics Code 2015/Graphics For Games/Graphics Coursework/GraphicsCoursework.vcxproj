@@ -78,6 +78,7 @@
     <ClCompile Include="FramebufferNode.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GenericControlNode.cpp" />
+    <ClCompile Include="GenericControlNodeSingle.cpp" />
     <ClCompile Include="HeightmapTexture.cpp" />
     <ClCompile Include="ILight.cpp" />
     <ClCompile Include="Math.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="FramebufferNode.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GenericControlNode.h" />
+    <ClInclude Include="GenericControlNodeSingle.h" />
     <ClInclude Include="HeightmapTexture.h" />
     <ClInclude Include="ILight.h" />
     <ClInclude Include="Math.h" />

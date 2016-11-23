@@ -13,7 +13,7 @@ SubTreeNode::SubTreeNode(const std::string &name, SceneNode *subtree)
     : SceneNode(name)
     , m_oldParent(nullptr)
 {
-  SetProcessMode(PM_DONT_CARE);
+  SetProcessMode(PM_BOTH);
   m_children.push_back(subtree);
 }
 

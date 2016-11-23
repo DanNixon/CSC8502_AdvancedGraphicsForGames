@@ -11,7 +11,7 @@ namespace GraphicsCoursework
 ShaderSyncNode::ShaderSyncNode(const std::string &name)
     : SceneNode(name)
 {
-  SetProcessMode(PM_DONT_CARE);
+  SetProcessMode(PM_BOTH);
 }
 
 ShaderSyncNode::~ShaderSyncNode()

@@ -112,7 +112,7 @@ void World::Build(SceneNode *root)
   auto projection = globalTexMatrixIdentity->AddChild(
       new MatrixNode("projection", "projMatrix",
                      Matrix4::Perspective(1.0f, 10000.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
-  projection->SetProcessMode(SceneNode::PM_DONT_CARE);
+  projection->SetProcessMode(SceneNode::PM_BOTH);
 
   // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
@@ -144,7 +144,7 @@ void World::Build(SceneNode *root)
     auto skyboxGLcontrol =
         globalTransp->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
                                                       [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
-    skyboxGLcontrol->SetProcessMode(SceneNode::PM_DONT_CARE);
+    skyboxGLcontrol->SetProcessMode(SceneNode::PM_BOTH);
 
     auto skyboxShader = skyboxGLcontrol->AddChild(
         new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "SkyboxVertex.glsl"),
@@ -263,7 +263,7 @@ void World::Build(SceneNode *root)
 
     auto terrainControlNode = terrainShader->AddChild(
         new GenericControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
-    terrainControlNode->SetProcessMode(SceneNode::PM_DONT_CARE);
+    terrainControlNode->SetProcessMode(SceneNode::PM_BOTH);
 
     auto terrainTextureMatrix =
         terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(100.0f)));

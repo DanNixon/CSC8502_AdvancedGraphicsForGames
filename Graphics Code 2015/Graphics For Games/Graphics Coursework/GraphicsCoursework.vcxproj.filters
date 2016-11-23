@@ -117,6 +117,9 @@
     <ClCompile Include="Math.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="GenericControlNodeSingle.cpp">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -249,6 +252,9 @@
     </ClInclude>
     <ClInclude Include="Math.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericControlNodeSingle.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

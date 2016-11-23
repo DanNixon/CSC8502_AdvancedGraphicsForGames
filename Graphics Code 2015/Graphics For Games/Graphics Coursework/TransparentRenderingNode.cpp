@@ -15,7 +15,7 @@ namespace GraphicsCoursework
 TransparentRenderingNode::TransparentRenderingNode(const std::string &name)
     : SceneNode(name)
 {
-  SetProcessMode(PM_DONT_CARE);
+  SetProcessMode(PM_BOTH);
 }
 
 TransparentRenderingNode::~TransparentRenderingNode()
