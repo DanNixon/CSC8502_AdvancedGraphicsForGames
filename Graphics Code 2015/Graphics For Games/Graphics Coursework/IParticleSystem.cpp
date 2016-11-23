@@ -2,36 +2,159 @@
 
 #include "IParticleSystem.h"
 
+#define RAND() ((rand() % 101) / 100.0f)
+
 namespace GraphicsCoursework
 {
-IParticleSystem::IParticleSystem(size_t numParticles, bool colour)
+IParticleSystem::IParticleSystem()
     : Mesh()
+    , m_particleRate(100.0f)
+    , m_particleLifetime(500.0f)
+    , m_particleSize(24.0f)
+    , m_particleVariance(0.2f)
+    , m_nextParticleTime(0.0f)
+    , m_particleSpeed(0.2f)
+    , m_numLaunchParticles(10)
+    , m_largestSize(0)
 {
-  m_type = GL_TRIANGLE_STRIP;
-  m_numVertices = numParticles;
-
-  m_vertices = new Vector3[m_numVertices];
-
-  if (colour)
-  {
-    m_colours = new Vector4[m_numVertices];
-
-    for (size_t i = 0; i < m_numVertices; i++)
-      m_colours[i] = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-  }
-
-  BufferAllData();
+  m_type = GL_POINTS;
 }
 
 IParticleSystem::~IParticleSystem()
 {
+  for (auto it = m_particles.begin(); it != m_particles.end(); ++it)
+    delete *it;
+
+  for (auto it = m_freeList.begin(); it != m_freeList.end(); ++it)
+    delete *it;
 }
 
 void IParticleSystem::Update(float msec)
 {
-  DeleteBuffer(VERTEX_BUFFER);
-  DeleteBuffer(COLOUR_BUFFER);
-  BufferData(VERTEX_BUFFER, 3, m_vertices);
-  BufferData(COLOUR_BUFFER, 4, m_colours);
+  m_nextParticleTime -= msec;
+
+  while (m_nextParticleTime <= 0)
+  {
+    m_nextParticleTime += m_particleRate;
+
+    // Add a number of particles to the vector, obtained from the free list.
+    for (int i = 0; i < m_numLaunchParticles; ++i)
+      m_particles.push_back(GetFreeParticle());
+  }
+
+  // Now for the particle 'think' function. Particles are so 'lightweight' there's not
+  // much point putting this as a member variable of the Particle struct...
+
+  for (auto it = m_particles.begin(); it != m_particles.end();)
+  {
+    Particle *p = (*it);
+
+    // We're keeping the particles 'life' in the alpha channel of its colour.
+    // This means it'll also fade out as it loses energy. Kinda cool?
+    p->colour.w -= (msec / m_particleLifetime);
+
+    // If this particle has ran out of life, remove it from the 'active' list,
+    // and put it on the 'free' list for reuse later.
+    if (p->colour.w <= 0.0f)
+    {
+      m_freeList.push_back(p);
+      it = m_particles.erase(it);
+    }
+    else
+    {
+      // Otherwise, this particle must be still 'alive'. Update its
+      // position by multiplying its normalised direction by the
+      // particle speed, and adding the result to the position. Easy!
+
+      p->position += p->direction * (msec * m_particleSpeed);
+
+      ++it;
+    }
+  }
+
+  // If we now have more particles than we have graphics memory for, we
+  // must allocate some new space for them, using ResizeArrays.
+  if (m_particles.size() > m_largestSize)
+    ResizeArrays();
+}
+
+void IParticleSystem::Draw()
+{
+  // Get 2 contiguous sections of memory full of our particle info
+  for (unsigned int i = 0; i < m_particles.size(); ++i)
+  {
+    m_vertices[i] = m_particles.at(i)->position;
+    m_colours[i] = m_particles.at(i)->colour;
+  }
+
+  glBindVertexArray(m_arrayObject);
+
+  // Bind vertex data
+  glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, m_particles.size() * sizeof(Vector3), (void *)m_vertices);
+  glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3), 0);
+  glEnableVertexAttribArray(VERTEX_BUFFER);                                       
+
+  // Bind colour data
+  glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[COLOUR_BUFFER]);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, m_particles.size() * sizeof(Vector4), (void *)m_colours);
+  glVertexAttribPointer(COLOUR_BUFFER, 4, GL_FLOAT, GL_FALSE, sizeof(Vector4), 0);
+  glEnableVertexAttribArray(COLOUR_BUFFER);
+
+  glDrawArrays(m_type, 0, m_particles.size());
+
+  glBindVertexArray(0);
+}
+
+Particle *IParticleSystem::GetFreeParticle()
+{
+  Particle *p = nullptr;
+
+  // Try to return an existing particle
+  if (m_freeList.size() > 0)
+  {
+    p = m_freeList.back();
+    m_freeList.pop_back();
+  }
+  else
+  {
+    p = new Particle();
+  }
+
+  // Randomise data
+  p->colour = Vector4(RAND(), RAND(), RAND(), 1.0);
+  p->direction = m_initialDirection;
+  p->direction.x += ((RAND() - RAND()) * m_particleVariance);
+  p->direction.y += ((RAND() - RAND()) * m_particleVariance);
+  p->direction.z += ((RAND() - RAND()) * m_particleVariance);
+
+  p->direction.Normalise();
+  p->position.ToZero();
+
+  return p;
+}
+
+void IParticleSystem::ResizeArrays()
+{
+  delete[] m_vertices;
+  delete[] m_colours;
+
+  glDeleteBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
+  glDeleteBuffers(1, &m_bufferObjects[COLOUR_BUFFER]);
+
+  m_vertices = new Vector3[m_particles.size()];
+  m_colours = new Vector4[m_particles.size()];
+  
+  glGenBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
+  glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
+  glBufferData(GL_ARRAY_BUFFER, m_particles.size() * sizeof(Vector3), 0, GL_DYNAMIC_DRAW);
+
+  glGenBuffers(1, &m_bufferObjects[COLOUR_BUFFER]);
+  glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[COLOUR_BUFFER]);
+  glBufferData(GL_ARRAY_BUFFER, m_particles.size() * sizeof(Vector4), 0, GL_DYNAMIC_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  m_largestSize = m_particles.size();
 }
 }
