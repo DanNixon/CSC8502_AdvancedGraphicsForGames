@@ -380,6 +380,9 @@ void World::Build(SceneNode *root)
 
   // PARTICLES
   {
+    ITexture * snowflakeTexture = new Texture();
+    snowflakeTexture->LoadFromFile(CW_TEXTURE_DIR "snowlfake_1.png");
+
     auto particleShader = globalTransp->AddChild(
         new ShaderNode("particleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
                                                             new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl"),
@@ -387,16 +390,18 @@ void World::Build(SceneNode *root)
     particleShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
     auto particleTextures =
-        particleShader->AddChild(new TextureNode("particleTextures", {{brickTexture, "diffuseTex", 1}}));
+        particleShader->AddChild(new TextureNode("particleTextures", {{ snowflakeTexture, "diffuseTex", 1}}));
 
-    auto particle1 = new IParticleSystem();
+    IParticleSystem * particle1 = new IParticleSystem();
+    particle1->SetParticleSpeed(0.01f);
+    particle1->SetParticleLifetime(5000.0f);
 
     auto particleControl = particleTextures->AddChild(
         new GenericControlNode("particleControl",
                                [](ShaderProgram *s) {
                                  glEnable(GL_BLEND);
                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 1.0f);
+                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.5f);
                                },
                                [](ShaderProgram *s) {
                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
