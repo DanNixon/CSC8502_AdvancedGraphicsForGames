@@ -48,8 +48,8 @@ bool ITexture::LoadFromFiles(const std::vector<std::string> &filenames, unsigned
 void ITexture::SetRepeating(bool repeat)
 {
   glBindTexture(m_type, m_textureID);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP);
+  glTexParameteri(m_type, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP);
+  glTexParameteri(m_type, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP);
   glBindTexture(m_type, 0);
 }
 

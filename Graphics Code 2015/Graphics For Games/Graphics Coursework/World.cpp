@@ -3,6 +3,7 @@
 #include "World.h"
 
 #include <../nclgl/Window.h>
+#include <../nclgl/OBJMesh.h>
 
 #include "CameraNode.h"
 #include "CameraSelectorNode.h"
@@ -134,7 +135,7 @@ void World::Build(SceneNode *root)
   ITexture *bufferColourTexOut = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
 
   bufferDepthTex->SetRepeating(true);
-  bufferColourTex->SetRepeating(true);
+  bufferColourTex->SetRepeating(false);
   bufferColourTexOut->SetRepeating(true);
 
   sceneBuffer->BindTexture(GL_DEPTH_ATTACHMENT, bufferDepthTex);
@@ -362,6 +363,16 @@ void World::Build(SceneNode *root)
     sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
     sphere1->SpecularIntensity() = 0.5f;
     sphere1->SpecularPower() = 100.0f;
+
+
+    OBJMesh * lampMesh = new OBJMesh();
+    lampMesh->LoadOBJMesh(CW_MESH_DIR "StreetLamp.obj");
+
+    MeshNode *lampRenderable = new MeshNode("lampRenderable", lampMesh);
+    envShaderSync->AddChild(lampRenderable);
+    lampRenderable->SetLocalTransformation(Matrix4::Scale(0.05f) * Matrix4::Translation(Vector3(0.0f, 5.0f, -30.0f)));
+    lampRenderable->SpecularIntensity() = 0.5f;
+    lampRenderable->SpecularPower() = 100.0f;
   }
 
   // WATER
@@ -556,8 +567,8 @@ void World::Build(SceneNode *root)
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
     auto control = view->AddChild(new GenericControlNode("processingControl", [this](ShaderProgram *s) {
-      glUniform1i(glGetUniformLocation(s->Program(), "shake"), 1);
-      glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 16.0f);
+      glUniform1i(glGetUniformLocation(s->Program(), "shake"), 0);
+      glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 32.0f);
     }));
 
     auto texture = control->AddChild(new TextureNode("processingTexture", {{bufferColourTex, "diffuseTex", 1}}));

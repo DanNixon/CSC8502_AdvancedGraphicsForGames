@@ -28,8 +28,8 @@ void main()
 	
 	if (shake == 1)
   {
-    float strength = 0.1;
-    gl_Position.x += cos(time * 10) * strength;        
-    gl_Position.y += cos(time * 15) * strength;        
+    float strength = 0.005;
+    OUT.texCoord.x += cos(time * 10) * strength;        
+    OUT.texCoord.y += cos(time * 15) * strength;        
   }
 }
