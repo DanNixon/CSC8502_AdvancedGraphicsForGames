@@ -116,7 +116,7 @@ void ILight::PreRender(RenderState &state)
 {
   ShaderDataNode::PreRender(state);
 
-  if (m_shadowSceneRoot != nullptr)
+  if (m_shadowSceneRoot != nullptr && state.processPass == false)
     DoShadowRender();
 }
 
