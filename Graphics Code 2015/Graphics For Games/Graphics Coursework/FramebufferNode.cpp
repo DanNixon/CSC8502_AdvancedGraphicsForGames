@@ -58,7 +58,9 @@ void FramebufferNode::PreRender(RenderState &state)
   if (ProcessingPassCheck(state))
   {
     glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+    if (m_buffer != 0)
+      glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   }
 }
 

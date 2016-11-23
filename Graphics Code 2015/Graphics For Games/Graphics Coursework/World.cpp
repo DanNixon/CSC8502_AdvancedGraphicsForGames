@@ -12,6 +12,7 @@
 #include "FractalBrownianMotion.h"
 #include "FramebufferNode.h"
 #include "GenericControlNode.h"
+#include "GenericControlNodeSingle.h"
 #include "HeightmapTexture.h"
 #include "MatrixNode.h"
 #include "ParticleSystem.h"
@@ -46,6 +47,10 @@ World::World(Renderer &renderer)
   m_state.screenDims = m_renderer.ParentWindow().GetScreenSize();
   m_state.screenBuffer = new FramebufferNode("screenBuffer", false);
   m_renderer.Root()->AddChild(m_state.screenBuffer);
+
+  m_state.screenBuffer->AddChild(new GenericControlNodeSingle("aaa", [](RenderState &) {
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  }));
 }
 
 /**
@@ -125,12 +130,16 @@ void World::Build(SceneNode *root)
   auto globalTransp = globalFog->AddChild(new TransparentRenderingNode("globalTransp"));
 
   ITexture *bufferDepthTex = new DepthStencilTexture(m_state.screenDims.x, m_state.screenDims.y);
-  ITexture *bufferColourTex1 = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
-  ITexture *bufferColourTex2 = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
+  ITexture *bufferColourTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
+  ITexture *bufferColourTexOut = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
+
+  bufferDepthTex->SetRepeating(true);
+  bufferColourTex->SetRepeating(true);
+  bufferColourTexOut->SetRepeating(true);
 
   sceneBuffer->BindTexture(GL_DEPTH_ATTACHMENT, bufferDepthTex);
   sceneBuffer->BindTexture(GL_STENCIL_ATTACHMENT, bufferDepthTex);
-  sceneBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTex1);
+  sceneBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTex);
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles(
@@ -528,48 +537,51 @@ void World::Build(SceneNode *root)
 
   // POST PROCESSING
   {
-    FramebufferNode *processBuffer = new FramebufferNode("processBuffer");
+    FramebufferNode *processBuffer = new FramebufferNode("processingBuffer");
+    processBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTexOut);
     root->AddChild(processBuffer);
 
     auto depthDisable = processBuffer->AddChild(
-        new GenericControlNode("depthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
+        new GenericControlNode("processingDepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
                                [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
     auto shader = depthDisable->AddChild(
-        new ShaderNode("shader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
+        new ShaderNode("processingShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
                                                     new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
 
     auto proj = globalTexMatrixIdentity->AddChild(
-        new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+        new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    auto control1 = view->AddChild(new GenericControlNode("control1", [bufferColourTex2](ShaderProgram *s) {
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bufferColourTex2->GetTextureID(), 0);
+    auto control = view->AddChild(new GenericControlNodeSingle("processingControl", [this](RenderState &s) {
+      glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+      glUniform1i(glGetUniformLocation(s.shader->Program(), "shake"), 1);
+      glUniform1f(glGetUniformLocation(s.shader->Program(), "time"), this->m_state.timeOfDay * 16.0f);
     }));
 
-    auto texture1 = control1->AddChild(new TextureNode("texture1", {{bufferColourTex1, "diffuseTex", 1}}));
-    auto sync1 = texture1->AddChild(new ShaderSyncNode("sync1"));
-    RenderableNode *quad1 = new MeshNode("quad1", Mesh::GenerateQuad());
-    sync1->AddChild(quad1);
+    auto texture = control->AddChild(new TextureNode("processingTexture", {{bufferColourTex, "diffuseTex", 1}}));
+    auto sync = texture->AddChild(new ShaderSyncNode("processingSync"));
+    sync->AddChild(new MeshNode("processingQuad", Mesh::GenerateQuad()));
   }
 
   // POST PROCESSING PRESENTATION
   {
     auto shader = m_state.screenBuffer->AddChild(
-        new ShaderNode("shader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
-                                                    new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
+        new ShaderNode("processingPresentShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
+                                                    new FragmentShader(CW_SHADER_DIR "TexturedFragment.glsl")})));
 
-    auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
+    auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("processingPresentTexMatrixIdentity", "textureMatrix"));
 
     auto proj = globalTexMatrixIdentity->AddChild(
-        new MatrixNode("proj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
-    auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
+        new MatrixNode("processingPresentProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+    auto view = proj->AddChild(new MatrixNode("processingPresentView", "viewMatrix", Matrix4()));
 
-    auto texture = view->AddChild(new TextureNode("texture", {{bufferColourTex1, "diffuseTex", 1}}));
-    auto sync = texture->AddChild(new ShaderSyncNode("sync"));
-    auto quad = sync->AddChild(new MeshNode("quad", Mesh::GenerateQuad()));
+    auto texture = view->AddChild(new TextureNode("processingPresentTexture", {{bufferColourTexOut, "diffuseTex", 1}}));
+    auto sync = texture->AddChild(new ShaderSyncNode("processingPresentSync"));
+    sync->AddChild(new MeshNode("processingPresentQuad", Mesh::GenerateQuad()));
   }
 }
 

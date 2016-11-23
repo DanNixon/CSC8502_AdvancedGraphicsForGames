@@ -40,7 +40,7 @@ bool Shader::LoadFile(std::string filename, std::string &into)
   file.open(filename);
   if (!file)
   {
-    std::cerr << "SHader source file \"" << filename << "\" not found!\n";
+    std::cerr << "Shader source file \"" << filename << "\" not found!\n";
     return false;
   }
 
