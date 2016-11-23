@@ -2,19 +2,27 @@
 
 #include "MeshNode.h"
 
-#include "IParticleSystem.h"
+#include "ParticleSystem.h"
 
 namespace GraphicsCoursework
 {
+/**
+ * @class ParticleSystemNode
+ * @brief Renderable node containg a particle system.
+ */
 class ParticleSystemNode : public MeshNode
 {
 public:
-  ParticleSystemNode(const std::string &name, IParticleSystem *particleSystem);
+  ParticleSystemNode(const std::string &name, ParticleSystem *particleSystem);
   virtual ~ParticleSystemNode();
 
-  inline IParticleSystem *System()
+  /**
+   * @brief Gets a pointer to the underlying particle system.
+   * @return Particle system
+   */
+  inline ParticleSystem *System()
   {
-    return static_cast<IParticleSystem *>(m_mesh);
+    return static_cast<ParticleSystem *>(m_mesh);
   }
 
   virtual void Update(float msec);

@@ -108,10 +108,10 @@
     <ClCompile Include="SubTreeNode.cpp">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="IParticleSystem.cpp">
+    <ClCompile Include="ParticleSystemNode.cpp">
       <Filter>Renderables</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleSystemNode.cpp">
+    <ClCompile Include="ParticleSystem.cpp">
       <Filter>Renderables</Filter>
     </ClCompile>
   </ItemGroup>
@@ -238,10 +238,10 @@
       <Filter>Texture Managment</Filter>
     </ClInclude>
     <ClInclude Include="directories.h" />
-    <ClInclude Include="IParticleSystem.h">
+    <ClInclude Include="ParticleSystemNode.h">
       <Filter>Renderables</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystemNode.h">
+    <ClInclude Include="ParticleSystem.h">
       <Filter>Renderables</Filter>
     </ClInclude>
   </ItemGroup>

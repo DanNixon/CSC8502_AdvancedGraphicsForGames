@@ -13,8 +13,8 @@
 #include "FramebufferNode.h"
 #include "GenericControlNode.h"
 #include "HeightmapTexture.h"
-#include "IParticleSystem.h"
 #include "MatrixNode.h"
+#include "ParticleSystem.h"
 #include "ParticleSystemNode.h"
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
@@ -378,7 +378,53 @@ void World::Build(SceneNode *root)
     waterQuad->SpecularPower() = 2.0f;
   }
 
-  // PARTICLES
+  // GEYSER PARTICLES
+  {
+    auto particleShader = globalTransp->AddChild(new ShaderNode(
+        "geyserParticleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                                   new FragmentShader(CW_SHADER_DIR "ParticleColourFragment.glsl"),
+                                                   new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
+    particleShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
+
+    ParticleSystem *particle = new ParticleSystem();
+    particle->SetLaunchParticles(50);
+    particle->SetParticleLifetime(4000.0f);
+
+    particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
+      col = Vector4(ParticleSystem::Rand(), ParticleSystem::Rand(), ParticleSystem::Rand(), 1.0);
+
+      dir = Vector3(0.0f, 1.0f, 0.0f);
+      dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
+      dir.y += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
+      dir.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
+    };
+
+    particle->UpdateFunction() = [](Particle &p, float msec) {
+      p.direction.y -= msec * 0.001f;
+      p.direction.Normalise();
+      p.position += p.direction * (msec * 0.01f);
+    };
+
+    auto particleControl = particleShader->AddChild(
+        new GenericControlNode("geyserParticleControl",
+                               [](ShaderProgram *s) {
+                                 glEnable(GL_BLEND);
+                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.2f);
+                               },
+                               [](ShaderProgram *s) {
+                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                               }));
+
+    auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("geyserParticleShaderSync"));
+
+    ParticleSystemNode *p = new ParticleSystemNode("geyserParticleRenderable", particle);
+    particleShaderSync->AddChild(p);
+    p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 50.0f)));
+  }
+
+  // SNOW PARTICLES
   {
     ITexture *snowflakeTexture = new Texture();
     snowflakeTexture->LoadFromFile(CW_TEXTURE_DIR "snowlfake_1.png");
@@ -390,11 +436,21 @@ void World::Build(SceneNode *root)
     particleShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
     auto particleTextures =
-        particleShader->AddChild(new TextureNode("particleTextures", {{snowflakeTexture, "diffuseTex", 1}}));
+        particleShader->AddChild(new TextureNode("particleTextures", {{brickTexture, "diffuseTex", 1}}));
 
-    IParticleSystem *particle1 = new IParticleSystem();
-    particle1->SetParticleSpeed(0.01f);
-    particle1->SetParticleLifetime(5000.0f);
+    ParticleSystem *particle = new ParticleSystem();
+    particle->SetParticleLifetime(5000.0f);
+
+    particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
+      col = Vector4(ParticleSystem::Rand(), ParticleSystem::Rand(), ParticleSystem::Rand(), 1.0);
+
+      dir = Vector3(0.0f, -1.0f, 0.0f);
+      dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+      dir.y -= abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+      dir.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+    };
+
+    particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
 
     auto particleControl = particleTextures->AddChild(
         new GenericControlNode("particleControl",
@@ -410,7 +466,7 @@ void World::Build(SceneNode *root)
 
     auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("particleShaderSync"));
 
-    ParticleSystemNode *p = new ParticleSystemNode("particleRenderable", particle1);
+    ParticleSystemNode *p = new ParticleSystemNode("particleRenderable", particle);
     particleShaderSync->AddChild(p);
     p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -10.0f)));
   }

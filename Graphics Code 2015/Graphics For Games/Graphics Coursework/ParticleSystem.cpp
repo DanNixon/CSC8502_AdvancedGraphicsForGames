@@ -1,25 +1,39 @@
 /** @file */
 
-#include "IParticleSystem.h"
-
-#define RAND() ((rand() % 101) / 100.0f)
+#include "ParticleSystem.h"
 
 namespace GraphicsCoursework
 {
-IParticleSystem::IParticleSystem()
+float ParticleSystem::Rand()
+{
+  return (rand() % 101) / 100.0f;
+}
+
+ParticleSystem::ParticleSystem()
     : Mesh()
     , m_particleRate(100.0f)
     , m_particleLifetime(500.0f)
-    , m_particleVariance(0.2f)
     , m_nextParticleTime(0.0f)
-    , m_particleSpeed(0.2f)
     , m_numLaunchParticles(10)
     , m_largestSize(0)
 {
   m_type = GL_POINTS;
+
+  m_newParticleFunc = [](Vector3 &dir, Vector4 &col) {
+    col = Vector4(Rand(), Rand(), Rand(), 1.0);
+
+    dir = Vector3(0.0f, 0.0f, 0.0f);
+    dir.x += ((Rand() - Rand()) * 0.5f);
+    dir.y += ((Rand() - Rand()) * 0.5f);
+    dir.z += ((Rand() - Rand()) * 0.5f);
+  };
+
+  m_particleUpdateFunc = [this](Particle &p, float msec) {
+    p.position += p.direction * (msec * 0.2);
+  };
 }
 
-IParticleSystem::~IParticleSystem()
+ParticleSystem::~ParticleSystem()
 {
   for (auto it = m_particles.begin(); it != m_particles.end(); ++it)
     delete *it;
@@ -28,7 +42,7 @@ IParticleSystem::~IParticleSystem()
     delete *it;
 }
 
-void IParticleSystem::Update(float msec)
+void ParticleSystem::Update(float msec)
 {
   m_nextParticleTime -= msec;
 
@@ -61,12 +75,7 @@ void IParticleSystem::Update(float msec)
     }
     else
     {
-      // Otherwise, this particle must be still 'alive'. Update its
-      // position by multiplying its normalised direction by the
-      // particle speed, and adding the result to the position. Easy!
-
-      p->position += p->direction * (msec * m_particleSpeed);
-
+      m_particleUpdateFunc(*p, msec);
       ++it;
     }
   }
@@ -77,7 +86,7 @@ void IParticleSystem::Update(float msec)
     ResizeArrays();
 }
 
-void IParticleSystem::Draw()
+void ParticleSystem::Draw()
 {
   // Get 2 contiguous sections of memory full of our particle info
   for (unsigned int i = 0; i < m_particles.size(); ++i)
@@ -105,7 +114,7 @@ void IParticleSystem::Draw()
   glBindVertexArray(0);
 }
 
-Particle *IParticleSystem::GetFreeParticle()
+Particle *ParticleSystem::GetFreeParticle()
 {
   Particle *p = nullptr;
 
@@ -121,11 +130,7 @@ Particle *IParticleSystem::GetFreeParticle()
   }
 
   // Randomise data
-  p->colour = Vector4(RAND(), RAND(), RAND(), 1.0);
-  p->direction = m_initialDirection;
-  p->direction.x += ((RAND() - RAND()) * m_particleVariance);
-  p->direction.y += ((RAND() - RAND()) * m_particleVariance);
-  p->direction.z += ((RAND() - RAND()) * m_particleVariance);
+  m_newParticleFunc(p->direction, p->colour);
 
   p->direction.Normalise();
   p->position.ToZero();
@@ -133,7 +138,7 @@ Particle *IParticleSystem::GetFreeParticle()
   return p;
 }
 
-void IParticleSystem::ResizeArrays()
+void ParticleSystem::ResizeArrays()
 {
   delete[] m_vertices;
   delete[] m_colours;
