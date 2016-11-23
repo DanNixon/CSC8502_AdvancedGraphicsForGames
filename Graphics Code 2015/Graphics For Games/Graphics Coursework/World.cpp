@@ -261,6 +261,7 @@ void World::Build(SceneNode *root)
 
     auto terrainControlNode = terrainShader->AddChild(
         new GenericControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
+    terrainControlNode->SetProcessMode(SceneNode::PM_DONT_CARE);
 
     auto terrainTextureMatrix =
         terrainControlNode->AddChild(new MatrixNode("terrainTextureMatrix", "textureMatrix", Matrix4::Scale(100.0f)));
