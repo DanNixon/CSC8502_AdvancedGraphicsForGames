@@ -212,6 +212,7 @@ void World::Build(SceneNode *root)
     m_state.flashlight->Reach() = 30.0f;
   }
 
+#if 0
   // HEIGHTMAP
   {
     // Height generation
@@ -376,30 +377,40 @@ void World::Build(SceneNode *root)
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     waterQuad->SpecularPower() = 2.0f;
   }
+#endif
 
   // PARTICLES
   {
-    auto particleShader = sceneBuffer->AddChild(new ShaderNode(
-        "particleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
-                                             new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl")})));
+    auto particleShader = globalTransp->AddChild(
+      new ShaderNode("envShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                                      new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl") })));
+    particleShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
-    auto particleTexture = particleShader->AddChild(new TextureNode("particleTexture", {}));
+    auto particleTextures = particleShader->AddChild(new TextureNode("particleTextures", { { brickTexture, "diffuseTex", 1 } }));
 
-    auto particleShaderSync = particleTexture->AddChild(new ShaderSyncNode("particleShaderSync"));
+    auto particleShaderSync = particleTextures->AddChild(new ShaderSyncNode("particleShaderSync"));
 
+#if 0
+    MeshNode *sphere1 = new MeshNode("sphere1", Mesh::GenerateSphere());
+    particleShaderSync->AddChild(sphere1);
+    sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
+    sphere1->SpecularIntensity() = 0.5f;
+    sphere1->SpecularPower() = 100.0f;
+#else
     IParticleSystem *particleMesh = new IParticleSystem(3, true);
 
     // TODO
     particleMesh->SetParticlePosition(0, Vector3(0, 0, 0));
-    particleMesh->SetParticlePosition(1, Vector3(10, 0, 0));
-    particleMesh->SetParticlePosition(2, Vector3(10, 10, 0));
+    particleMesh->SetParticlePosition(1, Vector3(1, 0, 0));
+    particleMesh->SetParticlePosition(2, Vector3(1, 1, 0));
     // particleMesh->SetParticlePosition(3, Vector3(0, 1, 0));
     particleMesh->Update(0.0f);
 
-    RenderableNode *particleRenderable =
-        (RenderableNode *)particleShaderSync->AddChild(new MeshNode("particleRenderable", particleMesh, true));
-    particleRenderable->SetBoundingSphereRadius(-1.0f);
-    particleRenderable->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
+    MeshNode * p = new MeshNode("particleRenderable", particleMesh);
+    particleShaderSync->AddChild(p);
+    p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
+    p->SetBoundingSphereRadius(-1.0f);
+#endif
   }
 
   // POST PROCESSING
@@ -485,8 +496,10 @@ void World::Update(float msec)
   if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_F))
     m_state.flashlight->ToggleActive();
 
+#if 0
   // Move water texture
   m_state.waterTexMatrix->Matrix() =
       Matrix4::Scale(10.0f) * Matrix4::Translation(Vector3(0.0f, -0.1f * m_state.timeOfDay, 0.0f));
+#endif
 }
 }

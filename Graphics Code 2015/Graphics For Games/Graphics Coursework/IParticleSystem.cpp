@@ -7,7 +7,7 @@ namespace GraphicsCoursework
 IParticleSystem::IParticleSystem(size_t numParticles, bool colour)
     : Mesh()
 {
-  m_type = GL_TRIANGLES;
+  m_type = GL_TRIANGLE_STRIP;
   m_numVertices = numParticles;
 
   m_vertices = new Vector3[m_numVertices];
