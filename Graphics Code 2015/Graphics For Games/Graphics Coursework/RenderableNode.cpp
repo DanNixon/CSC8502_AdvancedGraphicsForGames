@@ -20,6 +20,7 @@ RenderableNode::RenderableNode(const std::string &name, bool transparent)
     , m_specularPower(20.0f)
     , m_specularIntensity(0.5f)
 {
+  SetProcessMode(PM_DONT_CARE);
 }
 
 RenderableNode::~RenderableNode()

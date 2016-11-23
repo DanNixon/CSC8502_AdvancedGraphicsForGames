@@ -55,8 +55,11 @@ void FramebufferNode::BindTexture(GLuint target, ITexture *texture)
  */
 void FramebufferNode::PreRender(RenderState &state)
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  if (ProcessingPassCheck(state))
+  {
+    glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  }
 }
 
 /**
@@ -64,6 +67,7 @@ void FramebufferNode::PreRender(RenderState &state)
  */
 void FramebufferNode::PostRender(RenderState &state)
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  if (ProcessingPassCheck(state))
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 }

@@ -20,6 +20,14 @@ class Renderer;
 class SceneNode
 {
 public:
+  enum ProcessingMode
+  {
+    PM_RENDER_PASS,
+    PM_PROCESS_PASS,
+    PM_DONT_CARE
+  };
+
+public:
   SceneNode(const std::string &name, Renderer *renderer = nullptr);
   virtual ~SceneNode();
 
@@ -44,14 +52,14 @@ public:
   virtual void SetActive(bool active, bool recursive = false);
   bool ToggleActive();
 
-  inline bool IsProcessingNode() const
+  inline ProcessingMode ProcessMode() const
   {
-    return m_processingNode;
+    return m_processMode;
   }
 
-  virtual void SetIsProcessingNode(bool processingNode)
+  virtual void SetProcessMode(ProcessingMode mode)
   {
-    m_processingNode = processingNode;
+    m_processMode = mode;
   }
 
   /**
@@ -162,7 +170,7 @@ public:
 protected:
   inline bool ProcessingPassCheck(RenderState & state)
   {
-    return m_processingNode == state.processPass;
+    return (m_processMode == PM_PROCESS_PASS) == state.processPass || (m_processMode == PM_DONT_CARE);
   }
 
 protected:
@@ -174,7 +182,7 @@ protected:
   SceneNode *m_parent;  //!< Parent node
 
   bool m_active; //!< Flag indicating if this node is active
-  bool m_processingNode; //!< Flag indicating that this node is executed in processing stages only
+  ProcessingMode m_processMode; //!< Flag defining when this node is execuited
   bool m_owner;  //!< Flag indicating that this node owns any held resources
 
   Matrix4 m_localRotation;  //!< Local rotation matrix

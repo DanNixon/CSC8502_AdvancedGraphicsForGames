@@ -3,15 +3,15 @@
 #include "ILight.h"
 
 #include "CameraNode.h"
+#include "CameraSelectorNode.h"
 #include "FramebufferNode.h"
+#include "GenericControlNode.h"
 #include "Renderer.h"
+#include "ShaderNode.h"
 #include "ShaderProgram.h"
+#include "Shaders.h"
 #include "ShadowTexture.h"
 #include "SubtreeNode.h"
-#include "ShaderNode.h"
-#include "Shaders.h"
-#include "CameraSelectorNode.h"
-#include "GenericControlNode.h"
 #include "directories.h"
 
 namespace GraphicsCoursework
@@ -49,34 +49,38 @@ void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const 
     m_shadowTextures.push_back(new ShadowTexture(shadowTexDim));
 
   m_shadowSceneRoot = new FramebufferNode(m_name + "_ShadowFramebuffer");
-  m_shadowSceneRoot->SetIsProcessingNode(true);
+  m_shadowSceneRoot->SetProcessMode(PM_PROCESS_PASS);
 
   m_shadowCamera = new CameraNode(m_name + "_ShadowCamera");
-  m_shadowCamera->SetIsProcessingNode(true);
+  m_shadowCamera->SetProcessMode(PM_PROCESS_PASS);
   m_shadowSceneRoot->AddChild(m_shadowCamera);
 
-  auto shadowShader = m_shadowCamera->AddChild(new ShaderNode(m_name + "_ShadowShader", new ShaderProgram({
-      new VertexShader(CW_SHADER_DIR "ShadowVertex.glsl"),
-      new FragmentShader(CW_SHADER_DIR "ShadowFragment.glsl")
-    })));
-  shadowShader->SetIsProcessingNode(true);
+  auto shadowShader = m_shadowCamera->AddChild(new ShaderNode(
+      m_name + "_ShadowShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ShadowVertex.glsl"),
+                                                   new FragmentShader(CW_SHADER_DIR "ShadowFragment.glsl")})));
+  shadowShader->SetProcessMode(PM_PROCESS_PASS);
 
-  CameraSelectorNode * shadowCameraSelect  = new CameraSelectorNode(m_name + "_ShadowCameraSelect");
-  shadowCameraSelect->SetIsProcessingNode(true);
+  CameraSelectorNode *shadowCameraSelect = new CameraSelectorNode(m_name + "_ShadowCameraSelect");
+  shadowCameraSelect->SetProcessMode(PM_PROCESS_PASS);
   shadowCameraSelect->SetCamera(m_shadowCamera);
   shadowShader->AddChild(shadowCameraSelect);
 
-  auto shadowControlNode = shadowCameraSelect->AddChild(new GenericControlNode(m_name + "_ShadowControl", [shadowTexDim](ShaderProgram *s) {
-    glViewport(0, 0, shadowTexDim, shadowTexDim);
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-  }, [&screenDims](ShaderProgram * s) {
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    glViewport(0, 0, (GLsizei)screenDims.x, (GLsizei)screenDims.y);
-  }));
-  shadowControlNode->SetIsProcessingNode(true);
+  auto shadowControlNode = shadowCameraSelect->AddChild(
+      new GenericControlNode(m_name + "_ShadowControl",
+                             [shadowTexDim](ShaderProgram *s) {
+                               glDrawBuffer(GL_NONE);
+                               glClear(GL_DEPTH_BUFFER_BIT);
+                               glViewport(0, 0, shadowTexDim, shadowTexDim);
+                               glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+                             },
+                             [&screenDims](ShaderProgram *s) {
+                               glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                               glViewport(0, 0, (GLsizei)screenDims.x, (GLsizei)screenDims.y);
+                             }));
+  shadowControlNode->SetProcessMode(PM_PROCESS_PASS);
 
   auto shadowSubtree = shadowControlNode->AddChild(new SubTreeNode(m_name + "_ShadowSubtree", shadowSceneRoot));
-  shadowSubtree->SetIsProcessingNode(true);
+  shadowSubtree->SetProcessMode(PM_PROCESS_PASS);
 }
 
 /**

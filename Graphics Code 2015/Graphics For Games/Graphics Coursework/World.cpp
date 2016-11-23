@@ -106,9 +106,11 @@ void World::Build(SceneNode *root)
 
   auto globalTexMatrixIdentity =
       playerCameraSelect->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
+
   auto projection = globalTexMatrixIdentity->AddChild(
       new MatrixNode("projection", "projMatrix",
                      Matrix4::Perspective(1.0f, 10000.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
+  projection->SetProcessMode(SceneNode::PM_DONT_CARE);
 
   // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
@@ -140,6 +142,7 @@ void World::Build(SceneNode *root)
     auto skyboxGLcontrol =
         globalTransp->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
                                                       [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
+    skyboxGLcontrol->SetProcessMode(SceneNode::PM_DONT_CARE);
 
     auto skyboxShader = skyboxGLcontrol->AddChild(
         new ShaderNode("skyboxShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "SkyboxVertex.glsl"),
@@ -202,7 +205,7 @@ void World::Build(SceneNode *root)
     m_state.flashlight = new SpotLight("playerFlashlight");
     playerCamera->AddChild(m_state.flashlight);
     m_renderer.AddPersistentDataNode(m_state.flashlight);
-    m_state.flashlight->InitShadows(2048, globalTransp, m_state.screenDims);
+    m_state.flashlight->InitShadows(2048, projection, m_state.screenDims);
     m_state.flashlight->SetActive(false);
     m_state.flashlight->SetLocalTransformation(playerLightTransform);
     m_state.flashlight->Colour() = Vector4(0.95f, 0.95f, 1.0f, 1.0f);
@@ -282,15 +285,15 @@ void World::Build(SceneNode *root)
     portalCamera->SetLocalTransformation(Matrix4::Translation(Vector3(30.0f, 30.0f, 000.0f)));
 
     // Portal camera quad
-    auto portalCameraShader = portalCamera->AddChild(
-      new ShaderNode("portalCameraShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
-        new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl") })));
+    auto portalCameraShader = portalCamera->AddChild(new ShaderNode(
+        "portalCameraShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+                                                 new FragmentShader(CW_SHADER_DIR "PerPixelFragment.glsl")})));
 
     ITexture *portalCameraTexture = new Texture();
     portalCameraTexture->LoadFromFile(CW_TEXTURE_DIR "portal.png");
 
-    auto portalCameraTextures = portalCameraShader->AddChild(new TextureNode(
-      "portalCameraTextures", { { portalCameraTexture, "diffuseTex", 1 }}));
+    auto portalCameraTextures =
+        portalCameraShader->AddChild(new TextureNode("portalCameraTextures", {{portalCameraTexture, "diffuseTex", 1}}));
     auto protalCameraShaderSync = portalCameraTextures->AddChild(new ShaderSyncNode("protalCameraShaderSync"));
 
     MeshNode *portalCameraQuad = new MeshNode("portalCameraQuad", Mesh::GenerateQuad());
@@ -317,7 +320,7 @@ void World::Build(SceneNode *root)
     // Portal quad
     auto portalShader = globalTransp->AddChild(
         new ShaderNode("portalShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
-                                                       new FragmentShader(CW_SHADER_DIR "PortalFragment.glsl")})));
+                                                          new FragmentShader(CW_SHADER_DIR "PortalFragment.glsl")})));
     portalShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
     ITexture *brokenGlassTex = new Texture();
