@@ -27,7 +27,6 @@ public:
 
 protected:
   float Fade(float t) const;
-  float Lerp(float t, float a, float b) const;
   float Grad(int hash, float x, float y, float z) const;
 
 protected:

@@ -1,3 +1,5 @@
+/** @file */
+
 #pragma once
 
 #include <../nclgl/Matrix4.h>

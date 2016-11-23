@@ -26,5 +26,9 @@ public:
   }
 
   virtual void Update(float msec);
+  virtual void Draw(RenderState &state);
+
+protected:
+  bool m_inViewLastFrame;
 };
 }

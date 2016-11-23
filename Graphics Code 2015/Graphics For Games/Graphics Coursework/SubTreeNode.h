@@ -19,6 +19,11 @@ public:
   SubTreeNode(const std::string &name, SceneNode *subtree);
   virtual ~SubTreeNode();
 
+  virtual void Update(float msec)
+  {
+    // Do not update children here
+  }
+
   virtual void PreRender(RenderState &state);
   virtual void PostRender(RenderState &state);
 

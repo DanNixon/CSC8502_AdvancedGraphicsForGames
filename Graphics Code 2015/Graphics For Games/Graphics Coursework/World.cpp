@@ -32,6 +32,7 @@
 #include "TextureNode.h"
 #include "TransparentRenderingNode.h"
 #include "directories.h"
+#include "Math.h"
 
 namespace GraphicsCoursework
 {
@@ -284,7 +285,7 @@ void World::Build(SceneNode *root)
     CameraNode *portalCamera = new CameraNode("portalCamera");
     sceneBuffer->AddChild(portalCamera);
     portalCamera->LockOrientationTo(playerCamera, Matrix4::Rotation(-10.0f, Vector3(1.0f, 0.0f, 0.0f)));
-    portalCamera->SetLocalTransformation(Matrix4::Translation(Vector3(30.0f, 30.0f, 000.0f)));
+    portalCamera->SetLocalTransformation(Matrix4::Translation(Vector3(30.0f, 30.0f, 600.0f)));
 
     // Portal camera quad
     auto portalCameraShader = portalCamera->AddChild(new ShaderNode(
@@ -296,7 +297,7 @@ void World::Build(SceneNode *root)
 
     auto portalCameraTextures =
         portalCameraShader->AddChild(new TextureNode("portalCameraTextures", {{portalCameraTexture, "diffuseTex", 1}}));
-    auto protalCameraShaderSync = portalCameraTextures->AddChild(new ShaderSyncNode("protalCameraShaderSync"));
+    auto protalCameraShaderSync = portalCameraTextures->AddChild(new ShaderSyncNode("portalCameraShaderSync"));
 
     MeshNode *portalCameraQuad = new MeshNode("portalCameraQuad", Mesh::GenerateQuad());
     protalCameraShaderSync->AddChild(portalCameraQuad);
@@ -384,27 +385,26 @@ void World::Build(SceneNode *root)
         "geyserParticleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
                                                    new FragmentShader(CW_SHADER_DIR "ParticleColourFragment.glsl"),
                                                    new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
-    particleShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
     ParticleSystem *particle = new ParticleSystem();
     particle->SetLaunchParticles(50);
-    particle->SetParticleLifetime(4000.0f);
+    particle->SetParticleLifetime(5000.0f);
 
     particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
-      col = Vector4(ParticleSystem::Rand() * 0.25f, ParticleSystem::Rand() * 0.25f, ParticleSystem::Rand(), 1.0);
+      col = Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
 
-      dir = Vector3(0.2f, 1.0f, 0.0f);
+      dir = Vector3(0.05f, 1.0f, 1.0f);
       dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
       dir.y += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
       dir.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
     };
 
     particle->UpdateFunction() = [](Particle &p, float msec) {
-      p.colour.x += ParticleSystem::Rand() * 0.005f;
-      p.colour.y += ParticleSystem::Rand() * 0.005f;
+      p.colour.x += ParticleSystem::Rand() * 0.01f;
+      p.colour.y += ParticleSystem::Rand() * 0.01f;
       p.colour.z += ParticleSystem::Rand() * 0.001f;
 
-      p.direction.y -= msec * 0.001f;
+      p.direction.y -= msec * 0.0005f;
       p.direction.Normalise();
 
       p.position += p.direction * (msec * 0.01f);
@@ -426,7 +426,8 @@ void World::Build(SceneNode *root)
 
     ParticleSystemNode *p = new ParticleSystemNode("geyserParticleRenderable", particle);
     particleShaderSync->AddChild(p);
-    p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 50.0f)));
+    p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, 400.0f)));
+    p->SetBoundingSphereRadius(50.0f);
   }
 
   // RAIN PARTICLES
@@ -472,7 +473,7 @@ void World::Build(SceneNode *root)
     auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("rainParticleShaderSync"));
 
     ParticleSystemNode *p = new ParticleSystemNode("rainParticleRenderable", particle);
-    particleShaderSync->AddChild(p);
+    //particleShaderSync->AddChild(p);
     p->SetLocalTransformation(Matrix4::Translation(Vector3(20.0f, 5.0f, -10.0f)));
   }
 
@@ -521,7 +522,7 @@ void World::Build(SceneNode *root)
     auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("snowParticleShaderSync"));
 
     ParticleSystemNode *p = new ParticleSystemNode("snowParticleRenderable", particle);
-    particleShaderSync->AddChild(p);
+    //particleShaderSync->AddChild(p);
     p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -10.0f)));
   }
 

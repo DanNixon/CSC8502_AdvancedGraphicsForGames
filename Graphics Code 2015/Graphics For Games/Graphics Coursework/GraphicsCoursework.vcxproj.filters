@@ -114,6 +114,9 @@
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Renderables</Filter>
     </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PerformanceMonitorNode.h">
@@ -243,6 +246,9 @@
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Renderables</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
