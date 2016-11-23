@@ -92,7 +92,7 @@ void IParticleSystem::Draw()
   glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
   glBufferSubData(GL_ARRAY_BUFFER, 0, m_particles.size() * sizeof(Vector3), (void *)m_vertices);
   glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vector3), 0);
-  glEnableVertexAttribArray(VERTEX_BUFFER);                                       
+  glEnableVertexAttribArray(VERTEX_BUFFER);
 
   // Bind colour data
   glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[COLOUR_BUFFER]);
@@ -143,7 +143,7 @@ void IParticleSystem::ResizeArrays()
 
   m_vertices = new Vector3[m_particles.size()];
   m_colours = new Vector4[m_particles.size()];
-  
+
   glGenBuffers(1, &m_bufferObjects[VERTEX_BUFFER]);
   glBindBuffer(GL_ARRAY_BUFFER, m_bufferObjects[VERTEX_BUFFER]);
   glBufferData(GL_ARRAY_BUFFER, m_particles.size() * sizeof(Vector3), 0, GL_DYNAMIC_DRAW);

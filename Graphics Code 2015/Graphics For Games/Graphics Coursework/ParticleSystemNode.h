@@ -6,17 +6,17 @@
 
 namespace GraphicsCoursework
 {
-  class ParticleSystemNode : public MeshNode
+class ParticleSystemNode : public MeshNode
+{
+public:
+  ParticleSystemNode(const std::string &name, IParticleSystem *particleSystem);
+  virtual ~ParticleSystemNode();
+
+  inline IParticleSystem *System()
   {
-  public:
-    ParticleSystemNode(const std::string &name, IParticleSystem * particleSystem);
-    virtual ~ParticleSystemNode();
+    return static_cast<IParticleSystem *>(m_mesh);
+  }
 
-    inline IParticleSystem * System()
-    {
-      return static_cast<IParticleSystem *>(m_mesh);
-    }
-
-    virtual void Update(float msec);
-  };
+  virtual void Update(float msec);
+};
 }

@@ -15,6 +15,7 @@
 #include "HeightmapTexture.h"
 #include "IParticleSystem.h"
 #include "MatrixNode.h"
+#include "ParticleSystemNode.h"
 #include "PerformanceMonitorNode.h"
 #include "PerlinNoise.h"
 #include "PointLight.h"
@@ -31,7 +32,6 @@
 #include "TextureNode.h"
 #include "TransparentRenderingNode.h"
 #include "directories.h"
-#include "ParticleSystemNode.h"
 
 namespace GraphicsCoursework
 {
@@ -380,19 +380,19 @@ void World::Build(SceneNode *root)
 
   // PARTICLES
   {
-    ITexture * snowflakeTexture = new Texture();
+    ITexture *snowflakeTexture = new Texture();
     snowflakeTexture->LoadFromFile(CW_TEXTURE_DIR "snowlfake_1.png");
 
-    auto particleShader = globalTransp->AddChild(
-        new ShaderNode("particleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
-                                                            new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl"),
-                                                            new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
+    auto particleShader = globalTransp->AddChild(new ShaderNode(
+        "particleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                             new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl"),
+                                             new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
     particleShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
     auto particleTextures =
-        particleShader->AddChild(new TextureNode("particleTextures", {{ snowflakeTexture, "diffuseTex", 1}}));
+        particleShader->AddChild(new TextureNode("particleTextures", {{snowflakeTexture, "diffuseTex", 1}}));
 
-    IParticleSystem * particle1 = new IParticleSystem();
+    IParticleSystem *particle1 = new IParticleSystem();
     particle1->SetParticleSpeed(0.01f);
     particle1->SetParticleLifetime(5000.0f);
 
