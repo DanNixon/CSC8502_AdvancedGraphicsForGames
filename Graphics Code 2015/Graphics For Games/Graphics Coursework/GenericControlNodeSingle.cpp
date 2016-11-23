@@ -18,13 +18,21 @@ GenericControlNodeSingle::~GenericControlNodeSingle()
 {
 }
 
+/**
+ * @copydoc SceneNode::PreRender
+ */
 void GenericControlNodeSingle::PreRender(RenderState &state)
 {
-  m_onEntry(state);
+  if (ProcessingPassCheck(state))
+    m_onEntry(state);
 }
 
+/**
+ * @copydoc SceneNode::PostRender
+ */
 void GenericControlNodeSingle::PostRender(RenderState &state)
 {
-  m_onExit(state);
+  if (ProcessingPassCheck(state))
+    m_onExit(state);
 }
 }

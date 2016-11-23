@@ -24,7 +24,7 @@ public:
   {
     PM_RENDER_PASS,
     PM_PROCESS_PASS,
-    PM_DONT_CARE
+    PM_BOTH
   };
 
 public:
@@ -170,7 +170,7 @@ public:
 protected:
   inline bool ProcessingPassCheck(RenderState &state)
   {
-    bool retVal = (m_processMode == PM_PROCESS_PASS) == state.processPass || (m_processMode == PM_DONT_CARE);
+    bool retVal = (m_processMode == PM_PROCESS_PASS) == state.processPass || (m_processMode == PM_BOTH);
     return retVal;
   }
 
