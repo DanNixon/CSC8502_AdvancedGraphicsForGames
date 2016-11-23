@@ -391,17 +391,22 @@ void World::Build(SceneNode *root)
     particle->SetParticleLifetime(4000.0f);
 
     particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
-      col = Vector4(ParticleSystem::Rand(), ParticleSystem::Rand(), ParticleSystem::Rand(), 1.0);
+      col = Vector4(ParticleSystem::Rand() * 0.25f, ParticleSystem::Rand() * 0.25f, ParticleSystem::Rand(), 1.0);
 
-      dir = Vector3(0.0f, 1.0f, 0.0f);
+      dir = Vector3(0.2f, 1.0f, 0.0f);
       dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
       dir.y += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
       dir.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
     };
 
     particle->UpdateFunction() = [](Particle &p, float msec) {
+      p.colour.x += ParticleSystem::Rand() * 0.005f;
+      p.colour.y += ParticleSystem::Rand() * 0.005f;
+      p.colour.z += ParticleSystem::Rand() * 0.001f;
+
       p.direction.y -= msec * 0.001f;
       p.direction.Normalise();
+
       p.position += p.direction * (msec * 0.01f);
     };
 
@@ -424,19 +429,19 @@ void World::Build(SceneNode *root)
     p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 50.0f)));
   }
 
-  // SNOW PARTICLES
+  // RAIN PARTICLES
   {
-    ITexture *snowflakeTexture = new Texture();
-    snowflakeTexture->LoadFromFile(CW_TEXTURE_DIR "snowlfake_1.png");
+    // TODO
 
     auto particleShader = globalTransp->AddChild(new ShaderNode(
-        "particleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
-                                             new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl"),
-                                             new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
+        "rainParticleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                                 new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl"),
+                                                 new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
     particleShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
 
+    // TODO
     auto particleTextures =
-        particleShader->AddChild(new TextureNode("particleTextures", {{brickTexture, "diffuseTex", 1}}));
+        particleShader->AddChild(new TextureNode("rainParticleTextures", {{brickTexture, "diffuseTex", 1}}));
 
     ParticleSystem *particle = new ParticleSystem();
     particle->SetParticleLifetime(5000.0f);
@@ -453,7 +458,7 @@ void World::Build(SceneNode *root)
     particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
 
     auto particleControl = particleTextures->AddChild(
-        new GenericControlNode("particleControl",
+        new GenericControlNode("rainParticleControl",
                                [](ShaderProgram *s) {
                                  glEnable(GL_BLEND);
                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -464,9 +469,58 @@ void World::Build(SceneNode *root)
                                  glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
                                }));
 
-    auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("particleShaderSync"));
+    auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("rainParticleShaderSync"));
 
-    ParticleSystemNode *p = new ParticleSystemNode("particleRenderable", particle);
+    ParticleSystemNode *p = new ParticleSystemNode("rainParticleRenderable", particle);
+    particleShaderSync->AddChild(p);
+    p->SetLocalTransformation(Matrix4::Translation(Vector3(20.0f, 5.0f, -10.0f)));
+  }
+
+  // SNOW PARTICLES
+  {
+    // TODO: fix texture
+    ITexture *snowflakeTexture = new Texture();
+    snowflakeTexture->LoadFromFile(CW_TEXTURE_DIR "snowlfake_1.png");
+
+    auto particleShader = globalTransp->AddChild(new ShaderNode(
+        "snowParticleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                                 new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl"),
+                                                 new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
+    particleShader->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 20.0f, 0.0f)));
+
+    // TODO: use correct texture
+    auto particleTextures =
+        particleShader->AddChild(new TextureNode("snowParticleTextures", {{brickTexture, "diffuseTex", 1}}));
+
+    ParticleSystem *particle = new ParticleSystem();
+    particle->SetParticleLifetime(5000.0f);
+
+    particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
+      col = Vector4(ParticleSystem::Rand(), ParticleSystem::Rand(), ParticleSystem::Rand(), 1.0);
+
+      dir = Vector3(0.0f, -1.0f, 0.0f);
+      dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+      dir.y -= abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+      dir.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+    };
+
+    particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
+
+    auto particleControl = particleTextures->AddChild(
+        new GenericControlNode("snowParticleControl",
+                               [](ShaderProgram *s) {
+                                 glEnable(GL_BLEND);
+                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.5f);
+                               },
+                               [](ShaderProgram *s) {
+                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                               }));
+
+    auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("snowParticleShaderSync"));
+
+    ParticleSystemNode *p = new ParticleSystemNode("snowParticleRenderable", particle);
     particleShaderSync->AddChild(p);
     p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -10.0f)));
   }
