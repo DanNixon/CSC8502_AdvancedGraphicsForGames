@@ -2,6 +2,8 @@
 
 uniform sampler2D diffuseTex;
 
+uniform float colourTempFactor;
+
 in Vertex
 {
 	vec4 colour;
@@ -12,5 +14,18 @@ out vec4 fragColour;
 
 void main()
 {
-	fragColour = texture(diffuseTex, IN.texCoord.xy) * vec4(0.0, 0.7, 0.7, 1.0);
+	fragColour = texture(diffuseTex, IN.texCoord.xy);
+	
+	// Hacky colour temperature adjustment
+	if (colourTempFactor > 0.0)
+	{
+		// Higher, attenuate green and blue channels
+		fragColour.g *= (1.0 - colourTempFactor);
+		fragColour.b *= (1.0 - colourTempFactor);
+	}
+	else if (colourTempFactor < 0.0)
+	{
+		// Lower, attenuate red channel
+		fragColour.r *= (1.0 + colourTempFactor);
+	}
 }

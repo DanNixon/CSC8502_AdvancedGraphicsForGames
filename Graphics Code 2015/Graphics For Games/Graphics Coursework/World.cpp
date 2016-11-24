@@ -583,8 +583,11 @@ void World::Build(SceneNode *root)
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
     auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {
+      float cf = (this->m_state.timeOfDay - 0.5f) * 2.0f;
+      std::cout << cf << '\n';
       glUniform1i(glGetUniformLocation(s->Program(), "shake"), 0);
       glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 32.0f);
+      glUniform1f(glGetUniformLocation(s->Program(), "colourTempFactor"), cf);
     }));
 
     auto texture = control->AddChild(new TextureNode("processingTexture", {{bufferColourTex, "diffuseTex", 1}}));
