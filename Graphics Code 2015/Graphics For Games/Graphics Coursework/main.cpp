@@ -33,10 +33,14 @@ int main()
   float msec = 0.0f;
   World w(r);
 
+  glClearColor(0.3f, 0.6f, 0.7f, 1.0f);
+
   /* Build and render loading screen */
   w.BuildLoadingScreen(r.Root());
   r.Root()->Update(msec);
   r.RenderScene();
+
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   /* Build the world */
   w.Build(r.Root());

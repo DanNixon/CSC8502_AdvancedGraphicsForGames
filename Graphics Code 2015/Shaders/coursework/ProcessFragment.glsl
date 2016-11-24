@@ -47,6 +47,16 @@ vec3 colourTemperatureToRGB(float temperatureInKelvins)
   return retColour;
 }
 
+float noise(float t)
+{
+	return 0.0f;
+}
+
+float noise(vec2 t)
+{
+	return 0.0f;
+}
+
 void main()
 {
   fragColour = texture(diffuseTex, IN.texCoord.xy);

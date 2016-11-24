@@ -127,16 +127,14 @@ void World::Build(SceneNode *root)
   auto globalTransp = globalFog->AddChild(new TransparentRenderingNode("globalTransp"));
 
   ITexture *bufferDepthTex = new DepthStencilTexture(m_state.screenDims.x, m_state.screenDims.y);
-  ITexture *bufferColourTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
-  ITexture *bufferColourTexOut = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
+  ITexture *sceneBufferOutputTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
 
   bufferDepthTex->SetRepeating(true);
-  bufferColourTex->SetRepeating(false);
-  bufferColourTexOut->SetRepeating(true);
+  sceneBufferOutputTex->SetRepeating(false);
 
   sceneBuffer->BindTexture(GL_DEPTH_ATTACHMENT, bufferDepthTex);
   sceneBuffer->BindTexture(GL_STENCIL_ATTACHMENT, bufferDepthTex);
-  sceneBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTex);
+  sceneBuffer->BindTexture(GL_COLOR_ATTACHMENT0, sceneBufferOutputTex);
 
   ITexture *cubeMapTex = new CubeMapTexture();
   cubeMapTex->LoadFromFiles(
@@ -586,53 +584,130 @@ void World::Build(SceneNode *root)
 
   // POST PROCESSING
   {
-    FramebufferNode *processBuffer = new FramebufferNode("processingBuffer");
-    processBuffer->BindTexture(GL_COLOR_ATTACHMENT0, bufferColourTexOut);
-    root->AddChild(processBuffer);
+    ITexture *postProcessingBufferOutoutTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
+    postProcessingBufferOutoutTex->SetRepeating(true);
 
-    auto depthDisable = processBuffer->AddChild(
+    // EFFECTS
+    {
+      FramebufferNode *processBuffer = new FramebufferNode("processingBuffer");
+      processBuffer->BindTexture(GL_COLOR_ATTACHMENT0, postProcessingBufferOutoutTex);
+      root->AddChild(processBuffer);
+
+      auto depthDisable = processBuffer->AddChild(
         new ShaderControlNode("processingDepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
-                              [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
+          [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
-    auto shader = depthDisable->AddChild(new ShaderNode(
-        "processingShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
-                                               new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
+      auto shader = depthDisable->AddChild(new ShaderNode(
+        "processingShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
+                                               new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl") })));
 
-    MatrixNode *texMatrix = new MatrixNode("processingTexMatrix", "textureMatrix");
-    shader->AddChild(texMatrix);
+      MatrixNode *texMatrix = new MatrixNode("processingTexMatrix", "textureMatrix");
+      shader->AddChild(texMatrix);
 
-    auto proj =
+      auto proj =
         texMatrix->AddChild(new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
-    auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
+      auto view = proj->AddChild(new MatrixNode("processingView", "viewMatrix", Matrix4()));
 
-    auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {
-      glUniform1i(glGetUniformLocation(s->Program(), "shake"), 0);
-      glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 32.0f);
-      glUniform1f(glGetUniformLocation(s->Program(), "colourTemp"), this->m_state.colourTemp);
-    }));
+      auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {
+        glUniform1i(glGetUniformLocation(s->Program(), "shake"), 0);
+        glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 32.0f);
+        glUniform1f(glGetUniformLocation(s->Program(), "colourTemp"), this->m_state.colourTemp);
+      }));
 
-    auto texture = control->AddChild(new TextureNode("processingTexture", {{bufferColourTex, "diffuseTex", 1}}));
-    auto sync = texture->AddChild(new ShaderSyncNode("processingSync"));
-    auto processQuad = sync->AddChild(new MeshNode("processingQuad", Mesh::GenerateQuad()));
-    processQuad->SetLocalTransformation(Matrix4::Scale(1.2f));
-  }
+      auto texture = control->AddChild(new TextureNode("processingTexture", { {sceneBufferOutputTex, "diffuseTex", 1} }));
+      auto sync = texture->AddChild(new ShaderSyncNode("processingSync"));
+      auto processQuad = sync->AddChild(new MeshNode("processingQuad", Mesh::GenerateQuad()));
+      processQuad->SetLocalTransformation(Matrix4::Scale(1.2f));
+    }
 
-  // POST PROCESSING PRESENTATION
-  {
-    auto shader = m_state.screenBuffer->AddChild(new ShaderNode(
-        "processingPresentShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
-                                                      new FragmentShader(CW_SHADER_DIR "TexturedFragment.glsl")})));
+    ITexture *lensFlareStage1BufferOutputTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
+    lensFlareStage1BufferOutputTex->SetRepeating(true);
 
-    auto globalTexMatrixIdentity =
+    // LENS FLARE 1 (downsample & threshold)
+    {
+      FramebufferNode *lensFlareBuffer = new FramebufferNode("lensFlare1Buffer");
+      lensFlareBuffer->BindTexture(GL_COLOR_ATTACHMENT0, lensFlareStage1BufferOutputTex);
+      root->AddChild(lensFlareBuffer);
+
+      auto depthDisable = lensFlareBuffer->AddChild(
+        new ShaderControlNode("lensFlare1DepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
+          [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
+
+      auto shader = depthDisable->AddChild(new ShaderNode(
+        "lensFlare1Shader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "LensFlareVertex.glsl"),
+          new FragmentShader(CW_SHADER_DIR "LensFlareScaleBiasFragment.glsl") })));
+
+      MatrixNode *texMatrix = new MatrixNode("lensFlare1TexMatrix", "textureMatrix");
+      shader->AddChild(texMatrix);
+
+      auto proj =
+        texMatrix->AddChild(new MatrixNode("lensFlare1ProjMatrix", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+      auto view = proj->AddChild(new MatrixNode("lensFlare1ViewMatrix", "viewMatrix", Matrix4()));
+
+      auto control = view->AddChild(new ShaderControlNode("lensFlare1Control", [this](ShaderProgram *s) {
+        glUniform4f(glGetUniformLocation(s->Program(), "scale"), 0.7f, 0.5f, 0.6f, 0.5f);
+        glUniform4f(glGetUniformLocation(s->Program(), "bias"), -0.2f, -0.2f, -0.2f, -0.5f);
+      }));
+
+      auto texture = control->AddChild(new TextureNode("lensFlare1Texture", { { sceneBufferOutputTex, "inTex", 1 } }));
+      auto sync = texture->AddChild(new ShaderSyncNode("lensFlare1Sync"));
+      sync->AddChild(new MeshNode("lensFlare1Quad", Mesh::GenerateQuad()));
+    }
+
+    ITexture *lensFlareStage2BufferOutputTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
+    lensFlareStage2BufferOutputTex->SetRepeating(true);
+
+    // LENS FLARE STAGE 2 (generation)
+    {
+      FramebufferNode *lensFlareBuffer = new FramebufferNode("lensFlare2Buffer");
+      lensFlareBuffer->BindTexture(GL_COLOR_ATTACHMENT0, lensFlareStage2BufferOutputTex);
+      root->AddChild(lensFlareBuffer);
+
+      auto depthDisable = lensFlareBuffer->AddChild(
+        new ShaderControlNode("lensFlare2DepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
+          [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
+
+      auto shader = depthDisable->AddChild(new ShaderNode(
+        "lensFlare2Shader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "LensFlareVertex.glsl"),
+          new FragmentShader(CW_SHADER_DIR "LensFlareFragment.glsl") })));
+
+      MatrixNode *texMatrix = new MatrixNode("lensFlare2TexMatrix", "textureMatrix");
+      shader->AddChild(texMatrix);
+
+      auto proj =
+        texMatrix->AddChild(new MatrixNode("lensFlare2ProjMatrix", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+      auto view = proj->AddChild(new MatrixNode("lensFlare2ViewMatrix", "viewMatrix", Matrix4()));
+
+      auto control = view->AddChild(new ShaderControlNode("lensFlare2Control", [this](ShaderProgram *s) {
+        glUniform1i(glGetUniformLocation(s->Program(), "numSamples"), 8);
+        glUniform1f(glGetUniformLocation(s->Program(), "dispersal"), 0.4f);
+        glUniform1f(glGetUniformLocation(s->Program(), "haloWidth"), 3.0f);
+        glUniform1f(glGetUniformLocation(s->Program(), "distortion"), 2.0f);
+      }));
+
+      auto texture = control->AddChild(new TextureNode("lensFlare2Texture", { { lensFlareStage1BufferOutputTex, "inTex", 1 } }));
+      auto sync = texture->AddChild(new ShaderSyncNode("lensFlare2Sync"));
+      sync->AddChild(new MeshNode("lensFlare2Quad", Mesh::GenerateQuad()));
+    }
+
+    // POST PROCESSING PRESENTATION
+    {
+      auto shader = m_state.screenBuffer->AddChild(new ShaderNode(
+        "processingPresentShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ProcessingPresentationVertex.glsl"),
+                                                      new FragmentShader(CW_SHADER_DIR "ProcessingPresentationFragment.glsl") })));
+
+      auto globalTexMatrixIdentity =
         shader->AddChild(new MatrixNode("processingPresentTexMatrixIdentity", "textureMatrix"));
 
-    auto proj = globalTexMatrixIdentity->AddChild(
+      auto proj = globalTexMatrixIdentity->AddChild(
         new MatrixNode("processingPresentProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
-    auto view = proj->AddChild(new MatrixNode("processingPresentView", "viewMatrix", Matrix4()));
+      auto view = proj->AddChild(new MatrixNode("processingPresentView", "viewMatrix", Matrix4()));
 
-    auto texture = view->AddChild(new TextureNode("processingPresentTexture", {{bufferColourTexOut, "diffuseTex", 1}}));
-    auto sync = texture->AddChild(new ShaderSyncNode("processingPresentSync"));
-    sync->AddChild(new MeshNode("processingPresentQuad", Mesh::GenerateQuad()));
+      auto texture = view->AddChild(new TextureNode("processingPresentTexture", { {postProcessingBufferOutoutTex, "effectTex", 1},
+      { lensFlareStage2BufferOutputTex, "lensFlareTex", 2} }));
+      auto sync = texture->AddChild(new ShaderSyncNode("processingPresentSync"));
+      sync->AddChild(new MeshNode("processingPresentQuad", Mesh::GenerateQuad()));
+    }
   }
 }
 
