@@ -65,21 +65,22 @@ void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const 
   shadowCameraSelect->SetCamera(m_shadowCamera);
   shadowShader->AddChild(shadowCameraSelect);
 
-  auto shadowControlNode =
-      shadowCameraSelect->AddChild(new TreeControlNode(m_name + "_ShadowControl",
-                                                       [this, shadowTexDim](RenderState &s) {
-                                                         glClear(GL_DEPTH_BUFFER_BIT);
-                                                         glEnable(GL_DEPTH_TEST);
-                                                         glUniformMatrix4fv(glGetUniformLocation(s.shader->Program(), "projMatrix"), 1, false, (float *)&(this->m_shadowProjection));
-                                                         glViewport(0, 0, shadowTexDim, shadowTexDim);
-                                                         glDrawBuffer(GL_NONE);
-                                                         glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-                                                       },
-                                                       [&screenDims](RenderState &s) {
-                                                         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-                                                         glViewport(0, 0, (GLsizei)screenDims.x, (GLsizei)screenDims.y);
-                                                         glUniformMatrix4fv(glGetUniformLocation(s.shader->Program(), "projMatrix"), 1, false, (float *)&Matrix4());
-                                                       }));
+  auto shadowControlNode = shadowCameraSelect->AddChild(new TreeControlNode(
+      m_name + "_ShadowControl",
+      [this, shadowTexDim](RenderState &s) {
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glUniformMatrix4fv(glGetUniformLocation(s.shader->Program(), "projMatrix"), 1, false,
+                           (float *)&(this->m_shadowProjection));
+        glViewport(0, 0, shadowTexDim, shadowTexDim);
+        glDrawBuffer(GL_NONE);
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+      },
+      [&screenDims](RenderState &s) {
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        glViewport(0, 0, (GLsizei)screenDims.x, (GLsizei)screenDims.y);
+        glUniformMatrix4fv(glGetUniformLocation(s.shader->Program(), "projMatrix"), 1, false, (float *)&Matrix4());
+      }));
   shadowControlNode->SetProcessMode(PM_PROCESS_PASS);
 
   auto shadowSubtree = shadowControlNode->AddChild(new SubTreeNode(m_name + "_ShadowSubtree", shadowSceneRoot));
@@ -96,6 +97,10 @@ void ILight::SetIndex(size_t index)
   SetUniformNames(std::to_string(m_index));
 }
 
+/**
+ * @brief Performs shadow mapping render passes for this light.
+ * @param mainState Reference to outer render state
+ */
 void ILight::DoShadowRender(RenderState &mainState)
 {
   if (m_shadowSceneRoot == nullptr)
