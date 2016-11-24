@@ -1,6 +1,6 @@
 /** @file */
 
-#include "GenericControlNode.h"
+#include "ShaderControlNode.h"
 
 #include "GL/glew.h"
 
@@ -12,7 +12,7 @@ namespace GraphicsCoursework
  * @param onBind Function called when entering this node
  * @param onUnBind Function called when exiting this node
  */
-GenericControlNode::GenericControlNode(const std::string &name, ControlCallbackFunc onBind,
+ShaderControlNode::ShaderControlNode(const std::string &name, ControlCallbackFunc onBind,
                                        ControlCallbackFunc onUnBind)
     : ShaderDataNode(name)
     , m_onBind(onBind)
@@ -20,14 +20,14 @@ GenericControlNode::GenericControlNode(const std::string &name, ControlCallbackF
 {
 }
 
-GenericControlNode::~GenericControlNode()
+ShaderControlNode::~ShaderControlNode()
 {
 }
 
 /**
  * @copydoc ShaderDataNode::ShaderBind
  */
-void GenericControlNode::ShaderBind(ShaderProgram *s)
+void ShaderControlNode::ShaderBind(ShaderProgram *s)
 {
   m_onBind(s);
 }
@@ -35,7 +35,7 @@ void GenericControlNode::ShaderBind(ShaderProgram *s)
 /**
  * @copydoc ShaderDataNode::ShaderUnBind
  */
-void GenericControlNode::ShaderUnBind(ShaderProgram *s)
+void ShaderControlNode::ShaderUnBind(ShaderProgram *s)
 {
   m_onUnBind(s);
 }

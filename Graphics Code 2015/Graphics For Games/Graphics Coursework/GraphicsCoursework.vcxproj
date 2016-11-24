@@ -77,8 +77,8 @@
     <ClCompile Include="FractalBrownianMotion.cpp" />
     <ClCompile Include="FramebufferNode.cpp" />
     <ClCompile Include="Frustum.cpp" />
-    <ClCompile Include="GenericControlNode.cpp" />
-    <ClCompile Include="GenericControlNodeSingle.cpp" />
+    <ClCompile Include="ShaderControlNode.cpp" />
+    <ClCompile Include="TreeControlNode.cpp" />
     <ClCompile Include="HeightmapTexture.cpp" />
     <ClCompile Include="ILight.cpp" />
     <ClCompile Include="Math.cpp" />
@@ -121,8 +121,8 @@
     <ClInclude Include="FractalBrownianMotion.h" />
     <ClInclude Include="FramebufferNode.h" />
     <ClInclude Include="Frustum.h" />
-    <ClInclude Include="GenericControlNode.h" />
-    <ClInclude Include="GenericControlNodeSingle.h" />
+    <ClInclude Include="ShaderControlNode.h" />
+    <ClInclude Include="TreeControlNode.h" />
     <ClInclude Include="HeightmapTexture.h" />
     <ClInclude Include="ILight.h" />
     <ClInclude Include="Math.h" />

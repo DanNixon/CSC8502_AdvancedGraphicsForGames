@@ -12,8 +12,8 @@
 #include "Font.h"
 #include "FractalBrownianMotion.h"
 #include "FramebufferNode.h"
-#include "GenericControlNode.h"
-#include "GenericControlNodeSingle.h"
+#include "ShaderControlNode.h"
+#include "TreeControlNode.h"
 #include "HeightmapTexture.h"
 #include "MatrixNode.h"
 #include "ParticleSystem.h"
@@ -49,7 +49,7 @@ World::World(Renderer &renderer)
   m_state.screenBuffer = new FramebufferNode("screenBuffer", false);
   m_renderer.Root()->AddChild(m_state.screenBuffer);
 
-  m_state.screenBuffer->AddChild(new GenericControlNodeSingle("aaa", [](RenderState &) {
+  m_state.screenBuffer->AddChild(new TreeControlNode("aaa", [](RenderState &) {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   }));
 }
@@ -123,7 +123,7 @@ void World::Build(SceneNode *root)
   // Scene FBO
   FramebufferNode *sceneBuffer = new FramebufferNode("sceneBuffer");
   projection->AddChild(sceneBuffer);
-  auto globalFog = sceneBuffer->AddChild(new GenericControlNode("globalFog", [](ShaderProgram *s) {
+  auto globalFog = sceneBuffer->AddChild(new ShaderControlNode("globalFog", [](ShaderProgram *s) {
     glUniform3f(glGetUniformLocation(s->Program(), "fogBaseColour"), 0.4f, 0.4f, 0.55f);
     glUniform1f(glGetUniformLocation(s->Program(), "fogExp"), 0.0005f);
     glUniform1f(glGetUniformLocation(s->Program(), "fogAtten"), 0.4f);
@@ -152,7 +152,7 @@ void World::Build(SceneNode *root)
   // SKYBOX
   {
     auto skyboxGLcontrol =
-        globalTransp->AddChild(new GenericControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
+        globalTransp->AddChild(new ShaderControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
                                                       [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
     skyboxGLcontrol->SetProcessMode(SceneNode::PM_BOTH);
 
@@ -272,7 +272,7 @@ void World::Build(SceneNode *root)
                                             new TesselationEvaluationShader(CW_SHADER_DIR "HeightmapTES.glsl")})));
 
     auto terrainControlNode = terrainShader->AddChild(
-        new GenericControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
+        new ShaderControlNode("terrainControlNode", [](ShaderProgram *) { glPatchParameteri(GL_PATCH_VERTICES, 4); }));
     terrainControlNode->SetProcessMode(SceneNode::PM_BOTH);
 
     auto terrainTextureMatrix =
@@ -365,7 +365,7 @@ void World::Build(SceneNode *root)
     sphere1->SpecularPower() = 100.0f;
   }
 
-  // STEET LIGHT
+  // STREET LIGHT
   {
     auto streetLightShader = globalTransp->AddChild(
       new ShaderNode("streetLightShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
@@ -447,7 +447,7 @@ void World::Build(SceneNode *root)
     };
 
     auto particleControl = particleShader->AddChild(
-        new GenericControlNode("geyserParticleControl",
+        new ShaderControlNode("geyserParticleControl",
                                [](ShaderProgram *s) {
                                  glEnable(GL_BLEND);
                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -495,7 +495,7 @@ void World::Build(SceneNode *root)
     particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
 
     auto particleControl = particleTextures->AddChild(
-        new GenericControlNode("rainParticleControl",
+        new ShaderControlNode("rainParticleControl",
                                [](ShaderProgram *s) {
                                  glEnable(GL_BLEND);
                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -544,7 +544,7 @@ void World::Build(SceneNode *root)
     particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
 
     auto particleControl = particleTextures->AddChild(
-        new GenericControlNode("snowParticleControl",
+        new ShaderControlNode("snowParticleControl",
                                [](ShaderProgram *s) {
                                  glEnable(GL_BLEND);
                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -569,7 +569,7 @@ void World::Build(SceneNode *root)
     root->AddChild(processBuffer);
 
     auto depthDisable = processBuffer->AddChild(
-        new GenericControlNode("processingDepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
+        new ShaderControlNode("processingDepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
                                [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
     auto shader = depthDisable->AddChild(
@@ -582,7 +582,7 @@ void World::Build(SceneNode *root)
         new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
-    auto control = view->AddChild(new GenericControlNode("processingControl", [this](ShaderProgram *s) {
+    auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {
       glUniform1i(glGetUniformLocation(s->Program(), "shake"), 0);
       glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 32.0f);
     }));

@@ -77,9 +77,6 @@
     <ClCompile Include="CubeMapTexture.cpp">
       <Filter>Texture Managment</Filter>
     </ClCompile>
-    <ClCompile Include="GenericControlNode.cpp">
-      <Filter>Scene Managment &amp; Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="MatrixNode.cpp">
       <Filter>Camera &amp; View</Filter>
     </ClCompile>
@@ -117,7 +114,10 @@
     <ClCompile Include="Math.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="GenericControlNodeSingle.cpp">
+    <ClCompile Include="ShaderControlNode.cpp">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeControlNode.cpp">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,9 +203,6 @@
     <ClInclude Include="CubeMapTexture.h">
       <Filter>Texture Managment</Filter>
     </ClInclude>
-    <ClInclude Include="GenericControlNode.h">
-      <Filter>Scene Managment &amp; Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="MatrixNode.h">
       <Filter>Camera &amp; View</Filter>
     </ClInclude>
@@ -253,7 +250,10 @@
     <ClInclude Include="Math.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="GenericControlNodeSingle.h">
+    <ClInclude Include="ShaderControlNode.h">
+      <Filter>Scene Managment &amp; Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeControlNode.h">
       <Filter>Scene Managment &amp; Rendering</Filter>
     </ClInclude>
   </ItemGroup>

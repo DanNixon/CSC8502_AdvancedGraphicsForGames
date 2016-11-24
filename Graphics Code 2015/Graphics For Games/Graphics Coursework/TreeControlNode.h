@@ -9,7 +9,7 @@
 
 namespace GraphicsCoursework
 {
-class GenericControlNodeSingle : public SceneNode
+class TreeControlNode : public SceneNode
 {
 public:
   /**
@@ -18,9 +18,9 @@ public:
   typedef std::function<void(RenderState &state)> ControlCallbackFunc;
 
 public:
-  GenericControlNodeSingle(const std::string &name, ControlCallbackFunc onBind = [](RenderState &) {},
+  TreeControlNode(const std::string &name, ControlCallbackFunc onBind = [](RenderState &) {},
                            ControlCallbackFunc onUnBind = [](RenderState &) {});
-  virtual ~GenericControlNodeSingle();
+  virtual ~TreeControlNode();
 
   inline ControlCallbackFunc &OnEntry()
   {

@@ -5,7 +5,7 @@
 #include "CameraNode.h"
 #include "CameraSelectorNode.h"
 #include "FramebufferNode.h"
-#include "GenericControlNodeSingle.h"
+#include "TreeControlNode.h"
 #include "Renderer.h"
 #include "ShaderNode.h"
 #include "ShaderProgram.h"
@@ -68,7 +68,7 @@ void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const 
   shadowShader->AddChild(shadowCameraSelect);
 
   auto shadowControlNode = shadowCameraSelect->AddChild(
-      new GenericControlNodeSingle(m_name + "_ShadowControl",
+      new TreeControlNode(m_name + "_ShadowControl",
                              [shadowTexDim](RenderState &) {
                                //glDrawBuffer(GL_NONE);
                                glClear(GL_DEPTH_BUFFER_BIT);

@@ -1,12 +1,12 @@
 /** @file */
 
-#include "GenericControlNodeSingle.h"
+#include "TreeControlNode.h"
 
 #include "GL/glew.h"
 
 namespace GraphicsCoursework
 {
-GenericControlNodeSingle::GenericControlNodeSingle(const std::string &name, ControlCallbackFunc onBind,
+TreeControlNode::TreeControlNode(const std::string &name, ControlCallbackFunc onBind,
                                                    ControlCallbackFunc onUnBind)
     : SceneNode(name)
     , m_onEntry(onBind)
@@ -14,14 +14,14 @@ GenericControlNodeSingle::GenericControlNodeSingle(const std::string &name, Cont
 {
 }
 
-GenericControlNodeSingle::~GenericControlNodeSingle()
+TreeControlNode::~TreeControlNode()
 {
 }
 
 /**
  * @copydoc SceneNode::PreRender
  */
-void GenericControlNodeSingle::PreRender(RenderState &state)
+void TreeControlNode::PreRender(RenderState &state)
 {
   if (ProcessingPassCheck(state))
     m_onEntry(state);
@@ -30,7 +30,7 @@ void GenericControlNodeSingle::PreRender(RenderState &state)
 /**
  * @copydoc SceneNode::PostRender
  */
-void GenericControlNodeSingle::PostRender(RenderState &state)
+void TreeControlNode::PostRender(RenderState &state)
 {
   if (ProcessingPassCheck(state))
     m_onExit(state);
