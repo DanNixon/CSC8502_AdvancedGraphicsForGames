@@ -22,6 +22,10 @@ ShaderProgram::ShaderProgram()
   m_program = glCreateProgram();
 }
 
+/**
+ * @brief Creates aand links a shader program with a given set of shaders.
+ * @param shaders List of shaders to link into program
+ */
 ShaderProgram::ShaderProgram(std::vector<Shader *> shaders)
     : m_valid(false)
 {

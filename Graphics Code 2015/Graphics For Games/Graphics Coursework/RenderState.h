@@ -17,10 +17,13 @@ class TransparentRenderingNode;
 class ITexture;
 class ILight;
 
+/**
+ * @brief Stores data for a rendered shadow map.
+ */
 struct ShadowMap
 {
-  Matrix4 pvMatrix;
-  ITexture *texture;
+  Matrix4 pvMatrix;  //!< Projection-view matrix the shadow map was rendered with
+  ITexture *texture; //!< Texture containing depth buffer of shadow render
 };
 
 /**
@@ -50,12 +53,12 @@ struct RenderState
   ShaderProgram *shader;                             //!< Current shader (should never be null after ShaderSyncNode)
   std::vector<ShaderDataNode *> shaderDataNodeStack; //!< Stack of ShaderDataNode to be activated by ShaderSyncNode
 
-  bool processPass;
+  bool processPass; //!< Flag indicating if the current scene graph traversal is a processing pass
 
   std::vector<RenderableNode *> transparentNodes; //!< List of transparent nodes
-  TransparentRenderingNode
-      *transparentSync; //!< Lowest TransparentRenderingNode (the one that will next process transparentNodes)
+  TransparentRenderingNode *
+      transparentSync; //!< Lowest TransparentRenderingNode (the one that will next process transparentNodes)
 
-  std::vector<ShadowMap> shadowMaps;
+  std::vector<ShadowMap> shadowMaps; //!< Shadow maps for all light directions in the scene
 };
 }

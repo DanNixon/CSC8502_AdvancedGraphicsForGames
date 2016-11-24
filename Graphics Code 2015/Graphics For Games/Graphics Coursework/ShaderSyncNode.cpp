@@ -8,6 +8,10 @@
 
 namespace GraphicsCoursework
 {
+/**
+ * @brief Creates a new shader sync node.
+ * @param name Node name
+ */
 ShaderSyncNode::ShaderSyncNode(const std::string &name)
     : SceneNode(name)
 {
@@ -18,6 +22,9 @@ ShaderSyncNode::~ShaderSyncNode()
 {
 }
 
+/**
+ * @copydoc SceneNode::PreRender
+ */
 void ShaderSyncNode::PreRender(RenderState &state)
 {
   GLuint program = 0;
@@ -43,6 +50,9 @@ void ShaderSyncNode::PreRender(RenderState &state)
   }
 }
 
+/**
+ * @copydoc SceneNode::PostRender
+ */
 void ShaderSyncNode::PostRender(RenderState &state)
 {
   for (auto it = state.shaderDataNodeStack.rbegin(); it != state.shaderDataNodeStack.rend(); ++it)

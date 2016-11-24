@@ -20,11 +20,14 @@ class Renderer;
 class SceneNode
 {
 public:
+  /**
+   * @brief Used to defined passes on which a SceneNode should be activated.
+   */
   enum ProcessingMode
   {
-    PM_RENDER_PASS,
-    PM_PROCESS_PASS,
-    PM_BOTH
+    PM_RENDER_PASS, //!< Render passes only
+    PM_PROCESS_PASS, //!< Processing passes only
+    PM_BOTH //!< Always activate
   };
 
 public:
@@ -52,11 +55,21 @@ public:
   virtual void SetActive(bool active, bool recursive = false);
   bool ToggleActive();
 
+  /**
+   * @brief Gets the processing pass mode for this node.
+   * @return Processing pass mode
+   */
   inline ProcessingMode ProcessMode() const
   {
     return m_processMode;
   }
 
+  /**
+   * @brief Sets the processing pass mode for this node.
+   * @param mode Processing pass mode
+   *
+   * This controls if the node is activated on render passes, processing passes or both.
+   */
   virtual void SetProcessMode(ProcessingMode mode)
   {
     m_processMode = mode;
@@ -168,6 +181,11 @@ public:
   friend std::ostream &operator<<(std::ostream &s, const SceneNode &n);
 
 protected:
+  /**
+   * @brief Checks if this node should be activated based on the processing mode setting and render state.
+   * @param state Current render state
+   * @return True if this node should be activated
+   */
   inline bool ProcessingPassCheck(RenderState &state)
   {
     bool retVal = (m_processMode == PM_PROCESS_PASS) == state.processPass || (m_processMode == PM_BOTH);
