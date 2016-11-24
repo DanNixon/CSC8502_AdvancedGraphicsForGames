@@ -210,7 +210,7 @@ void Mesh::SetGLPatches()
 void Mesh::SetUniformColour(const Vector4 &colour)
 {
   if (m_colours == nullptr)
-    return;
+    m_colours = new Vector4[m_numVertices];
 
   for (size_t i = 0; i < m_numVertices; i++)
     m_colours[i] = colour;

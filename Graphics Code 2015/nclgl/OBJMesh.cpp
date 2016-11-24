@@ -265,11 +265,11 @@ bool OBJMesh::LoadOBJMesh(std::string filename)
       }
       else
       {
-        m->normals = new Vector3[m->numVertices];
+        m->m_normals = new Vector3[m->m_numVertices];
 
         for (unsigned int j = 0; j < sm->normIndices.size(); ++j)
         {
-          m->normals[j] = inputNormals[sm->normIndices[j] - 1];
+          m->m_normals[j] = inputNormals[sm->normIndices[j] - 1];
         }
       }
 #endif

@@ -363,16 +363,32 @@ void World::Build(SceneNode *root)
     sphere1->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -20.0f)));
     sphere1->SpecularIntensity() = 0.5f;
     sphere1->SpecularPower() = 100.0f;
+  }
 
+  // STEET LIGHT
+  {
+    auto streetLightShader = globalTransp->AddChild(
+      new ShaderNode("streetLightShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+        new FragmentShader(CW_SHADER_DIR "PerPixelFragmentColour.glsl") })));
+
+    auto streetLightShaderSync = streetLightShader->AddChild(new ShaderSyncNode("streetLightShaderSync"));
+    streetLightShaderSync->SetLocalTransformation(Matrix4::Translation(Vector3(-20.0f, 16.0f, -20.0f)));
 
     OBJMesh * lampMesh = new OBJMesh();
-    lampMesh->LoadOBJMesh(CW_MESH_DIR "StreetLamp.obj");
+    lampMesh->LoadOBJMesh(CW_MESH_DIR "lamp_post.obj");
+    lampMesh->SetUniformColour(Vector4(0.9f, 0.8f, 0.8f, 1.0f));
 
-    MeshNode *lampRenderable = new MeshNode("lampRenderable", lampMesh);
-    envShaderSync->AddChild(lampRenderable);
-    lampRenderable->SetLocalTransformation(Matrix4::Scale(0.05f) * Matrix4::Translation(Vector3(0.0f, 5.0f, -30.0f)));
-    lampRenderable->SpecularIntensity() = 0.5f;
-    lampRenderable->SpecularPower() = 100.0f;
+    MeshNode *streetLightRenderable = new MeshNode("streetLightRenderable", lampMesh);
+    streetLightShaderSync->AddChild(streetLightRenderable);
+    streetLightRenderable->SetLocalTransformation(Matrix4::Scale(0.05f));
+    streetLightRenderable->SpecularIntensity() = 0.5f;
+    streetLightRenderable->SpecularPower() = 100.0f;
+
+    ILight * light = new PointLight("streetLightLight");
+    streetLightShaderSync->AddChild(light);
+    m_renderer.AddPersistentDataNode(light);
+    light->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 12.0f, 0.0f)));
+    light->Reach() = 250.0f;
   }
 
   // WATER

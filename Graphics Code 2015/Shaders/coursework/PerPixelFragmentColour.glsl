@@ -3,9 +3,6 @@
 const int MAX_POINT_LIGHTS = 4;
 const int MAX_SPOT_LIGHTS = 2;
 
-uniform sampler2D portalViewTex;
-uniform sampler2D brokenGlassTex;
-
 uniform vec3 cameraPos;
 
 uniform float specularPower;
@@ -39,7 +36,7 @@ uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 in Vertex
 {
-  vec3 colour;
+  vec4 colour;
   vec2 texCoord;
   vec3 normal;
   vec3 worldPos;
@@ -88,7 +85,7 @@ vec3 processSpotLight(vec4 diffuse, SpotLight light)
 
 void main(void)
 {
-  vec4 diffuse = texture(brokenGlassTex, IN.texCoord) + texture(portalViewTex, IN.texCoord);
+  vec4 diffuse = IN.colour;
 
   fragColour = vec4(0.0, 0.0, 0.0, diffuse.a);
 	

@@ -1,6 +1,6 @@
 #version 150 core
 
-const int MAX_POINT_LIGHTS = 3;
+const int MAX_POINT_LIGHTS = 4;
 const int MAX_SPOT_LIGHTS = 2;
 
 uniform sampler2D waterTexture;
