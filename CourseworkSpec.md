@@ -62,9 +62,9 @@ higher the mark awarded for that feature.
 - [ ] Space ships, UFOs, strange lights in the sky (lighting is key here not the
   space ship model)
 - [ ] Weather effects (rain, snow, fog, wind, lightning)
-- [ ] Volcano or geyser eruption
+- [x] Volcano or geyser eruption
 - [x] A portal effect
-- [ ] Lens-flare
+- [x] Lens-flare
 - [ ] A light that casts shadows appropriately (ie from the light’s position in all
   directions)
 - [x] A pool of realistic water which reflects the scene
