@@ -624,6 +624,7 @@ void World::Build(SceneNode *root)
     ITexture *lensFlareStage1BufferOutputTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
     lensFlareStage1BufferOutputTex->SetRepeating(true);
 
+    // Lens flare implmented folling this guide: http://john-chapman-graphics.blogspot.co.uk/2013/02/pseudo-lens-flare.html
     // LENS FLARE 1 (downsample & threshold)
     {
       FramebufferNode *lensFlareBuffer = new FramebufferNode("lensFlare1Buffer");
