@@ -604,9 +604,9 @@ void World::Build(SceneNode *root)
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
     auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {
-      glUniform1i(glGetUniformLocation(s->Program(), "shake"), 1);
+      glUniform1i(glGetUniformLocation(s->Program(), "shake"), 0);
       glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 32.0f);
-      glUniform1f(glGetUniformLocation(s->Program(), "colourTempFactor"), this->m_state.colourTemp);
+      glUniform1f(glGetUniformLocation(s->Program(), "colourTemp"), this->m_state.colourTemp);
     }));
 
     auto texture = control->AddChild(new TextureNode("processingTexture", {{bufferColourTex, "diffuseTex", 1}}));

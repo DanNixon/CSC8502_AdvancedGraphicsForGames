@@ -27,7 +27,7 @@ struct WorldState
       , worldBounds(5000.0f)
       , worldClockSpeed((1.0f / 1000.0f) / 60.0f) // 1 day = 60 seconds
       , timeOfDay(0.25f)
-      , colourTemp(0.0f)
+      , colourTemp(3000.0f)
       , loadingNode(nullptr)
       , sun(nullptr)
       , moon(nullptr)
