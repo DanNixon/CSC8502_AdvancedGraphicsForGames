@@ -407,7 +407,8 @@ void World::Build(SceneNode *root)
     RenderableNode *waterQuad =
         (RenderableNode *)waterShaderSync->AddChild(new MeshNode("waterQuad", Mesh::GenerateQuad()));
     waterQuad->SetBoundingSphereRadius(-1.0f);
-    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 0.0f)) * Matrix4::Scale(m_state.worldBounds));
+    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 0.0f)) *
+                                      Matrix4::Scale(m_state.worldBounds));
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     waterQuad->SpecularPower() = 2.0f;
   }
