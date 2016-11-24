@@ -146,7 +146,7 @@ void World::Build(SceneNode *root)
       {CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_px.jpg", CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mx.jpg",
        CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_py.jpg", CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_my.jpg",
        CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_pz.jpg",
-       CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mz.jpg"});
+       CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mz.jpg"}, SOIL_FLAG_INVERT_Y);
 
   // SKYBOX
   {
@@ -576,23 +576,23 @@ void World::Build(SceneNode *root)
         "processingShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
                                                new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
 
-    auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
+    MatrixNode * texMatrix = new MatrixNode("processingTexMatrix", "textureMatrix");
+    shader->AddChild(texMatrix);
 
-    auto proj = globalTexMatrixIdentity->AddChild(
+    auto proj = texMatrix->AddChild(
         new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
     auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {
-      float cf = (this->m_state.timeOfDay - 0.5f) * 2.0f;
-      std::cout << cf << '\n';
-      glUniform1i(glGetUniformLocation(s->Program(), "shake"), 0);
+      glUniform1i(glGetUniformLocation(s->Program(), "shake"), 1);
       glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 32.0f);
-      glUniform1f(glGetUniformLocation(s->Program(), "colourTempFactor"), cf);
+      glUniform1f(glGetUniformLocation(s->Program(), "colourTempFactor"), this->m_state.colourTemp);
     }));
 
     auto texture = control->AddChild(new TextureNode("processingTexture", {{bufferColourTex, "diffuseTex", 1}}));
     auto sync = texture->AddChild(new ShaderSyncNode("processingSync"));
-    sync->AddChild(new MeshNode("processingQuad", Mesh::GenerateQuad()));
+    auto processQuad = sync->AddChild(new MeshNode("processingQuad", Mesh::GenerateQuad()));
+    processQuad->SetLocalTransformation(Matrix4::Scale(1.2f));
   }
 
   // POST PROCESSING PRESENTATION
@@ -630,14 +630,14 @@ void World::Update(float msec)
     m_state.timeOfDay = 0.0f;
 
   // Update sun and moon positions and light intensity
-  Matrix4 sunMoonTrans = Matrix4::Rotation(360.0f * m_state.timeOfDay, Vector3(0.0f, 0.0f, 1.0f));
+  Matrix4 sunMoonTrans = Matrix4::Rotation(90.0f + (360.0f * m_state.timeOfDay), Vector3(0.0f, 0.0f, 1.0f));
 
-  m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) *
+  m_state.sun->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, -m_state.worldBounds, 0.0f)) *
                                       Matrix4::Scale(250.0f));
   m_state.sun->Colour().w =
       max(0.15f, m_state.sun->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
 
-  m_state.moon->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, -m_state.worldBounds, 0.0f)) *
+  m_state.moon->SetLocalTransformation(sunMoonTrans * Matrix4::Translation(Vector3(0.0f, m_state.worldBounds, 0.0f)) *
                                        Matrix4::Scale(80.0f));
   m_state.moon->Colour().w =
       max(0.1f, m_state.moon->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);

@@ -25,7 +25,8 @@ struct WorldState
       : screenBuffer(nullptr)
       , worldBounds(5000.0f)
       , worldClockSpeed((1.0f / 1000.0f) / 60.0f) // 1 day = 60 seconds
-      , timeOfDay(0.7f)
+      , timeOfDay(0.25f)
+      , colourTemp(0.0f)
       , loadingNode(nullptr)
       , sun(nullptr)
       , moon(nullptr)
@@ -46,6 +47,8 @@ struct WorldState
 
   float worldClockSpeed; //!< Speed of world clock tick relative to real clock tick
   float timeOfDay;       //!< Time of day (0.0 - 1.0)
+
+  float colourTemp; //!< Colour temperature factor used in post processing
 
   SceneNode *loadingNode;     //!< Loading text node
   PointLight *sun;            //!< Sun light

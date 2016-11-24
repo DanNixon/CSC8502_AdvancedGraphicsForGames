@@ -7,6 +7,7 @@ uniform mat4 textureMatrix;
 
 uniform bool shake;
 uniform float time;
+uniform float zoom;
 
 in vec3 position;
 in vec4 colour;
