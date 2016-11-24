@@ -15,6 +15,7 @@ namespace GraphicsCoursework
 CameraSelectorNode::CameraSelectorNode(const std::string &name)
     : ShaderDataNode(name)
     , m_camera(nullptr)
+    , m_previousCamera(nullptr)
 {
 }
 
@@ -56,7 +57,10 @@ void CameraSelectorNode::PreRender(RenderState &state)
   ShaderDataNode::PreRender(state);
 
   if (ProcessingPassCheck(state))
+  {
+    m_previousCamera = state.camera;
     state.camera = m_camera;
+  }
 }
 
 /**
@@ -67,7 +71,10 @@ void CameraSelectorNode::PostRender(RenderState &state)
   ShaderDataNode::PostRender(state);
 
   if (ProcessingPassCheck(state))
-    state.camera = nullptr;
+  {
+    state.camera = m_previousCamera;
+    m_previousCamera = nullptr;
+  }
 }
 
 /**

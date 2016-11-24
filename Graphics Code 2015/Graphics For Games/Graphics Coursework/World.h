@@ -15,6 +15,7 @@ class FramebufferNode;
 class PointLight;
 class SpotLight;
 class MatrixNode;
+class ParticleSystemNode;
 
 /**
  * @brief Structure holding data describing world state and pointers to nodes required to update the world accordingly.
@@ -33,6 +34,8 @@ struct WorldState
       , lantern(nullptr)
       , flashlight(nullptr)
       , waterTexMatrix(nullptr)
+      , rain(nullptr)
+      , snow(nullptr)
   {
   }
 
@@ -56,6 +59,9 @@ struct WorldState
   PointLight *lantern;        //!< Player lantern
   SpotLight *flashlight;      //!< Player torch
   MatrixNode *waterTexMatrix; //!< Water surface texture matrix
+
+  ParticleSystemNode *rain; //!< Rain particle system
+  ParticleSystemNode *snow; //!< Snow particle system
 };
 
 /**

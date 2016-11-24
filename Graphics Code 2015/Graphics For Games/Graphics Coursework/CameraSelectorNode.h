@@ -47,5 +47,6 @@ public:
 
 protected:
   CameraNode *m_camera; //!< The camera that will be activated by this node.
+  CameraNode * m_previousCamera; //!< Perviously active camera
 };
 }
