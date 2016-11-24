@@ -146,7 +146,8 @@ void World::Build(SceneNode *root)
       {CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_px.jpg", CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mx.jpg",
        CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_py.jpg", CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_my.jpg",
        CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_pz.jpg",
-       CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mz.jpg"}, SOIL_FLAG_INVERT_Y);
+       CW_TEXTURE_DIR "TychoSkymapII.t3_08192x04096_80_mz.jpg"},
+      SOIL_FLAG_INVERT_Y);
 
   // SKYBOX
   {
@@ -374,8 +375,8 @@ void World::Build(SceneNode *root)
     streetLightShaderSync->SetLocalTransformation(Matrix4::Translation(Vector3(-20.0f, 16.0f, -20.0f)));
 
     OBJMesh *lampMesh = new OBJMesh();
-    //lampMesh->LoadOBJMesh(CW_MESH_DIR "lamp_post.obj");
-    //lampMesh->SetUniformColour(Vector4(0.9f, 0.8f, 0.8f, 1.0f));
+    lampMesh->LoadOBJMesh(CW_MESH_DIR "lamp_post.obj", false);
+    lampMesh->SetUniformColour(Vector4(0.9f, 0.8f, 0.8f, 1.0f));
 
     MeshNode *streetLightRenderable = new MeshNode("streetLightRenderable", lampMesh);
     streetLightShaderSync->AddChild(streetLightRenderable);
@@ -468,19 +469,19 @@ void World::Build(SceneNode *root)
 
   // WEATHER PARICLES
   {
-    CameraNode * particleCamera = new CameraNode("particleCamera");
+    CameraNode *particleCamera = new CameraNode("particleCamera");
     root->AddChild(particleCamera);
     particleCamera->LockOrientationTo(playerCamera);
     particleCamera->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, -15.0f, 0.0f)));
 
     auto particleProj = sceneBuffer->AddChild(
-      new MatrixNode("particleProj", "projMatrix",
-        Matrix4::Perspective(1.0f, 100.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
+        new MatrixNode("particleProj", "projMatrix",
+                       Matrix4::Perspective(1.0f, 100.0f, m_state.screenDims.x / m_state.screenDims.y, 45.0f)));
     particleProj->SetProcessMode(SceneNode::PM_BOTH);
 
     auto particleTransp = particleProj->AddChild(new TransparentRenderingNode("particleTransp"));
 
-    CameraSelectorNode * particleCameraSelect = new CameraSelectorNode("particleCameraSelect");
+    CameraSelectorNode *particleCameraSelect = new CameraSelectorNode("particleCameraSelect");
     particleTransp->AddChild(particleCameraSelect);
     particleCameraSelect->SetCamera(particleCamera);
 
@@ -490,19 +491,20 @@ void World::Build(SceneNode *root)
       raindropTexture->LoadFromFile(CW_TEXTURE_DIR "raindrop.tga");
 
       auto particleShader = particleCameraSelect->AddChild(new ShaderNode(
-        "rainParticleShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
-                                                 new FragmentShader(CW_SHADER_DIR "ParticleMixFragment.glsl"),
-                                                 new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl") })));
+          "rainParticleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                                   new FragmentShader(CW_SHADER_DIR "ParticleMixFragment.glsl"),
+                                                   new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
 
       auto particleTextures =
-        particleShader->AddChild(new TextureNode("rainParticleTextures", { { raindropTexture, "diffuseTex", 1 } }));
+          particleShader->AddChild(new TextureNode("rainParticleTextures", {{raindropTexture, "diffuseTex", 1}}));
 
       ParticleSystem *particle = new ParticleSystem();
       particle->SetParticleLifetime(6000.0f);
+      particle->SetLaunchParticles(25);
 
       particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
         col = Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f),
-          Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
+                      Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
 
         dir = Vector3(0.0f, -1.0f, 0.0f);
         dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
@@ -518,16 +520,16 @@ void World::Build(SceneNode *root)
       };
 
       auto particleControl = particleTextures->AddChild(
-        new ShaderControlNode("rainParticleControl",
-          [](ShaderProgram *s) {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.1f);
-      },
-          [](ShaderProgram *s) {
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
-      }));
+          new ShaderControlNode("rainParticleControl",
+                                [](ShaderProgram *s) {
+                                  glEnable(GL_BLEND);
+                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                  glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.1f);
+                                },
+                                [](ShaderProgram *s) {
+                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                  glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                                }));
 
       auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("rainParticleShaderSync"));
 
@@ -542,12 +544,12 @@ void World::Build(SceneNode *root)
       snowflakeTexture->LoadFromFile(CW_TEXTURE_DIR "snowflake_1.tga");
 
       auto particleShader = particleCameraSelect->AddChild(new ShaderNode(
-        "snowParticleShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
-                                                 new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl"),
-                                                 new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl") })));
+          "snowParticleShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                                   new FragmentShader(CW_SHADER_DIR "ParticleFragment.glsl"),
+                                                   new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
 
       auto particleTextures =
-        particleShader->AddChild(new TextureNode("snowParticleTextures", { { snowflakeTexture, "diffuseTex", 1} }));
+          particleShader->AddChild(new TextureNode("snowParticleTextures", {{snowflakeTexture, "diffuseTex", 1}}));
 
       ParticleSystem *particle = new ParticleSystem();
       particle->SetParticleLifetime(5000.0f);
@@ -564,16 +566,16 @@ void World::Build(SceneNode *root)
       particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
 
       auto particleControl = particleTextures->AddChild(
-        new ShaderControlNode("snowParticleControl",
-          [](ShaderProgram *s) {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.2f);
-      },
-          [](ShaderProgram *s) {
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
-      }));
+          new ShaderControlNode("snowParticleControl",
+                                [](ShaderProgram *s) {
+                                  glEnable(GL_BLEND);
+                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                  glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.2f);
+                                },
+                                [](ShaderProgram *s) {
+                                  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                  glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                                }));
 
       auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("snowParticleShaderSync"));
 
@@ -597,11 +599,11 @@ void World::Build(SceneNode *root)
         "processingShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
                                                new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
 
-    MatrixNode * texMatrix = new MatrixNode("processingTexMatrix", "textureMatrix");
+    MatrixNode *texMatrix = new MatrixNode("processingTexMatrix", "textureMatrix");
     shader->AddChild(texMatrix);
 
-    auto proj = texMatrix->AddChild(
-        new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+    auto proj =
+        texMatrix->AddChild(new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
     auto view = proj->AddChild(new MatrixNode("view", "viewMatrix", Matrix4()));
 
     auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {

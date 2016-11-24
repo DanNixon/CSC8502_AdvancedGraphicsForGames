@@ -24,7 +24,7 @@ in even more annoying.
 
 using namespace std;
 
-bool OBJMesh::LoadOBJMesh(std::string filename)
+bool OBJMesh::LoadOBJMesh(std::string filename, bool warn)
 {
   std::ifstream f(filename.c_str(), std::ios::in);
 
@@ -203,9 +203,9 @@ bool OBJMesh::LoadOBJMesh(std::string filename)
         bool a = true;
       }
     }
-    else
+    else if (warn)
     {
-      std::cout << "OBJMesh::LoadOBJMesh Unknown file data:" << currentLine << std::endl;
+      std::cerr << "OBJMesh::LoadOBJMesh Unknown file data:" << currentLine << std::endl;
     }
   }
 
