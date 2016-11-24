@@ -113,12 +113,9 @@ void ILight::DoShadowRender(RenderState &mainState)
   {
     m_shadowSceneRoot->BindTexture(GL_DEPTH_ATTACHMENT, m_shadowTextures[i]);
     m_shadowSceneRoot->BindTexture(GL_COLOR_ATTACHMENT0, shadowcol);
-
-    m_shadowCamera->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, 0.0f)));
     m_shadowCamera->LookInDirection(directions[i]);
 
     m_shadowSceneRoot->Update(0.0f);
-
     m_shadowSceneRoot->Render(state);
 
     mainState.shadowMaps.push_back({m_shadowProjection * m_shadowCamera->ViewMatrix(), m_shadowTextures[i]});
