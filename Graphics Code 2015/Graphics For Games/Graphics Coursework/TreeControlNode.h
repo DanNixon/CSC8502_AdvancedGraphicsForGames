@@ -22,11 +22,19 @@ public:
                   ControlCallbackFunc onUnBind = [](RenderState &) {});
   virtual ~TreeControlNode();
 
+  /**
+   * @brief Gets or sets the function called when entering this node.
+   * @return Reference to function
+   */
   inline ControlCallbackFunc &OnEntry()
   {
     return m_onEntry;
   }
 
+  /**
+   * @brief Gets or sets the function called when exiting this node.
+   * @return Reference to function
+   */
   inline ControlCallbackFunc &OnExit()
   {
     return m_onExit;

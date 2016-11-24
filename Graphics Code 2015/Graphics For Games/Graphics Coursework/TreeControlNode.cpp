@@ -6,10 +6,16 @@
 
 namespace GraphicsCoursework
 {
-TreeControlNode::TreeControlNode(const std::string &name, ControlCallbackFunc onBind, ControlCallbackFunc onUnBind)
+/**
+ * @brief Creates a new tree control node.
+ * @param name Node name
+ * @param onEntry Function called when entering this node
+ * @param onExit Function called when exiting this node
+ */
+TreeControlNode::TreeControlNode(const std::string &name, ControlCallbackFunc onEntry, ControlCallbackFunc onExit)
     : SceneNode(name)
-    , m_onEntry(onBind)
-    , m_onExit(onUnBind)
+    , m_onEntry(onEntry)
+    , m_onExit(onExit)
 {
 }
 

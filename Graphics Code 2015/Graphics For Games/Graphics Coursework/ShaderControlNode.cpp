@@ -9,8 +9,8 @@ namespace GraphicsCoursework
 /**
  * @brief Creates a new generic control node.
  * @param name Node name
- * @param onBind Function called when entering this node
- * @param onUnBind Function called when exiting this node
+ * @param onBind Function called when binding the shader
+ * @param onUnBind Function called when unbinding the shader
  */
 ShaderControlNode::ShaderControlNode(const std::string &name, ControlCallbackFunc onBind, ControlCallbackFunc onUnBind)
     : ShaderDataNode(name)

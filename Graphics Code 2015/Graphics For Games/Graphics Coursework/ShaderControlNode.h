@@ -28,7 +28,7 @@ public:
   virtual ~ShaderControlNode();
 
   /**
-   * @brief Gets or sets the function called when entering this node.
+   * @brief Gets or sets the function called when binding the shader.
    * @return Reference to function
    */
   inline ControlCallbackFunc &OnBind()
@@ -37,7 +37,7 @@ public:
   }
 
   /**
-   * @brief Gets or sets the function called when leaving this node.
+   * @brief Gets or sets the function called when unbinding the shader.
    * @return Reference to function
    */
   inline ControlCallbackFunc &OnUnBind()
