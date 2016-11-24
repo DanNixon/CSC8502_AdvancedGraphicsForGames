@@ -12,8 +12,7 @@ namespace GraphicsCoursework
  * @param onBind Function called when entering this node
  * @param onUnBind Function called when exiting this node
  */
-ShaderControlNode::ShaderControlNode(const std::string &name, ControlCallbackFunc onBind,
-                                       ControlCallbackFunc onUnBind)
+ShaderControlNode::ShaderControlNode(const std::string &name, ControlCallbackFunc onBind, ControlCallbackFunc onUnBind)
     : ShaderDataNode(name)
     , m_onBind(onBind)
     , m_onUnBind(onUnBind)

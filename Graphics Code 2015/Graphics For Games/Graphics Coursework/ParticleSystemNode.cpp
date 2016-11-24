@@ -33,9 +33,10 @@ void ParticleSystemNode::Update(float msec)
   m_inViewLastFrame = false;
 }
 
-void ParticleSystemNode::Draw(RenderState & state)
+void ParticleSystemNode::Draw(RenderState &state)
 {
   MeshNode::Draw(state);
-  m_inViewLastFrame = m_inViewLastFrame || (state.cameraViewFrustum.ContainsSceneNode(this) || m_boundingSphereRadius < 0.0f);
+  m_inViewLastFrame =
+      m_inViewLastFrame || (state.cameraViewFrustum.ContainsSceneNode(this) || m_boundingSphereRadius < 0.0f);
 }
 }

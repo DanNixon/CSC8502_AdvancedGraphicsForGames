@@ -5,13 +5,13 @@
 #include "CameraNode.h"
 #include "CameraSelectorNode.h"
 #include "FramebufferNode.h"
-#include "TreeControlNode.h"
 #include "Renderer.h"
 #include "ShaderNode.h"
 #include "ShaderProgram.h"
 #include "Shaders.h"
 #include "ShadowTexture.h"
 #include "SubtreeNode.h"
+#include "TreeControlNode.h"
 #include "directories.h"
 
 namespace GraphicsCoursework
@@ -67,18 +67,18 @@ void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const 
   shadowCameraSelect->SetCamera(m_shadowCamera);
   shadowShader->AddChild(shadowCameraSelect);
 
-  auto shadowControlNode = shadowCameraSelect->AddChild(
-      new TreeControlNode(m_name + "_ShadowControl",
-                             [shadowTexDim](RenderState &) {
-                               //glDrawBuffer(GL_NONE);
-                               glClear(GL_DEPTH_BUFFER_BIT);
-                               glViewport(0, 0, shadowTexDim, shadowTexDim);
-                               //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-                             },
-                             [&screenDims](RenderState &) {
-                               //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-                               glViewport(0, 0, (GLsizei)screenDims.x, (GLsizei)screenDims.y);
-                             }));
+  auto shadowControlNode =
+      shadowCameraSelect->AddChild(new TreeControlNode(m_name + "_ShadowControl",
+                                                       [shadowTexDim](RenderState &) {
+                                                         // glDrawBuffer(GL_NONE);
+                                                         glClear(GL_DEPTH_BUFFER_BIT);
+                                                         glViewport(0, 0, shadowTexDim, shadowTexDim);
+                                                         // glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+                                                       },
+                                                       [&screenDims](RenderState &) {
+                                                         // glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                                                         glViewport(0, 0, (GLsizei)screenDims.x, (GLsizei)screenDims.y);
+                                                       }));
   shadowControlNode->SetProcessMode(PM_PROCESS_PASS);
 
   auto shadowSubtree = shadowControlNode->AddChild(new SubTreeNode(m_name + "_ShadowSubtree", shadowSceneRoot));

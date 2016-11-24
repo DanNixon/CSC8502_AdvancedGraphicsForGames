@@ -4,9 +4,9 @@
 
 namespace GraphicsCoursework
 {
-  class Math
-  {
-  public:
-    static float Lerp(float a, float b, float f);
-  };
+class Math
+{
+public:
+  static float Lerp(float a, float b, float f);
+};
 }

@@ -28,9 +28,7 @@ ParticleSystem::ParticleSystem()
     dir.z += ((Rand() - Rand()) * 0.5f);
   };
 
-  m_particleUpdateFunc = [this](Particle &p, float msec) {
-    p.position += p.direction * (msec * 0.2);
-  };
+  m_particleUpdateFunc = [this](Particle &p, float msec) { p.position += p.direction * (msec * 0.2); };
 }
 
 ParticleSystem::~ParticleSystem()

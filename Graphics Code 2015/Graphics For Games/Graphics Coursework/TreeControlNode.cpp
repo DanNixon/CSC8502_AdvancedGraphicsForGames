@@ -6,8 +6,7 @@
 
 namespace GraphicsCoursework
 {
-TreeControlNode::TreeControlNode(const std::string &name, ControlCallbackFunc onBind,
-                                                   ControlCallbackFunc onUnBind)
+TreeControlNode::TreeControlNode(const std::string &name, ControlCallbackFunc onBind, ControlCallbackFunc onUnBind)
     : SceneNode(name)
     , m_onEntry(onBind)
     , m_onExit(onUnBind)

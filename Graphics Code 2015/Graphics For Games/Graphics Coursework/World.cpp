@@ -2,8 +2,8 @@
 
 #include "World.h"
 
-#include <../nclgl/Window.h>
 #include <../nclgl/OBJMesh.h>
+#include <../nclgl/Window.h>
 
 #include "CameraNode.h"
 #include "CameraSelectorNode.h"
@@ -12,9 +12,8 @@
 #include "Font.h"
 #include "FractalBrownianMotion.h"
 #include "FramebufferNode.h"
-#include "ShaderControlNode.h"
-#include "TreeControlNode.h"
 #include "HeightmapTexture.h"
+#include "Math.h"
 #include "MatrixNode.h"
 #include "ParticleSystem.h"
 #include "ParticleSystemNode.h"
@@ -25,6 +24,7 @@
 #include "RGBATexture.h"
 #include "Renderer.h"
 #include "SceneNode.h"
+#include "ShaderControlNode.h"
 #include "ShaderNode.h"
 #include "ShaderProgram.h"
 #include "ShaderSyncNode.h"
@@ -33,8 +33,8 @@
 #include "SubTreeNode.h"
 #include "TextureNode.h"
 #include "TransparentRenderingNode.h"
+#include "TreeControlNode.h"
 #include "directories.h"
-#include "Math.h"
 
 namespace GraphicsCoursework
 {
@@ -49,9 +49,8 @@ World::World(Renderer &renderer)
   m_state.screenBuffer = new FramebufferNode("screenBuffer", false);
   m_renderer.Root()->AddChild(m_state.screenBuffer);
 
-  m_state.screenBuffer->AddChild(new TreeControlNode("aaa", [](RenderState &) {
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-  }));
+  m_state.screenBuffer->AddChild(
+      new TreeControlNode("aaa", [](RenderState &) { glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT); }));
 }
 
 /**
@@ -153,7 +152,7 @@ void World::Build(SceneNode *root)
   {
     auto skyboxGLcontrol =
         globalTransp->AddChild(new ShaderControlNode("skyboxGLcontrol", [](ShaderProgram *) { glDepthMask(GL_FALSE); },
-                                                      [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
+                                                     [](ShaderProgram *) { glDepthMask(GL_TRUE); }));
     skyboxGLcontrol->SetProcessMode(SceneNode::PM_BOTH);
 
     auto skyboxShader = skyboxGLcontrol->AddChild(
@@ -367,14 +366,14 @@ void World::Build(SceneNode *root)
 
   // STREET LIGHT
   {
-    auto streetLightShader = globalTransp->AddChild(
-      new ShaderNode("streetLightShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
-        new FragmentShader(CW_SHADER_DIR "PerPixelFragmentColour.glsl") })));
+    auto streetLightShader = globalTransp->AddChild(new ShaderNode(
+        "streetLightShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "PerPixelVertex.glsl"),
+                                                new FragmentShader(CW_SHADER_DIR "PerPixelFragmentColour.glsl")})));
 
     auto streetLightShaderSync = streetLightShader->AddChild(new ShaderSyncNode("streetLightShaderSync"));
     streetLightShaderSync->SetLocalTransformation(Matrix4::Translation(Vector3(-20.0f, 16.0f, -20.0f)));
 
-    OBJMesh * lampMesh = new OBJMesh();
+    OBJMesh *lampMesh = new OBJMesh();
     lampMesh->LoadOBJMesh(CW_MESH_DIR "lamp_post.obj");
     lampMesh->SetUniformColour(Vector4(0.9f, 0.8f, 0.8f, 1.0f));
 
@@ -384,7 +383,7 @@ void World::Build(SceneNode *root)
     streetLightRenderable->SpecularIntensity() = 0.5f;
     streetLightRenderable->SpecularPower() = 100.0f;
 
-    ILight * light = new PointLight("streetLightLight");
+    ILight *light = new PointLight("streetLightLight");
     streetLightShaderSync->AddChild(light);
     m_renderer.AddPersistentDataNode(light);
     light->SetLocalTransformation(Matrix4::Translation(Vector3(1.0f, 12.0f, 0.0f)));
@@ -427,7 +426,8 @@ void World::Build(SceneNode *root)
     particle->SetParticleLifetime(5000.0f);
 
     particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
-      col = Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
+      col = Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f),
+                    Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
 
       dir = Vector3(0.05f, 1.0f, 1.0f);
       dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
@@ -448,15 +448,15 @@ void World::Build(SceneNode *root)
 
     auto particleControl = particleShader->AddChild(
         new ShaderControlNode("geyserParticleControl",
-                               [](ShaderProgram *s) {
-                                 glEnable(GL_BLEND);
-                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.2f);
-                               },
-                               [](ShaderProgram *s) {
-                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
-                               }));
+                              [](ShaderProgram *s) {
+                                glEnable(GL_BLEND);
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.2f);
+                              },
+                              [](ShaderProgram *s) {
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                              }));
 
     auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("geyserParticleShaderSync"));
 
@@ -496,20 +496,20 @@ void World::Build(SceneNode *root)
 
     auto particleControl = particleTextures->AddChild(
         new ShaderControlNode("rainParticleControl",
-                               [](ShaderProgram *s) {
-                                 glEnable(GL_BLEND);
-                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.5f);
-                               },
-                               [](ShaderProgram *s) {
-                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
-                               }));
+                              [](ShaderProgram *s) {
+                                glEnable(GL_BLEND);
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.5f);
+                              },
+                              [](ShaderProgram *s) {
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                              }));
 
     auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("rainParticleShaderSync"));
 
     ParticleSystemNode *p = new ParticleSystemNode("rainParticleRenderable", particle);
-    //particleShaderSync->AddChild(p);
+    // particleShaderSync->AddChild(p);
     p->SetLocalTransformation(Matrix4::Translation(Vector3(20.0f, 5.0f, -10.0f)));
   }
 
@@ -545,20 +545,20 @@ void World::Build(SceneNode *root)
 
     auto particleControl = particleTextures->AddChild(
         new ShaderControlNode("snowParticleControl",
-                               [](ShaderProgram *s) {
-                                 glEnable(GL_BLEND);
-                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.5f);
-                               },
-                               [](ShaderProgram *s) {
-                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                                 glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
-                               }));
+                              [](ShaderProgram *s) {
+                                glEnable(GL_BLEND);
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.5f);
+                              },
+                              [](ShaderProgram *s) {
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                              }));
 
     auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("snowParticleShaderSync"));
 
     ParticleSystemNode *p = new ParticleSystemNode("snowParticleRenderable", particle);
-    //particleShaderSync->AddChild(p);
+    // particleShaderSync->AddChild(p);
     p->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 5.0f, -10.0f)));
   }
 
@@ -570,11 +570,11 @@ void World::Build(SceneNode *root)
 
     auto depthDisable = processBuffer->AddChild(
         new ShaderControlNode("processingDepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
-                               [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
+                              [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
-    auto shader = depthDisable->AddChild(
-        new ShaderNode("processingShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
-                                                    new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
+    auto shader = depthDisable->AddChild(new ShaderNode(
+        "processingShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
+                                               new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
 
     auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("globalTexMatrixIdentity", "textureMatrix"));
 
@@ -594,11 +594,12 @@ void World::Build(SceneNode *root)
 
   // POST PROCESSING PRESENTATION
   {
-    auto shader = m_state.screenBuffer->AddChild(
-        new ShaderNode("processingPresentShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
-                                                    new FragmentShader(CW_SHADER_DIR "TexturedFragment.glsl")})));
+    auto shader = m_state.screenBuffer->AddChild(new ShaderNode(
+        "processingPresentShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "TexturedVertex.glsl"),
+                                                      new FragmentShader(CW_SHADER_DIR "TexturedFragment.glsl")})));
 
-    auto globalTexMatrixIdentity = shader->AddChild(new MatrixNode("processingPresentTexMatrixIdentity", "textureMatrix"));
+    auto globalTexMatrixIdentity =
+        shader->AddChild(new MatrixNode("processingPresentTexMatrixIdentity", "textureMatrix"));
 
     auto proj = globalTexMatrixIdentity->AddChild(
         new MatrixNode("processingPresentProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));

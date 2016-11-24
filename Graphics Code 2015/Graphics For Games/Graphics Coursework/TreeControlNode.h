@@ -19,7 +19,7 @@ public:
 
 public:
   TreeControlNode(const std::string &name, ControlCallbackFunc onBind = [](RenderState &) {},
-                           ControlCallbackFunc onUnBind = [](RenderState &) {});
+                  ControlCallbackFunc onUnBind = [](RenderState &) {});
   virtual ~TreeControlNode();
 
   inline ControlCallbackFunc &OnEntry()

@@ -99,9 +99,11 @@ float PerlinNoise::Noise(float x, float y, float z) const
   /* Add blended results from 8 corners of cube */
   float res = Math::Lerp(
       w, Math::Lerp(v, Math::Lerp(u, Grad(m_permutation[AA], x, y, z), Grad(m_permutation[BA], x - 1, y, z)),
-        Math::Lerp(u, Grad(m_permutation[AB], x, y - 1, z), Grad(m_permutation[BB], x - 1, y - 1, z))),
-    Math::Lerp(v, Math::Lerp(u, Grad(m_permutation[AA + 1], x, y, z - 1), Grad(m_permutation[BA + 1], x - 1, y, z - 1)),
-      Math::Lerp(u, Grad(m_permutation[AB + 1], x, y - 1, z - 1), Grad(m_permutation[BB + 1], x - 1, y - 1, z - 1))));
+                    Math::Lerp(u, Grad(m_permutation[AB], x, y - 1, z), Grad(m_permutation[BB], x - 1, y - 1, z))),
+      Math::Lerp(v,
+                 Math::Lerp(u, Grad(m_permutation[AA + 1], x, y, z - 1), Grad(m_permutation[BA + 1], x - 1, y, z - 1)),
+                 Math::Lerp(u, Grad(m_permutation[AB + 1], x, y - 1, z - 1),
+                            Grad(m_permutation[BB + 1], x - 1, y - 1, z - 1))));
   return (res + 1.0f) / 2.0f;
 }
 

@@ -11,7 +11,8 @@ namespace GraphicsCoursework
 {
 /**
  * @class ShaderControlNode
- * @brief Scene node used to inject custom functions into the rendering workflow at shader bind/unbind time when a SHaderSyncNode has been activated.
+ * @brief Scene node used to inject custom functions into the rendering workflow at shader bind/unbind time when a
+ * SHaderSyncNode has been activated.
  */
 class ShaderControlNode : public ShaderDataNode
 {
@@ -23,7 +24,7 @@ public:
 
 public:
   ShaderControlNode(const std::string &name, ControlCallbackFunc onBind = [](ShaderProgram *) {},
-                     ControlCallbackFunc onUnBind = [](ShaderProgram *) {});
+                    ControlCallbackFunc onUnBind = [](ShaderProgram *) {});
   virtual ~ShaderControlNode();
 
   /**
