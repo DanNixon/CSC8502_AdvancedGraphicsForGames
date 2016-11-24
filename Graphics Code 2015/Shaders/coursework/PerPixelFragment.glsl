@@ -4,7 +4,6 @@ const int MAX_POINT_LIGHTS = 4;
 const int MAX_SPOT_LIGHTS = 2;
 
 uniform sampler2D diffuseTex;
-uniform sampler2DShadow shadowTex;
 
 uniform vec3 cameraPos;
 
@@ -43,20 +42,15 @@ in Vertex
   vec2 texCoord;
   vec3 normal;
   vec3 worldPos;
-  vec4 shadowProj;
 } IN;
 
 out vec4 fragColour;
 
 vec3 processPointLight(vec4 diffuse, Light light)
 {
-  float shadow = 1.0;
-  if (IN.shadowProj.w > 0.0)
-    shadow = textureProj(shadowTex, IN.shadowProj);
-	
   vec3 incident = normalize(light.position - IN.worldPos);
-  float lambert = max(0.0, dot(incident, IN.normal)) * shadow;
-  
+  float lambert = max(0.0, dot(incident, IN.normal));
+
   float dist = length(light.position - IN.worldPos);
   float atten = 1.0 - clamp(dist / light.reach, 0.0, 1.0);
 
