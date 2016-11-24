@@ -11,5 +11,5 @@ out vec4 fragColour;
 
 void main()
 {
-	fragColour = texture(diffuseTex, IN.texCoord);
+  fragColour = texture(diffuseTex, IN.texCoord);
 }

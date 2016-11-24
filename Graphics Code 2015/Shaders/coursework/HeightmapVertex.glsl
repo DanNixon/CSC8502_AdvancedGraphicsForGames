@@ -18,9 +18,9 @@ void main()
 {
 	OUT.colour = colour;
 	OUT.texCoord = texCoord;
-	
+
 	mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
 	OUT.normal = normalize(normalMatrix * normalize(normal));
-	
+
 	gl_Position = vec4(position, 1.0);
 }
