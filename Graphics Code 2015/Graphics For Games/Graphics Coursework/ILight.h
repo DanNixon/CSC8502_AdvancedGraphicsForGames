@@ -118,7 +118,5 @@ protected:
   FramebufferNode *m_shadowSceneRoot;            //!< Root node of the shadow rendering scene
   CameraNode *m_shadowCamera;                    //!< Camera used to render the shadow depth map
   Matrix4 m_shadowProjection;                    //!< Projection matrix used when rendering shadows
-
-  RGBATexture *shadowcol;
 };
 }
