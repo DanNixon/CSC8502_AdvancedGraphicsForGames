@@ -83,7 +83,8 @@ void World::BuildLoadingScreen(SceneNode *root)
   sysMonShaderSync->AddChild(sysMonNode);
   sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
 
-  m_state.loadingNode = sysMonShaderSync->AddChild(new TextNode("loadingNode", sysMonFont, "Loading..."));
+  m_state.loadingNode = sysMonShaderSync->AddChild(new TextNode("loadingNode", sysMonFont,
+    "Pixels do their best now and are preparing. Please wait warmly..."));
   m_state.loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
 }
 
