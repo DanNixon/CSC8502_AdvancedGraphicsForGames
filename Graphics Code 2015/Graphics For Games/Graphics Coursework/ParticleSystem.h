@@ -13,8 +13,8 @@ namespace GraphicsCoursework
 struct Particle
 {
   Vector3 position;
-  Vector4 colour;
   Vector3 direction;
+  Vector4 colour;
 };
 
 /**
@@ -27,7 +27,7 @@ public:
   static float Rand();
 
 public:
-  typedef std::function<void(Vector3 &dir, Vector4 &col)> NewParticleFunction;
+  typedef std::function<void(Particle &p)> NewParticleFunction;
   typedef std::function<void(Particle &p, float msec)> ParticleUpdateFunction;
 
 public:

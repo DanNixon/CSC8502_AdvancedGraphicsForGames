@@ -19,16 +19,15 @@ ParticleSystem::ParticleSystem()
 {
   m_type = GL_POINTS;
 
-  m_newParticleFunc = [](Vector3 &dir, Vector4 &col) {
-    col = Vector4(Rand(), Rand(), Rand(), 1.0);
+  m_newParticleFunc = [](Particle &p) {
+    p.colour = Vector4(Rand(), Rand(), Rand(), 1.0);
 
-    dir = Vector3(0.0f, 0.0f, 0.0f);
-    dir.x += ((Rand() - Rand()) * 0.5f);
-    dir.y += ((Rand() - Rand()) * 0.5f);
-    dir.z += ((Rand() - Rand()) * 0.5f);
+    p.direction.x += ((Rand() - Rand()) * 0.5f);
+    p.direction.y += ((Rand() - Rand()) * 0.5f);
+    p.direction.z += ((Rand() - Rand()) * 0.5f);
   };
 
-  m_particleUpdateFunc = [this](Particle &p, float msec) { p.position += p.direction * (msec * 0.2f); };
+  m_particleUpdateFunc = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.2f); };
 }
 
 ParticleSystem::~ParticleSystem()
@@ -127,8 +126,12 @@ Particle *ParticleSystem::GetFreeParticle()
     p = new Particle();
   }
 
-  // Randomise data
-  m_newParticleFunc(p->direction, p->colour);
+  // Generate new particle state
+  p->position.ToZero();
+  p->direction.ToZero();
+  p->colour.w = 1.0f;
+
+  m_newParticleFunc(*p);
 
   p->direction.Normalise();
   p->position.ToZero();

@@ -424,14 +424,14 @@ void World::Build(SceneNode *root)
     particle->SetLaunchParticles(50);
     particle->SetParticleLifetime(5000.0f);
 
-    particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
-      col = Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f),
-                    Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
+    particle->NewFunction() = [](Particle &p) {
+      p.colour = Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f),
+                         Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
 
-      dir = Vector3(0.05f, 1.0f, 1.0f);
-      dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
-      dir.y += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
-      dir.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
+      p.direction = Vector3(0.05f, 1.0f, 1.0f);
+      p.direction.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
+      p.direction.y += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
+      p.direction.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.4f);
     };
 
     particle->UpdateFunction() = [](Particle &p, float msec) {
@@ -497,24 +497,25 @@ void World::Build(SceneNode *root)
           particleShader->AddChild(new TextureNode("rainParticleTextures", {{raindropTexture, "diffuseTex", 1}}));
 
       ParticleSystem *particle = new ParticleSystem();
-      particle->SetParticleLifetime(6000.0f);
-      particle->SetLaunchParticles(25);
+      particle->SetParticleLifetime(8000.0f);
+      particle->SetLaunchParticles(30);
 
-      particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
-        col = Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f),
-                      Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
+      particle->NewFunction() = [](Particle &p) {
+        p.colour =
+            Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.2f),
+                    Math::Lerp(ParticleSystem::Rand(), 0.5f, 1.0f), 1.0f);
 
-        dir = Vector3(0.0f, -1.0f, 0.0f);
-        dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
-        dir.y -= abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
-        dir.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+        p.direction = Vector3(0.0f, -1.0f, 0.0f);
+        p.direction.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+        p.direction.y -= abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+        p.direction.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
       };
 
       particle->UpdateFunction() = [](Particle &p, float msec) {
-        p.direction.x *= 0.95f;
-        p.direction.z *= 0.95f;
+        p.direction.x *= 0.975f;
+        p.direction.z *= 0.975f;
 
-        p.position += p.direction * (msec * 0.1f);
+        p.position += p.direction * (msec * 0.08f);
       };
 
       auto particleControl = particleTextures->AddChild(
@@ -552,13 +553,13 @@ void World::Build(SceneNode *root)
       ParticleSystem *particle = new ParticleSystem();
       particle->SetParticleLifetime(5000.0f);
 
-      particle->NewFunction() = [](Vector3 &dir, Vector4 &col) {
-        col = Vector4(ParticleSystem::Rand(), ParticleSystem::Rand(), ParticleSystem::Rand(), 1.0);
+      particle->NewFunction() = [](Particle &p) {
+        p.colour = Vector4(ParticleSystem::Rand(), ParticleSystem::Rand(), ParticleSystem::Rand(), 1.0);
 
-        dir = Vector3(0.0f, -1.0f, 0.0f);
-        dir.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
-        dir.y -= abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
-        dir.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+        p.direction = Vector3(0.0f, -1.0f, 0.0f);
+        p.direction.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+        p.direction.y -= abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+        p.direction.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
       };
 
       particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
