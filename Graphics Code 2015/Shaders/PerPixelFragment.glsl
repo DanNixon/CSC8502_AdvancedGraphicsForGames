@@ -31,7 +31,7 @@ out vec4 fragColour;
 
 vec3 processLight(vec4 diffuse, vec4 lightCol, vec3 lightPos, float lightRadius, float lightAmbInt)
 {
-	vec3 incident = normalize(lightPos - IN.worldPos);
+  vec3 incident = normalize(lightPos - IN.worldPos);
   float lambert = max(0.0, dot(incident, IN.normal));
 
   float dist = length(lightPos - IN.worldPos);
@@ -43,14 +43,14 @@ vec3 processLight(vec4 diffuse, vec4 lightCol, vec3 lightPos, float lightRadius,
   float rFactor = max(0.0, dot(halfDir, IN.normal));
   float sFactor = pow(rFactor, specularPower);
 
-	vec3 lColour = lightCol.rgb * lightCol.a;
+  vec3 lColour = lightCol.rgb * lightCol.a;
   vec3 diffuseColour = diffuse.rgb * lColour;
   vec3 specColour = (lColour * sFactor) * specularIntensity;
 
   vec3 finalColour = vec3((diffuseColour + specColour) * atten * lambert);
   finalColour += diffuseColour * lightAmbInt;
 
-	return finalColour;
+  return finalColour;
 }
 
 void main(void)
@@ -59,5 +59,5 @@ void main(void)
 
   fragColour = vec4(0.0, 0.0, 0.0, diffuse.a);
   fragColour.rgb += processLight(diffuse, sun_colour, sun_position, sun_radius, sun_ambientIntensity);
-	fragColour.rgb += processLight(diffuse, moon_colour, moon_position, moon_radius, moon_ambientIntensity);
+  fragColour.rgb += processLight(diffuse, moon_colour, moon_position, moon_radius, moon_ambientIntensity);
 }
