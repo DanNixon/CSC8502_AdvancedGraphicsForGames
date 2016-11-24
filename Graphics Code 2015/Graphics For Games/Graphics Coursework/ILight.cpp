@@ -51,7 +51,7 @@ void ILight::InitShadows(GLuint shadowTexDim, SceneNode *shadowSceneRoot, const 
   m_shadowSceneRoot = new FramebufferNode(m_name + "_ShadowFramebuffer");
   m_shadowSceneRoot->SetProcessMode(PM_PROCESS_PASS);
 
-  m_shadowCamera = new CameraNode(m_name + "_ShadowCamera");
+  m_shadowCamera = new CameraNode(m_name + "_ShadowCamera", false);
   m_shadowCamera->SetProcessMode(PM_PROCESS_PASS);
   m_shadowSceneRoot->AddChild(m_shadowCamera);
 
@@ -102,6 +102,8 @@ void ILight::DoShadowRender()
 
   std::vector<Vector3> directions;
   CastDirections(directions);
+
+  m_shadowSceneRoot->Update(0.0f);
 
   for (size_t i = 0; i < NumDirections(); i++)
   {

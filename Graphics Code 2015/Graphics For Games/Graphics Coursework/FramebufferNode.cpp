@@ -58,12 +58,7 @@ void FramebufferNode::PreRender(RenderState &state)
   if (ProcessingPassCheck(state))
   {
     glBindFramebuffer(GL_FRAMEBUFFER, m_buffer);
-
-    if (m_buffer != 0)
-    {
-      // will this fix the shadow mapping issue?
-      glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    }
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   }
 }
 

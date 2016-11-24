@@ -48,9 +48,6 @@ World::World(Renderer &renderer)
   m_state.screenDims = m_renderer.ParentWindow().GetScreenSize();
   m_state.screenBuffer = new FramebufferNode("screenBuffer", false);
   m_renderer.Root()->AddChild(m_state.screenBuffer);
-
-  m_state.screenBuffer->AddChild(
-      new TreeControlNode("aaa", [](RenderState &) { glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT); }));
 }
 
 /**
@@ -410,7 +407,7 @@ void World::Build(SceneNode *root)
     RenderableNode *waterQuad =
         (RenderableNode *)waterShaderSync->AddChild(new MeshNode("waterQuad", Mesh::GenerateQuad()));
     waterQuad->SetBoundingSphereRadius(-1.0f);
-    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 0.0f)) * Matrix4::Scale(1000.0f));
+    waterQuad->SetLocalTransformation(Matrix4::Translation(Vector3(0.0f, 0.0f, 0.0f)) * Matrix4::Scale(m_state.worldBounds));
     waterQuad->SetLocalRotation(Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)));
     waterQuad->SpecularPower() = 2.0f;
   }
