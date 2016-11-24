@@ -14,6 +14,14 @@ class RenderableNode;
 class ShaderDataNode;
 class CameraNode;
 class TransparentRenderingNode;
+class ITexture;
+class ILight;
+
+struct ShadowMap
+{
+  Matrix4 pvMatrix;
+  ITexture *texture;
+};
 
 /**
  * @brief Stores data used when rendering.
@@ -32,8 +40,9 @@ struct RenderState
   {
   }
 
-  size_t numPointLights; //!< Number of point lights in the scene
-  size_t numSpotLights;  //!< Number of spot lights in the scene
+  size_t numPointLights;        //!< Number of point lights in the scene
+  size_t numSpotLights;         //!< Number of spot lights in the scene
+  std::vector<ILight *> lights; //!< Vector of all lights in scene
 
   CameraNode *camera;        //!< Active camera (may be nullptr during rendering)
   Frustum cameraViewFrustum; //!< Cached camera view frustum
@@ -46,5 +55,7 @@ struct RenderState
   std::vector<RenderableNode *> transparentNodes; //!< List of transparent nodes
   TransparentRenderingNode
       *transparentSync; //!< Lowest TransparentRenderingNode (the one that will next process transparentNodes)
+
+  std::vector<ShadowMap> shadowMaps;
 };
 }

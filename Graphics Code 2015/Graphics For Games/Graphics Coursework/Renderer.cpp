@@ -40,11 +40,17 @@ void Renderer::AddPersistentDataNode(ShaderDataNode *node)
 
   PointLight *pointLight = dynamic_cast<PointLight *>(node);
   if (pointLight != nullptr)
+  {
     pointLight->SetIndex(m_state.numPointLights++);
+    m_state.lights.push_back(pointLight);
+  }
 
   SpotLight *spotLight = dynamic_cast<SpotLight *>(node);
   if (spotLight != nullptr)
+  {
     spotLight->SetIndex(m_state.numSpotLights++);
+    m_state.lights.push_back(spotLight);
+  }
 }
 
 /**
@@ -67,8 +73,18 @@ bool Renderer::RemovePersistentDataNode(ShaderDataNode *node)
  */
 void Renderer::RenderScene()
 {
+  // Do shadow passes
+  for (auto it = m_state.lights.begin(); it != m_state.lights.end(); ++it)
+    (*it)->DoShadowRender(m_state);
+
+  // Do main pass
   m_sceneGraphRoot->Render(m_state);
+
   SwapBuffers();
+
+  // Reset state
+  m_state.transparentNodes.clear();
+  m_state.shadowMaps.clear();
 }
 
 /**

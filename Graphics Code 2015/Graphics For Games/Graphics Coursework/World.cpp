@@ -214,7 +214,7 @@ void World::Build(SceneNode *root)
     m_state.flashlight = new SpotLight("playerFlashlight");
     playerCamera->AddChild(m_state.flashlight);
     m_renderer.AddPersistentDataNode(m_state.flashlight);
-    m_state.flashlight->InitShadows(2048, projection, m_state.screenDims);
+    m_state.flashlight->InitShadows(2048, sceneBuffer, m_state.screenDims);
     m_state.flashlight->SetActive(false);
     m_state.flashlight->SetLocalTransformation(playerLightTransform);
     m_state.flashlight->Colour() = Vector4(0.95f, 0.95f, 1.0f, 1.0f);

@@ -94,9 +94,7 @@ public:
    */
   virtual void CastDirections(std::vector<Vector3> &directions) const = 0;
 
-  void DoShadowRender();
-
-  virtual void PreRender(RenderState &state);
+  void DoShadowRender(RenderState &mainState);
 
   virtual void ShaderBind(ShaderProgram *s);
   virtual void ShaderUnBind(ShaderProgram *s);
@@ -119,6 +117,7 @@ protected:
   std::vector<ShadowTexture *> m_shadowTextures; //!< Textures used in shadow mapping render passes
   FramebufferNode *m_shadowSceneRoot;            //!< Root node of the shadow rendering scene
   CameraNode *m_shadowCamera;                    //!< Camera used to render the shadow depth map
+  Matrix4 m_shadowProjection;                    //!< Projection matrix used when rendering shadows
 
   RGBATexture *shadowcol;
 };
