@@ -39,9 +39,9 @@ integrated into the scene.
 - [x] The environment should be lit with ambient, diffuse and specular
 - [ ] Shadows
 - [x] Skybox
-- [ ] Explosion is triggered by pressing a key. It consists of
-  - [ ] A bright flash which overwhelms the screen
-  - [ ] Particle effects
+- [x] Explosion is triggered by pressing a key. It consists of
+  - [x] A bright flash which overwhelms the screen
+  - [x] Particle effects
 - [x] A navigable camera, moving around the 3D environment
 - [x] Display the framerate being achieved
 - [x] Display the total memory being used
@@ -61,7 +61,7 @@ higher the mark awarded for that feature.
   programmatically)
 - [ ] Space ships, UFOs, strange lights in the sky (lighting is key here not the
   space ship model)
-- [ ] Weather effects (rain, snow, fog, wind, lightning)
+- [x] Weather effects (rain, snow, fog, wind, lightning)
 - [x] Volcano or geyser eruption
 - [x] A portal effect
 - [x] Lens-flare
