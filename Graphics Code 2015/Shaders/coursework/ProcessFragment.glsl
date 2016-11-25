@@ -1,10 +1,8 @@
 #version 150 core
 
 uniform sampler2D diffuseTex;
-uniform sampler2D filterTex;
 
 uniform float colourTemp;
-uniform float filter;
 uniform vec4 colourOverride;
 
 in Vertex
@@ -54,7 +52,7 @@ void main()
 {
   fragColour = texture(diffuseTex, IN.texCoord);
   fragColour.rgb *= colourTemperatureToRGB(colourTemp);
-  fragColour += texture(filterTex, IN.texCoord) * filter;
+
   if (colourOverride.a > 0.1)
-    fragColour.rgb = colourOverride.rgb;
+    fragColour.rgb = mix(fragColour.rgb, colourOverride.rgb, colourOverride.a);
 }

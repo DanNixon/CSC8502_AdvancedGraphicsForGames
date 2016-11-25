@@ -83,8 +83,8 @@ void World::BuildLoadingScreen(SceneNode *root)
   sysMonShaderSync->AddChild(sysMonNode);
   sysMonNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)));
 
-  m_state.loadingNode = sysMonShaderSync->AddChild(new TextNode("loadingNode", sysMonFont,
-    "Pixels do their best now and are preparing. Please wait warmly..."));
+  m_state.loadingNode = sysMonShaderSync->AddChild(
+      new TextNode("loadingNode", sysMonFont, "Pixels do their best now and are preparing. Please wait warmly..."));
   m_state.loadingNode->SetLocalTransformation(Matrix4::Scale(16.0f) * Matrix4::Translation(Vector3(0.0f, 2.0f, 0.0f)));
 }
 
@@ -583,46 +583,100 @@ void World::Build(SceneNode *root)
     }
   }
 
-  // EXPLOSION PARTICLES
-    {
-    auto particleShader = globalTransp->AddChild(new ShaderNode(
-      "explosionParticleShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
-        new FragmentShader(CW_SHADER_DIR "ParticleColourFragment.glsl"),
-        new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl") })));
+  auto explosionSite = globalTransp->AddChild(new SceneNode("explosionSite"));
+  explosionSite->SetLocalTransformation(Matrix4::Translation(Vector3(-20.0f, 20.0f, -80.0f)));
+
+  // EXPLOSION FUSE PARTICLES
+  {
+    auto particleShader = explosionSite->AddChild(
+        new ShaderNode("explosionFuseParticleShader",
+                       new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                          new FragmentShader(CW_SHADER_DIR "ParticleColourFragment.glsl"),
+                                          new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
 
     ParticleSystem *particle = new ParticleSystem();
-    particle->SetParticleLifetime(5000.0f);
-    particle->SetParticleRate(5000.0f);
+    particle->SetParticleLifetime(500.0f);
+    particle->SetParticleRate(10.0f);
+    particle->SetLaunchParticles(10);
 
     particle->NewFunction() = [](Particle &p) {
-      p.colour = Vector4(ParticleSystem::Rand(), ParticleSystem::Rand(), ParticleSystem::Rand(), 1.0);
+      p.colour = Vector4(Math::Lerp(ParticleSystem::Rand(), 0.7f, 1.0f), Math::Lerp(ParticleSystem::Rand(), 0.3f, 0.7f),
+                         Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.5f), 1.0f);
 
-      p.direction = Vector3(0.0f, -1.0f, 0.0f);
-      p.direction.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
-      p.direction.y -= abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
-      p.direction.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+      p.direction = Vector3((ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.2f,
+                            abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f),
+                            (ParticleSystem::Rand() - ParticleSystem::Rand()) * 0.2f);
     };
 
     particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
 
     auto particleControl = particleShader->AddChild(
-      new ShaderControlNode("explosionParticleControl",
-        [](ShaderProgram *s) {
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-      glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.2f);
-    },
-        [](ShaderProgram *s) {
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
-    }));
+        new ShaderControlNode("explosionFuseParticleControl",
+                              [](ShaderProgram *s) {
+                                glEnable(GL_BLEND);
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.1f);
+                              },
+                              [](ShaderProgram *s) {
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                              }));
 
-    auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("explosionParticleShaderSync"));
+    auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("explosionFuseParticleShaderSync"));
 
-    m_state.explosion = new ParticleSystemNode("explosionParticleRenderable", particle);
-    particleShaderSync->AddChild(m_state.explosion);
-    m_state.explosion->SetActive(false);
-    }
+    m_state.explosionFuse = new ParticleSystemNode("explosionFuseParticleRenderable", particle);
+    particleShaderSync->AddChild(m_state.explosionFuse);
+    m_state.explosionFuse->SetActive(false);
+  }
+
+  // EXPLOSION DEBRIS PARTICLES
+  {
+    auto particleShader = explosionSite->AddChild(
+        new ShaderNode("explosionDebrisParticleShader",
+                       new ShaderProgram({new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+                                          new FragmentShader(CW_SHADER_DIR "ParticleColourFragment.glsl"),
+                                          new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl")})));
+
+    ParticleSystem *particle = new ParticleSystem();
+    particle->SetParticleLifetime(6000.0f);
+    particle->SetParticleRate(10.0f);
+    particle->SetLaunchParticles(500);
+
+    particle->NewFunction() = [](Particle &p) {
+      p.colour =
+          Vector4(Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.4f), Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.35f),
+                  Math::Lerp(ParticleSystem::Rand(), 0.1f, 0.35f), 1.0f);
+
+      p.direction = Vector3((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.0f,
+                            abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f),
+                            (ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.0f);
+    };
+
+    particle->UpdateFunction() = [](Particle &p, float msec) {
+      p.direction.y -= msec * 0.001f;
+      p.direction.Normalise();
+
+      p.position += p.direction * (msec * 0.015f);
+    };
+
+    auto particleControl = particleShader->AddChild(
+        new ShaderControlNode("explosionDebrisParticleControl",
+                              [](ShaderProgram *s) {
+                                glEnable(GL_BLEND);
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.2f);
+                              },
+                              [](ShaderProgram *s) {
+                                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                                glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+                              }));
+
+    auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("explosionDebrisParticleShaderSync"));
+
+    m_state.explosionDebris = new ParticleSystemNode("explosionDebrisParticleRenderable", particle);
+    particleShaderSync->AddChild(m_state.explosionDebris);
+    m_state.explosionDebris->SetActive(false);
+  }
 
   // POST PROCESSING
   {
@@ -631,40 +685,41 @@ void World::Build(SceneNode *root)
 
     // EFFECTS
     {
-      // Reduced FOV filter texture
-      ITexture * filterTexture = new Texture();
-      filterTexture->LoadFromFile(CW_TEXTURE_DIR "filter_1.tga");
-
       FramebufferNode *processBuffer = new FramebufferNode("processingBuffer");
       processBuffer->BindTexture(GL_COLOR_ATTACHMENT0, postProcessingBufferOutoutTex);
       root->AddChild(processBuffer);
 
       auto depthDisable = processBuffer->AddChild(
-        new ShaderControlNode("processingDepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
-          [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
+          new ShaderControlNode("processingDepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
+                                [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
       auto shader = depthDisable->AddChild(new ShaderNode(
-        "processingShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
-                                               new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl") })));
+          "processingShader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "ProcessVertex.glsl"),
+                                                 new FragmentShader(CW_SHADER_DIR "ProcessFragment.glsl")})));
 
       MatrixNode *texMatrix = new MatrixNode("processingTexMatrix", "textureMatrix");
       shader->AddChild(texMatrix);
 
-      auto proj =
-        texMatrix->AddChild(new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+      auto proj = texMatrix->AddChild(
+          new MatrixNode("processingProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
       auto view = proj->AddChild(new MatrixNode("processingView", "viewMatrix", Matrix4()));
 
       auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {
-        glUniform1f(glGetUniformLocation(s->Program(), "cameraShakePhase"), this->m_state.timeOfDay * this->m_state.cameraShakeSpeed);
-        glUniform1f(glGetUniformLocation(s->Program(), "cameraShakeIntensity"), this->m_state.cameraShakeIntensity);
+        float shake = (this->m_state.explosionPhase == EXPLOSION_CAMERA_SHAKE)
+                          ? 1.0f - (this->m_state.explosionPhaseTime / 5000.0f)
+                          : 0.0f;
+        glUniform1f(glGetUniformLocation(s->Program(), "cameraShakePhase"),
+                    this->m_state.timeOfDay * this->m_state.cameraShakeSpeed);
+        glUniform1f(glGetUniformLocation(s->Program(), "cameraShakeIntensity"), shake * 0.1f);
 
-        glUniform1f(glGetUniformLocation(s->Program(), "filter"), this->m_state.filterAmount);
+        float a = (this->m_state.explosionPhase == EXPLOSION_FLASH) ? 1.0f - (this->m_state.explosionPhaseTime / 250.0f)
+                                                                    : 0.0f;
+        glUniform4f(glGetUniformLocation(s->Program(), "colourOverride"), 1.0f, 1.0f, 1.0f, a);
+
         glUniform1f(glGetUniformLocation(s->Program(), "colourTemp"), this->m_state.colourTemp);
       }));
 
-      auto texture = control->AddChild(new TextureNode("processingTexture", { {sceneBufferOutputTex, "diffuseTex", 1},
-        {filterTexture, "filterTex", 2}
-      }));
+      auto texture = control->AddChild(new TextureNode("processingTexture", {{sceneBufferOutputTex, "diffuseTex", 1}}));
       auto sync = texture->AddChild(new ShaderSyncNode("processingSync"));
       auto processQuad = sync->AddChild(new MeshNode("processingQuad", Mesh::GenerateQuad()));
       processQuad->SetLocalTransformation(Matrix4::Scale(1.2f));
@@ -673,7 +728,8 @@ void World::Build(SceneNode *root)
     ITexture *lensFlareStage1BufferOutputTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
     lensFlareStage1BufferOutputTex->SetRepeating(true);
 
-    // Lens flare implmented folling this guide: http://john-chapman-graphics.blogspot.co.uk/2013/02/pseudo-lens-flare.html
+    // Lens flare implmented folling this guide:
+    // http://john-chapman-graphics.blogspot.co.uk/2013/02/pseudo-lens-flare.html
     // LENS FLARE 1 (downsample & threshold)
     {
       FramebufferNode *lensFlareBuffer = new FramebufferNode("lensFlare1Buffer");
@@ -681,18 +737,19 @@ void World::Build(SceneNode *root)
       root->AddChild(lensFlareBuffer);
 
       auto depthDisable = lensFlareBuffer->AddChild(
-        new ShaderControlNode("lensFlare1DepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
-          [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
+          new ShaderControlNode("lensFlare1DepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
+                                [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
-      auto shader = depthDisable->AddChild(new ShaderNode(
-        "lensFlare1Shader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "LensFlareVertex.glsl"),
-          new FragmentShader(CW_SHADER_DIR "LensFlareScaleBiasFragment.glsl") })));
+      auto shader = depthDisable->AddChild(
+          new ShaderNode("lensFlare1Shader",
+                         new ShaderProgram({new VertexShader(CW_SHADER_DIR "LensFlareVertex.glsl"),
+                                            new FragmentShader(CW_SHADER_DIR "LensFlareScaleBiasFragment.glsl")})));
 
       MatrixNode *texMatrix = new MatrixNode("lensFlare1TexMatrix", "textureMatrix");
       shader->AddChild(texMatrix);
 
-      auto proj =
-        texMatrix->AddChild(new MatrixNode("lensFlare1ProjMatrix", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+      auto proj = texMatrix->AddChild(
+          new MatrixNode("lensFlare1ProjMatrix", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
       auto view = proj->AddChild(new MatrixNode("lensFlare1ViewMatrix", "viewMatrix", Matrix4()));
 
       auto control = view->AddChild(new ShaderControlNode("lensFlare1Control", [this](ShaderProgram *s) {
@@ -700,7 +757,7 @@ void World::Build(SceneNode *root)
         glUniform4f(glGetUniformLocation(s->Program(), "bias"), -0.2f, -0.2f, -0.2f, -0.5f);
       }));
 
-      auto texture = control->AddChild(new TextureNode("lensFlare1Texture", { { sceneBufferOutputTex, "inTex", 1 } }));
+      auto texture = control->AddChild(new TextureNode("lensFlare1Texture", {{sceneBufferOutputTex, "inTex", 1}}));
       auto sync = texture->AddChild(new ShaderSyncNode("lensFlare1Sync"));
       sync->AddChild(new MeshNode("lensFlare1Quad", Mesh::GenerateQuad()));
     }
@@ -715,18 +772,18 @@ void World::Build(SceneNode *root)
       root->AddChild(lensFlareBuffer);
 
       auto depthDisable = lensFlareBuffer->AddChild(
-        new ShaderControlNode("lensFlare2DepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
-          [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
+          new ShaderControlNode("lensFlare2DepthDisable", [](ShaderProgram *) { glDisable(GL_DEPTH_TEST); },
+                                [](ShaderProgram *) { glEnable(GL_DEPTH_TEST); }));
 
       auto shader = depthDisable->AddChild(new ShaderNode(
-        "lensFlare2Shader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "LensFlareVertex.glsl"),
-          new FragmentShader(CW_SHADER_DIR "LensFlareFragment.glsl") })));
+          "lensFlare2Shader", new ShaderProgram({new VertexShader(CW_SHADER_DIR "LensFlareVertex.glsl"),
+                                                 new FragmentShader(CW_SHADER_DIR "LensFlareFragment.glsl")})));
 
       MatrixNode *texMatrix = new MatrixNode("lensFlare2TexMatrix", "textureMatrix");
       shader->AddChild(texMatrix);
 
-      auto proj =
-        texMatrix->AddChild(new MatrixNode("lensFlare2ProjMatrix", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+      auto proj = texMatrix->AddChild(
+          new MatrixNode("lensFlare2ProjMatrix", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
       auto view = proj->AddChild(new MatrixNode("lensFlare2ViewMatrix", "viewMatrix", Matrix4()));
 
       auto control = view->AddChild(new ShaderControlNode("lensFlare2Control", [this](ShaderProgram *s) {
@@ -736,26 +793,29 @@ void World::Build(SceneNode *root)
         glUniform1f(glGetUniformLocation(s->Program(), "distortion"), 2.0f);
       }));
 
-      auto texture = control->AddChild(new TextureNode("lensFlare2Texture", { { lensFlareStage1BufferOutputTex, "inTex", 1 } }));
+      auto texture =
+          control->AddChild(new TextureNode("lensFlare2Texture", {{lensFlareStage1BufferOutputTex, "inTex", 1}}));
       auto sync = texture->AddChild(new ShaderSyncNode("lensFlare2Sync"));
       sync->AddChild(new MeshNode("lensFlare2Quad", Mesh::GenerateQuad()));
     }
 
     // POST PROCESSING PRESENTATION
     {
-      auto shader = m_state.screenBuffer->AddChild(new ShaderNode(
-        "processingPresentShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ProcessingPresentationVertex.glsl"),
-                                                      new FragmentShader(CW_SHADER_DIR "ProcessingPresentationFragment.glsl") })));
+      auto shader = m_state.screenBuffer->AddChild(
+          new ShaderNode("processingPresentShader",
+                         new ShaderProgram({new VertexShader(CW_SHADER_DIR "ProcessingPresentationVertex.glsl"),
+                                            new FragmentShader(CW_SHADER_DIR "ProcessingPresentationFragment.glsl")})));
 
       auto globalTexMatrixIdentity =
-        shader->AddChild(new MatrixNode("processingPresentTexMatrixIdentity", "textureMatrix"));
+          shader->AddChild(new MatrixNode("processingPresentTexMatrixIdentity", "textureMatrix"));
 
       auto proj = globalTexMatrixIdentity->AddChild(
-        new MatrixNode("processingPresentProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
+          new MatrixNode("processingPresentProj", "projMatrix", Matrix4::Orthographic(-1, 1, 1, -1, 1, -1)));
       auto view = proj->AddChild(new MatrixNode("processingPresentView", "viewMatrix", Matrix4()));
 
-      auto texture = view->AddChild(new TextureNode("processingPresentTexture", { {postProcessingBufferOutoutTex, "effectTex", 1},
-      { lensFlareStage2BufferOutputTex, "lensFlareTex", 2} }));
+      auto texture = view->AddChild(
+          new TextureNode("processingPresentTexture", {{postProcessingBufferOutoutTex, "effectTex", 1},
+                                                       {lensFlareStage2BufferOutputTex, "lensFlareTex", 2}}));
       auto sync = texture->AddChild(new ShaderSyncNode("processingPresentSync"));
       sync->AddChild(new MeshNode("processingPresentQuad", Mesh::GenerateQuad()));
     }
@@ -829,10 +889,67 @@ void World::Update(float msec)
   if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_E))
   {
     std::cout << "Pichuun\n";
-    m_state.explosionStartTime = m_renderer.ParentWindow().GetTimer()->GetMS();
+    m_state.explosionPhase = EXPLOSION_FUSE;
   }
 
   // Handle explosion effects
-  // TODO
+  if (m_state.explosionPhase != EXPLOSION_IDLE)
+    m_state.explosionPhaseTime += msec;
+
+  switch (m_state.explosionPhase)
+  {
+  case EXPLOSION_FUSE:
+    m_state.explosionFuse->SetActive(true);
+
+    if (m_state.explosionPhaseTime > 2000.0f)
+    {
+      m_state.explosionPhase = EXPLOSION_FLASH;
+      m_state.explosionPhaseTime = 0.0f;
+    }
+
+    break;
+
+  case EXPLOSION_FLASH:
+    m_state.explosionFuse->SetActive(false);
+
+    if (m_state.explosionPhaseTime > 250.0f)
+    {
+      m_state.explosionPhase = EXPLOSION_PARTICLES;
+      m_state.explosionPhaseTime = 0.0f;
+    }
+
+    break;
+
+  case EXPLOSION_PARTICLES:
+    m_state.explosionDebris->SetActive(true);
+
+    if (m_state.explosionPhaseTime > 50.0f)
+    {
+      m_state.explosionPhase = EXPLOSION_CAMERA_SHAKE;
+      m_state.explosionPhaseTime = 0.0f;
+    }
+
+    break;
+
+  case EXPLOSION_CAMERA_SHAKE:
+    // Don't launch any more particles
+    m_state.explosionDebris->System()->SetParticleRate(6000.0f);
+
+    if (m_state.explosionPhaseTime > 5000.0f)
+    {
+      m_state.explosionPhase = EXPLOSION_END;
+      m_state.explosionPhaseTime = 0.0f;
+    }
+
+    break;
+
+  case EXPLOSION_END:
+    m_state.explosionDebris->SetActive(false);
+
+    m_state.explosionPhase = EXPLOSION_IDLE;
+    m_state.explosionPhaseTime = 0.0f;
+
+    break;
+  }
 }
 }

@@ -25,9 +25,9 @@ public:
    */
   enum ProcessingMode
   {
-    PM_RENDER_PASS, //!< Render passes only
+    PM_RENDER_PASS,  //!< Render passes only
     PM_PROCESS_PASS, //!< Processing passes only
-    PM_BOTH //!< Always activate
+    PM_BOTH          //!< Always activate
   };
 
 public:

@@ -56,8 +56,8 @@ struct RenderState
   bool processPass; //!< Flag indicating if the current scene graph traversal is a processing pass
 
   std::vector<RenderableNode *> transparentNodes; //!< List of transparent nodes
-  TransparentRenderingNode *
-      transparentSync; //!< Lowest TransparentRenderingNode (the one that will next process transparentNodes)
+  TransparentRenderingNode
+      *transparentSync; //!< Lowest TransparentRenderingNode (the one that will next process transparentNodes)
 
   std::vector<ShadowMap> shadowMaps; //!< Shadow maps for all light directions in the scene
 };
