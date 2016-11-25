@@ -583,6 +583,47 @@ void World::Build(SceneNode *root)
     }
   }
 
+  // EXPLOSION PARTICLES
+    {
+    auto particleShader = globalTransp->AddChild(new ShaderNode(
+      "explosionParticleShader", new ShaderProgram({ new VertexShader(CW_SHADER_DIR "ParticleVertex.glsl"),
+        new FragmentShader(CW_SHADER_DIR "ParticleColourFragment.glsl"),
+        new GeometryShader(CW_SHADER_DIR "ParticleGeometry.glsl") })));
+
+    ParticleSystem *particle = new ParticleSystem();
+    particle->SetParticleLifetime(5000.0f);
+    particle->SetParticleRate(5000.0f);
+
+    particle->NewFunction() = [](Particle &p) {
+      p.colour = Vector4(ParticleSystem::Rand(), ParticleSystem::Rand(), ParticleSystem::Rand(), 1.0);
+
+      p.direction = Vector3(0.0f, -1.0f, 0.0f);
+      p.direction.x += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+      p.direction.y -= abs((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+      p.direction.z += ((ParticleSystem::Rand() - ParticleSystem::Rand()) * 1.5f);
+    };
+
+    particle->UpdateFunction() = [](Particle &p, float msec) { p.position += p.direction * (msec * 0.01f); };
+
+    auto particleControl = particleShader->AddChild(
+      new ShaderControlNode("explosionParticleControl",
+        [](ShaderProgram *s) {
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+      glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.2f);
+    },
+        [](ShaderProgram *s) {
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glUniform1f(glGetUniformLocation(s->Program(), "particleSize"), 0.0f);
+    }));
+
+    auto particleShaderSync = particleControl->AddChild(new ShaderSyncNode("explosionParticleShaderSync"));
+
+    m_state.explosion = new ParticleSystemNode("explosionParticleRenderable", particle);
+    particleShaderSync->AddChild(m_state.explosion);
+    m_state.explosion->SetActive(false);
+    }
+
   // POST PROCESSING
   {
     ITexture *postProcessingBufferOutoutTex = new RGBATexture(m_state.screenDims.x, m_state.screenDims.y);
@@ -590,6 +631,10 @@ void World::Build(SceneNode *root)
 
     // EFFECTS
     {
+      // Reduced FOV filter texture
+      ITexture * filterTexture = new Texture();
+      filterTexture->LoadFromFile(CW_TEXTURE_DIR "filter_1.tga");
+
       FramebufferNode *processBuffer = new FramebufferNode("processingBuffer");
       processBuffer->BindTexture(GL_COLOR_ATTACHMENT0, postProcessingBufferOutoutTex);
       root->AddChild(processBuffer);
@@ -610,12 +655,16 @@ void World::Build(SceneNode *root)
       auto view = proj->AddChild(new MatrixNode("processingView", "viewMatrix", Matrix4()));
 
       auto control = view->AddChild(new ShaderControlNode("processingControl", [this](ShaderProgram *s) {
-        glUniform1i(glGetUniformLocation(s->Program(), "shake"), 0);
-        glUniform1f(glGetUniformLocation(s->Program(), "time"), this->m_state.timeOfDay * 32.0f);
+        glUniform1f(glGetUniformLocation(s->Program(), "cameraShakePhase"), this->m_state.timeOfDay * this->m_state.cameraShakeSpeed);
+        glUniform1f(glGetUniformLocation(s->Program(), "cameraShakeIntensity"), this->m_state.cameraShakeIntensity);
+
+        glUniform1f(glGetUniformLocation(s->Program(), "filter"), this->m_state.filterAmount);
         glUniform1f(glGetUniformLocation(s->Program(), "colourTemp"), this->m_state.colourTemp);
       }));
 
-      auto texture = control->AddChild(new TextureNode("processingTexture", { {sceneBufferOutputTex, "diffuseTex", 1} }));
+      auto texture = control->AddChild(new TextureNode("processingTexture", { {sceneBufferOutputTex, "diffuseTex", 1},
+        {filterTexture, "filterTex", 2}
+      }));
       auto sync = texture->AddChild(new ShaderSyncNode("processingSync"));
       auto processQuad = sync->AddChild(new MeshNode("processingQuad", Mesh::GenerateQuad()));
       processQuad->SetLocalTransformation(Matrix4::Scale(1.2f));
@@ -741,6 +790,13 @@ void World::Update(float msec)
   m_state.moon->Colour().w =
       max(0.1f, m_state.moon->GetLocalTransformation().GetPositionVector().y / m_state.worldBounds);
 
+  // Update colour temperature
+  float colourTempDelta = min(abs(m_state.colourTemp - m_state.colourTempTarget), m_state.colourTempSpeed * msec);
+  if (m_state.colourTemp < m_state.colourTempTarget)
+    m_state.colourTemp += colourTempDelta;
+  else
+    m_state.colourTemp -= colourTempDelta;
+
   // Toggle player lantern
   if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_L))
     std::cout << "Lantern: " << m_state.lantern->ToggleActive() << '\n';
@@ -751,14 +807,32 @@ void World::Update(float msec)
 
   // Toggle rain
   if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_1))
-    std::cout << "Rain: " << m_state.rain->ToggleActive() << '\n';
+  {
+    bool isRain = m_state.rain->ToggleActive();
+    std::cout << "Rain: " << isRain << '\n';
+    m_state.colourTempTarget = (isRain ? 12000.0f : 3000.0f);
+  }
 
   // Toggle snow
   if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_2))
-    std::cout << "Snow: " << m_state.snow->ToggleActive() << '\n';
+  {
+    bool isSnow = m_state.snow->ToggleActive();
+    std::cout << "Snow: " << isSnow << '\n';
+    m_state.colourTempTarget = (isSnow ? 5000.0f : 3000.0f);
+  }
 
   // Move water texture
   m_state.waterTexMatrix->Matrix() =
       Matrix4::Scale(10.0f) * Matrix4::Translation(Vector3(0.0f, -0.1f * m_state.timeOfDay, 0.0f));
+
+  // Trigger explosion
+  if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_E))
+  {
+    std::cout << "Pichuun\n";
+    m_state.explosionStartTime = m_renderer.ParentWindow().GetTimer()->GetMS();
+  }
+
+  // Handle explosion effects
+  // TODO
 }
 }

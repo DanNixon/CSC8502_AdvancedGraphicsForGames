@@ -23,11 +23,13 @@ class ParticleSystemNode;
 struct WorldState
 {
   WorldState()
-      : screenBuffer(nullptr)
-      , worldBounds(5000.0f)
-      , worldClockSpeed((1.0f / 1000.0f) / 60.0f) // 1 day = 60 seconds
-      , timeOfDay(0.25f)
-      , colourTemp(3000.0f)
+    : screenBuffer(nullptr)
+    , worldBounds(5000.0f)
+    , worldClockSpeed((1.0f / 1000.0f) / 60.0f) // 1 day = 60 seconds
+    , timeOfDay(0.25f)
+    , colourTemp(3000.0f)
+    , colourTempTarget(3000.0f)
+    , colourTempSpeed(10.0f)
       , loadingNode(nullptr)
       , sun(nullptr)
       , moon(nullptr)
@@ -36,6 +38,12 @@ struct WorldState
       , waterTexMatrix(nullptr)
       , rain(nullptr)
       , snow(nullptr)
+    , explosionStartTime(-1.0f)
+    , explosion(nullptr)
+    , cameraShakeTimeRemainingMs(0.0f)
+    , cameraShakeIntensity(0.0f)
+    , cameraShakeSpeed(40.0f)
+    , filterAmount(0.0f)
   {
   }
 
@@ -51,7 +59,9 @@ struct WorldState
   float worldClockSpeed; //!< Speed of world clock tick relative to real clock tick
   float timeOfDay;       //!< Time of day (0.0 - 1.0)
 
-  float colourTemp; //!< Colour temperature factor used in post processing
+  float colourTemp; //!< Colour temperature factor used in post processing  
+  float colourTempTarget; //!< Target colour temperature to reach
+  float colourTempSpeed; //!< Speed of colour temperature changes
 
   SceneNode *loadingNode;     //!< Loading text node
   PointLight *sun;            //!< Sun light
@@ -62,6 +72,13 @@ struct WorldState
 
   ParticleSystemNode *rain; //!< Rain particle system
   ParticleSystemNode *snow; //!< Snow particle system
+
+  float explosionStartTime; //!< Time that the explosion was triggered
+  ParticleSystemNode *explosion; //!< Explosion particle system
+  float cameraShakeTimeRemainingMs; //!< TIme in milliseconds left for the camera shake effect
+  float cameraShakeIntensity; //!< Intensity of camera shake effect
+  float cameraShakeSpeed; //!< Speed of camera shake effect
+  float filterAmount; //!< Amount of filter texture to blend into final frame
 };
 
 /**

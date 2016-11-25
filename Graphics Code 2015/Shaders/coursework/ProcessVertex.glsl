@@ -5,9 +5,8 @@ uniform mat4 viewMatrix;
 uniform mat4 projMatrix;
 uniform mat4 textureMatrix;
 
-uniform bool shake;
-uniform float time;
-uniform float zoom;
+uniform float cameraShakeIntensity;
+uniform float cameraShakePhase;
 
 in vec3 position;
 in vec4 colour;
@@ -26,10 +25,9 @@ void main()
   OUT.colour = colour;
   OUT.texCoord = (textureMatrix * vec4(texCoord, 0.0, 1.0)).xy;
 
-  if (shake)
+  if (cameraShakeIntensity >= 0.0)
   {
-    float strength = 0.005;
-    OUT.texCoord.x += cos(time * 10) * strength;
-    OUT.texCoord.y += cos(time * 15) * strength;
+    OUT.texCoord.x += cos(cameraShakePhase * 10) * cameraShakeIntensity;
+    OUT.texCoord.y += cos(cameraShakePhase * 15) * cameraShakeIntensity;
   }
 }
