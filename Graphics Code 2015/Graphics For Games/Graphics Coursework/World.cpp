@@ -712,7 +712,7 @@ void World::Build(SceneNode *root)
                     this->m_state.timeOfDay * this->m_state.cameraShakeSpeed);
         glUniform1f(glGetUniformLocation(s->Program(), "cameraShakeIntensity"), shake * 0.1f);
 
-        float a = (this->m_state.explosionPhase == EXPLOSION_FLASH) ? 1.0f - (this->m_state.explosionPhaseTime / 250.0f)
+        float a = (this->m_state.explosionPhase == EXPLOSION_FLASH) ? 1.0f - (this->m_state.explosionPhaseTime / 200.0f)
                                                                     : 0.0f;
         glUniform4f(glGetUniformLocation(s->Program(), "colourOverride"), 1.0f, 1.0f, 1.0f, a);
 
@@ -912,7 +912,7 @@ void World::Update(float msec)
   case EXPLOSION_FLASH:
     m_state.explosionFuse->SetActive(false);
 
-    if (m_state.explosionPhaseTime > 250.0f)
+    if (m_state.explosionPhaseTime > 100.0f)
     {
       m_state.explosionPhase = EXPLOSION_PARTICLES;
       m_state.explosionPhaseTime = 0.0f;
