@@ -17,7 +17,7 @@ using namespace GraphicsCoursework;
  */
 int main()
 {
-  Window window("Planet", 1440, 720, false);
+  Window window("Planet", 1280, 720, true);
   if (!window.HasInitialised())
     return 1;
 
